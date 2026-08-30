@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { RecipeCard } from "@/components/RecipeCard";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
@@ -9,46 +10,63 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
-      <section className="mb-12 text-center">
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Кулинарният блог на Иво
-        </h1>
-        <p className="mx-auto mt-3 max-w-xl text-zinc-600 dark:text-zinc-400">
-          Домашни рецепти за хобиисти и ентусиасти на готвенето — проверени,
-          подробни и лесни за следване.
-        </p>
-      </section>
-
-      <section className="mb-12 flex flex-wrap justify-center gap-2">
-        {categories.map((category) => (
+    <div>
+      <section className="relative overflow-hidden bg-surface-muted">
+        <div className="mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center sm:py-28">
+          <span className="mb-4 rounded-full bg-accent-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-accent-strong">
+            Домашна кухня
+          </span>
+          <h1 className="font-heading text-4xl font-bold tracking-tight sm:text-5xl">
+            Кулинарният блог на Иво
+          </h1>
+          <p className="mx-auto mt-4 max-w-xl text-lg text-muted-foreground">
+            Домашни рецепти за хобиисти и ентусиасти на готвенето — проверени,
+            подробни и лесни за следване.
+          </p>
           <Link
-            key={category.id}
-            href={`/recepti?category=${category.slug}`}
-            className="rounded-full border border-black/10 px-4 py-1.5 text-sm hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/[.06]"
+            href="/recepti"
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
           >
-            {category.name}
-          </Link>
-        ))}
-      </section>
-
-      <section>
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Последни рецепти</h2>
-          <Link href="/recepti" className="text-sm hover:underline">
-            Всички рецепти →
+            Разгледай рецептите
+            <ArrowRight size={16} />
           </Link>
         </div>
-        {recipes.length === 0 ? (
-          <p className="text-zinc-500">Все още няма публикувани рецепти.</p>
-        ) : (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-            {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
-            ))}
-          </div>
-        )}
       </section>
+
+      <div className="mx-auto max-w-5xl px-6 py-14">
+        <section className="mb-14 flex flex-wrap justify-center gap-2">
+          {categories.map((category) => (
+            <Link
+              key={category.id}
+              href={`/recepti?category=${category.slug}`}
+              className="rounded-full border border-border-subtle px-4 py-1.5 text-sm font-medium transition hover:border-accent hover:text-accent"
+            >
+              {category.name}
+            </Link>
+          ))}
+        </section>
+
+        <section>
+          <div className="mb-6 flex items-end justify-between">
+            <h2 className="font-heading text-2xl font-semibold">Последни рецепти</h2>
+            <Link
+              href="/recepti"
+              className="flex items-center gap-1 text-sm font-medium text-accent hover:underline"
+            >
+              Всички рецепти <ArrowRight size={14} />
+            </Link>
+          </div>
+          {recipes.length === 0 ? (
+            <p className="text-muted-foreground">Все още няма публикувани рецепти.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+              {recipes.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={recipe} />
+              ))}
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }

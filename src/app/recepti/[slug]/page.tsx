@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { ChefHat, Clock, Users } from "lucide-react";
 import { JsonLd } from "@/components/JsonLd";
+import { PrintButton } from "@/components/PrintButton";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { getImageUrl } from "@/lib/images";
 import { getRecipeBySlug } from "@/lib/recipes";
@@ -65,62 +67,93 @@ export default async function RecipePage({
   };
 
   return (
-    <article className="mx-auto max-w-3xl px-6 py-12 print:max-w-none">
+    <article className="print:mx-6">
       <JsonLd data={jsonLd} />
 
-      {recipe.category && (
-        <p className="text-sm font-medium uppercase tracking-wide text-amber-700 dark:text-amber-500">
-          {recipe.category.name}
-        </p>
-      )}
-      <h1 className="mt-1 text-3xl font-semibold tracking-tight">{recipe.title}</h1>
-      <p className="mt-3 text-zinc-600 dark:text-zinc-400">{recipe.description}</p>
-
-      <div className="mt-4 flex flex-wrap gap-4 text-sm text-zinc-500">
-        {recipe.prep_time_minutes > 0 && <span>Подготовка: {recipe.prep_time_minutes} мин</span>}
-        {recipe.cook_time_minutes > 0 && <span>Готвене: {recipe.cook_time_minutes} мин</span>}
-        <span>Трудност: {recipe.difficulty}</span>
-      </div>
-
-      {imageUrl && (
-        <div className="relative mt-6 aspect-video w-full overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-900 print:hidden">
+      <div className="relative h-[42vh] min-h-[280px] w-full overflow-hidden bg-surface-muted print:hidden">
+        {imageUrl ? (
           <Image src={imageUrl} alt={recipe.title} fill className="object-cover" priority />
+        ) : (
+          <div className="flex h-full items-center justify-center text-muted-foreground">
+            <ChefHat size={48} strokeWidth={1.5} />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 mx-auto w-full max-w-4xl px-6 pb-8">
+          {recipe.category && (
+            <span className="mb-2 inline-block rounded-full bg-accent px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-foreground">
+              {recipe.category.name}
+            </span>
+          )}
+          <h1 className="font-heading text-3xl font-bold text-white drop-shadow-sm sm:text-4xl">
+            {recipe.title}
+          </h1>
         </div>
-      )}
-
-      <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-[1fr_2fr]">
-        <section>
-          <h2 className="mb-4 text-lg font-semibold">Продукти</h2>
-          <RecipeIngredients ingredients={recipe.ingredients} baseServings={recipe.servings} />
-        </section>
-
-        <section>
-          <h2 className="mb-4 text-lg font-semibold">Приготвяне</h2>
-          <ol className="space-y-4">
-            {recipe.steps.map((step, index) => (
-              <li key={step.id} className="flex gap-3">
-                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-black text-xs font-medium text-white dark:bg-white dark:text-black">
-                  {index + 1}
-                </span>
-                <p className="text-sm leading-relaxed">{step.text}</p>
-              </li>
-            ))}
-          </ol>
-        </section>
       </div>
 
-      {recipe.tags.length > 0 && (
-        <div className="mt-10 flex flex-wrap gap-2 print:hidden">
-          {recipe.tags.map((tag) => (
-            <span
-              key={tag.id}
-              className="rounded-full border border-black/10 px-3 py-1 text-xs text-zinc-600 dark:border-white/15 dark:text-zinc-400"
-            >
-              {tag.name}
+      <div className="mx-auto max-w-4xl px-6 py-10">
+        <div className="hidden print:block">
+          {recipe.category && (
+            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-accent-strong">
+              {recipe.category.name}
             </span>
-          ))}
+          )}
+          <h1 className="font-heading text-3xl font-bold">{recipe.title}</h1>
         </div>
-      )}
+
+        <p className="mt-2 text-lg text-muted-foreground">{recipe.description}</p>
+
+        <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-2 border-y border-border-subtle py-4 text-sm">
+          {recipe.prep_time_minutes > 0 && (
+            <span className="flex items-center gap-1.5">
+              <Clock size={15} className="text-accent" /> Подготовка: {recipe.prep_time_minutes} мин
+            </span>
+          )}
+          {recipe.cook_time_minutes > 0 && (
+            <span className="flex items-center gap-1.5">
+              <Clock size={15} className="text-accent" /> Готвене: {recipe.cook_time_minutes} мин
+            </span>
+          )}
+          <span className="flex items-center gap-1.5">
+            <Users size={15} className="text-accent" /> {recipe.servings} порции
+          </span>
+          <span className="capitalize">Трудност: {recipe.difficulty}</span>
+          <PrintButton />
+        </div>
+
+        <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,300px)_1fr]">
+          <aside className="md:sticky md:top-24 md:self-start">
+            <RecipeIngredients ingredients={recipe.ingredients} baseServings={recipe.servings} />
+          </aside>
+
+          <section>
+            <h2 className="mb-5 font-heading text-xl font-semibold">Приготвяне</h2>
+            <ol className="relative space-y-6 border-l border-border-subtle pl-8">
+              {recipe.steps.map((step, index) => (
+                <li key={step.id} className="relative">
+                  <span className="absolute -left-[calc(2rem+1px)] flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
+                    {index + 1}
+                  </span>
+                  <p className="text-sm leading-relaxed">{step.text}</p>
+                </li>
+              ))}
+            </ol>
+          </section>
+        </div>
+
+        {recipe.tags.length > 0 && (
+          <div className="mt-10 flex flex-wrap gap-2 print:hidden">
+            {recipe.tags.map((tag) => (
+              <span
+                key={tag.id}
+                className="rounded-full bg-secondary-soft px-3 py-1 text-xs font-medium text-secondary"
+              >
+                {tag.name}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
     </article>
   );
 }

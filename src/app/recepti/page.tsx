@@ -20,10 +20,10 @@ export default async function ReceptiPage({
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="mb-6 text-2xl font-semibold">Рецепти</h1>
+      <h1 className="mb-6 font-heading text-3xl font-semibold">Рецепти</h1>
       <CategoryFilter categories={categories} activeSlug={category} />
       {recipes.length === 0 ? (
-        <p className="text-zinc-500">Няма намерени рецепти в тази категория.</p>
+        <p className="text-muted-foreground">Няма намерени рецепти в тази категория.</p>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
           {recipes.map((recipe) => (

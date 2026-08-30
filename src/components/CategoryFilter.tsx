@@ -12,10 +12,10 @@ export function CategoryFilter({
     <div className="mb-8 flex flex-wrap gap-2">
       <Link
         href="/recepti"
-        className={`rounded-full border px-4 py-1.5 text-sm ${
+        className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
           !activeSlug
-            ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-            : "border-black/10 hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/[.06]"
+            ? "border-accent bg-accent text-accent-foreground"
+            : "border-border-subtle hover:border-accent hover:text-accent"
         }`}
       >
         Всички
@@ -24,10 +24,10 @@ export function CategoryFilter({
         <Link
           key={category.id}
           href={`/recepti?category=${category.slug}`}
-          className={`rounded-full border px-4 py-1.5 text-sm ${
+          className={`rounded-full border px-4 py-1.5 text-sm font-medium transition ${
             activeSlug === category.slug
-              ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
-              : "border-black/10 hover:bg-black/[.04] dark:border-white/15 dark:hover:bg-white/[.06]"
+              ? "border-accent bg-accent text-accent-foreground"
+              : "border-border-subtle hover:border-accent hover:text-accent"
           }`}
         >
           {category.name}
