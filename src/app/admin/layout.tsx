@@ -8,11 +8,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <Link href="/admin" className="font-semibold">
           Администрация
         </Link>
-        <form action={logout}>
-          <button type="submit" className="text-sm text-zinc-500 hover:underline">
-            Изход
-          </button>
-        </form>
+        <div className="flex items-center gap-4">
+          <Link href="/admin/comments" className="text-sm text-zinc-500 hover:underline">
+            Коментари
+          </Link>
+          <form action={logout}>
+            <button type="submit" className="text-sm text-zinc-500 hover:underline">
+              Изход
+            </button>
+          </form>
+        </div>
       </div>
       {children}
     </div>

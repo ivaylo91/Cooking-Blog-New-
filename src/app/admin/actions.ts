@@ -172,3 +172,11 @@ export async function togglePublish(id: string, published: boolean) {
   revalidatePath("/");
   revalidatePath("/recepti");
 }
+
+export async function deleteComment(id: string, slug: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("comments").delete().eq("id", id);
+  if (error) throw error;
+  revalidatePath("/admin/comments");
+  revalidatePath(`/recepti/${slug}`);
+}

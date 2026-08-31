@@ -37,6 +37,7 @@ create table if not exists recipes (
   servings int not null default 4,
   image_path text,
   published boolean not null default false,
+  likes_count int not null default 0,
   author_id uuid references auth.users (id) on delete set null,
   search_vector tsvector generated always as (
     to_tsvector('simple', coalesce(title, '') || ' ' || coalesce(description, ''))
@@ -181,6 +182,63 @@ create policy "authenticated update recipe images" on storage.objects
   for update using (bucket_id = 'recipe-images' and auth.role() = 'authenticated');
 create policy "authenticated delete recipe images" on storage.objects
   for delete using (bucket_id = 'recipe-images' and auth.role() = 'authenticated');
+
+-- ---------------------------------------------------------------------------
+-- Comments — public, anonymous comments on published recipes
+-- ---------------------------------------------------------------------------
+create table if not exists comments (
+  id uuid primary key default gen_random_uuid(),
+  recipe_id uuid not null references recipes (id) on delete cascade,
+  author_name text not null,
+  text text not null,
+  created_at timestamptz not null default now(),
+  constraint comments_author_name_length check (char_length(author_name) between 1 and 60),
+  constraint comments_text_length check (char_length(text) between 1 and 1000)
+);
+
+create index if not exists comments_recipe_idx on comments (recipe_id, created_at desc);
+
+alter table comments enable row level security;
+
+create policy "comments on visible recipes are readable" on comments
+  for select using (
+    exists (
+      select 1 from recipes r
+      where r.id = comments.recipe_id
+        and (r.published = true or auth.role() = 'authenticated')
+    )
+  );
+
+create policy "anyone can comment on published recipes" on comments
+  for insert with check (
+    exists (select 1 from recipes r where r.id = comments.recipe_id and r.published = true)
+  );
+
+create policy "authenticated manage comments" on comments
+  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+
+-- ---------------------------------------------------------------------------
+-- Likes — anonymous, one increment per browser (enforced client-side via
+-- localStorage; this function only prevents direct table tampering).
+-- ---------------------------------------------------------------------------
+create or replace function increment_recipe_likes(p_recipe_id uuid)
+returns int
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  new_count int;
+begin
+  update recipes
+  set likes_count = likes_count + 1
+  where id = p_recipe_id and published = true
+  returning likes_count into new_count;
+  return new_count;
+end;
+$$;
+
+grant execute on function increment_recipe_likes(uuid) to anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Starter categories

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Category, Ingredient, Recipe, RecipeWithRelations, Step, Tag } from "@/types/recipe";
+import type { Category, Comment, Ingredient, Recipe, RecipeWithRelations, Step, Tag } from "@/types/recipe";
 
 export interface RecipeListItem extends Recipe {
   category: Category | null;
@@ -89,4 +89,15 @@ export function getRecipeBySlug(slug: string): Promise<RecipeWithRelations | nul
 
 export function getRecipeById(id: string): Promise<RecipeWithRelations | null> {
   return getRecipeByColumn("id", id);
+}
+
+export async function getRecipeComments(recipeId: string): Promise<Comment[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("comments")
+    .select("*")
+    .eq("recipe_id", recipeId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
 }

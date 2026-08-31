@@ -2,11 +2,14 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ChefHat, Clock, Users } from "lucide-react";
+import { Comments } from "@/components/Comments";
 import { JsonLd } from "@/components/JsonLd";
+import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
+import { ShareButtons } from "@/components/ShareButtons";
 import { getImageUrl } from "@/lib/images";
-import { getRecipeBySlug } from "@/lib/recipes";
+import { getRecipeBySlug, getRecipeComments } from "@/lib/recipes";
 
 function isoDuration(minutes: number): string {
   return `PT${minutes}M`;
@@ -38,8 +41,11 @@ export default async function RecipePage({
     notFound();
   }
 
+  const comments = await getRecipeComments(recipe.id);
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const recipeUrl = `${siteUrl}/recepti/${recipe.slug}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -64,6 +70,18 @@ export default async function RecipePage({
       text: s.text,
       image: getImageUrl(s.image_path) ?? undefined,
     })),
+    interactionStatistic: [
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/LikeAction",
+        userInteractionCount: recipe.likes_count,
+      },
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/CommentAction",
+        userInteractionCount: comments.length,
+      },
+    ],
   };
 
   return (
@@ -121,6 +139,11 @@ export default async function RecipePage({
           <PrintButton />
         </div>
 
+        <div className="mt-5 flex flex-wrap items-center justify-between gap-4 print:hidden">
+          <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
+          <ShareButtons title={recipe.title} url={recipeUrl} />
+        </div>
+
         <div className="mt-8 grid grid-cols-1 gap-10 md:grid-cols-[minmax(0,300px)_1fr]">
           <aside className="md:sticky md:top-24 md:self-start">
             <RecipeIngredients ingredients={recipe.ingredients} baseServings={recipe.servings} />
@@ -153,6 +176,10 @@ export default async function RecipePage({
             ))}
           </div>
         )}
+
+        <div className="print:hidden">
+          <Comments recipeId={recipe.id} slug={recipe.slug} comments={comments} />
+        </div>
       </div>
     </article>
   );

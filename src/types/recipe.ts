@@ -30,6 +30,14 @@ export interface Step {
   image_path: string | null;
 }
 
+export interface Comment {
+  id: string;
+  recipe_id: string;
+  author_name: string;
+  text: string;
+  created_at: string;
+}
+
 export interface Recipe {
   id: string;
   slug: string;
@@ -43,6 +51,7 @@ export interface Recipe {
   servings: number;
   image_path: string | null;
   published: boolean;
+  likes_count: number;
   created_at: string;
   updated_at: string;
 }
