@@ -28,7 +28,7 @@ export function CookingBackground({
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
-            opacity="0.5"
+            opacity="0.4"
             transform="translate(55,70) rotate(-16)"
           >
             <line x1="0" y1="0" x2="0" y2="46" />
@@ -41,7 +41,7 @@ export function CookingBackground({
           {/* herb sprig */}
           <g
             fill="var(--secondary)"
-            opacity="0.5"
+            opacity="0.4"
             transform="translate(285,55) rotate(18)"
           >
             <path d="M0 0 Q 4 26 0 52 Q -4 26 0 0 Z" />
@@ -56,7 +56,7 @@ export function CookingBackground({
             strokeWidth="2.2"
             strokeLinecap="round"
             fill="none"
-            opacity="0.5"
+            opacity="0.4"
             transform="translate(65,285)"
           >
             <path d="M 0 30 C -9 18, 9 10, 0 -2 C -9 -14, 9 -22, 0 -34" />
@@ -64,7 +64,7 @@ export function CookingBackground({
           </g>
 
           {/* citrus slice */}
-          <g transform="translate(285,280)" opacity="0.5">
+          <g transform="translate(285,280)" opacity="0.4">
             <circle r="22" fill="var(--accent-soft)" />
             <circle r="22" fill="none" stroke="var(--accent)" strokeWidth="2.2" />
             <g stroke="var(--accent)" strokeWidth="1.5">
@@ -75,7 +75,7 @@ export function CookingBackground({
           </g>
 
           {/* soup bowl with spoon, seen from above */}
-          <g transform="translate(180,175)" opacity="0.5">
+          <g transform="translate(180,175)" opacity="0.4">
             <ellipse cx="0" cy="0" rx="30" ry="13" fill="var(--accent-soft)" />
             <ellipse cx="0" cy="0" rx="30" ry="13" fill="none" stroke="var(--accent)" strokeWidth="2.2" />
             <path
@@ -91,7 +91,7 @@ export function CookingBackground({
           </g>
 
           {/* basil leaf with cherry tomatoes */}
-          <g opacity="0.5">
+          <g opacity="0.4">
             <g fill="var(--secondary)" transform="translate(172,52) rotate(-10)">
               <path d="M0 -17 C 15 -15 15 12 0 18 C -15 12 -15 -15 0 -17 Z" />
               <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--background)" strokeWidth="1.5" />
