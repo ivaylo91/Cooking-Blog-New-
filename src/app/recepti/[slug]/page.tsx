@@ -9,8 +9,9 @@ import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
+import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
-import { getImageUrl } from "@/lib/images";
+import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRelatedRecipes } from "@/lib/recipes";
 
 function isoDuration(minutes: number): string {
@@ -105,6 +106,8 @@ export default async function RecipePage({
           <div className="relative order-first aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-muted md:sticky md:top-24 md:order-last md:self-start print:hidden">
             {imageUrl ? (
               <Image src={imageUrl} alt={recipe.title} fill className="object-cover" priority />
+            ) : getPlaceholderVariant(recipe.id) === "salad" ? (
+              <SaladIllustration />
             ) : (
               <IngredientsIllustration />
             )}

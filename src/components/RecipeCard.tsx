@@ -4,12 +4,15 @@ import { Clock, Users } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
-import { getImageUrl } from "@/lib/images";
+import { SaladIllustration } from "@/components/SaladIllustration";
+import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
 export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
+  const Placeholder =
+    getPlaceholderVariant(recipe.id) === "salad" ? SaladIllustration : IngredientsIllustration;
 
   return (
     <Link
@@ -26,7 +29,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <IngredientsIllustration className="transition duration-500 group-hover:scale-105" />
+          <Placeholder className="transition duration-500 group-hover:scale-105" />
         )}
         {recipe.category && (
           <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-strong backdrop-blur-sm">
