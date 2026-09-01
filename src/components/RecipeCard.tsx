@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ChefHat, Clock, Users } from "lucide-react";
+import { Clock, Users } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
-import { CookingBackground } from "@/components/CookingBackground";
+import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { getImageUrl } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
@@ -17,7 +17,6 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border-subtle bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-muted">
-        <CookingBackground variant="absolute" />
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -27,9 +26,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
             className="object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="relative flex h-full items-center justify-center text-muted-foreground">
-            <ChefHat size={32} strokeWidth={1.5} />
-          </div>
+          <IngredientsIllustration className="transition duration-500 group-hover:scale-105" />
         )}
         {recipe.category && (
           <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-strong backdrop-blur-sm">

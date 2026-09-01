@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ChefHat } from "lucide-react";
 import { Comments } from "@/components/Comments";
-import { CookingBackground } from "@/components/CookingBackground";
 import { CookMode } from "@/components/CookMode";
+import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { JsonLd } from "@/components/JsonLd";
 import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
@@ -104,13 +103,10 @@ export default async function RecipePage({
       <div className="mx-auto max-w-6xl px-6 py-10 md:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-14 print:grid-cols-1 lg:gap-20">
           <div className="relative order-first aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-muted md:sticky md:top-24 md:order-last md:self-start print:hidden">
-            <CookingBackground variant="absolute" />
             {imageUrl ? (
               <Image src={imageUrl} alt={recipe.title} fill className="object-cover" priority />
             ) : (
-              <div className="relative flex h-full items-center justify-center text-muted-foreground">
-                <ChefHat size={48} strokeWidth={1.5} />
-              </div>
+              <IngredientsIllustration />
             )}
           </div>
 
