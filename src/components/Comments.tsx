@@ -35,6 +35,16 @@ export function Comments({
       )}
 
       <form action={addComment.bind(null, recipeId, slug)} className="flex flex-col gap-3">
+        {/* eslint-disable-next-line react-hooks/purity -- per-request timestamp is required for the bot time-trap; a few ms of skew across re-invocations doesn't affect correctness */}
+        <input type="hidden" name="form_rendered_at" value={Date.now()} />
+        <input
+          type="text"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute -left-[9999px] h-0 w-0 opacity-0"
+        />
         <input
           type="text"
           name="author_name"

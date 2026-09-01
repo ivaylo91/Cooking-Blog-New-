@@ -404,6 +404,12 @@ export function RecipeForm({
                 onChange={(e) => updateStep(index, { text: e.target.value })}
                 className={`flex-1 py-2 text-sm ${fieldClass}`}
               />
+              <ImageUpload
+                size="compact"
+                path={step.image_path}
+                onChange={(path) => updateStep(index, { image_path: path })}
+                folder="steps"
+              />
               <button
                 type="button"
                 onClick={() => setSteps((rows) => rows.filter((_, i) => i !== index))}

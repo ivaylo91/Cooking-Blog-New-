@@ -28,6 +28,9 @@ export const metadata: Metadata = {
     template: "%s | Кулинарният блог на Иво",
   },
   description: "Домашни рецепти за хобиисти и ентусиасти на готвенето.",
+  alternates: {
+    types: { "application/rss+xml": "/rss.xml" },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

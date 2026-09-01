@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChefHat } from "lucide-react";
+import { ChefHat, Rss } from "lucide-react";
 import { CookingBackground } from "@/components/CookingBackground";
 
 export function Footer() {
@@ -22,6 +22,10 @@ export function Footer() {
           <Link href="/za-ivo" className="hover:text-accent">
             За Иво
           </Link>
+          <a href="/rss.xml" className="flex items-center gap-1 hover:text-accent">
+            <Rss size={14} />
+            RSS
+          </a>
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
           © {new Date().getFullYear()} Кулинарният блог на Иво

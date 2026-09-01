@@ -164,14 +164,22 @@ export default async function RecipePage({
               </div>
             </div>
             <ol className="relative space-y-6 border-l border-border-subtle pl-8">
-              {recipe.steps.map((step, index) => (
-                <li key={step.id} className="relative">
-                  <span className="absolute -left-[calc(2rem+1px)] flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
-                    {index + 1}
-                  </span>
-                  <p className="text-sm leading-relaxed">{step.text}</p>
-                </li>
-              ))}
+              {recipe.steps.map((step, index) => {
+                const stepImageUrl = getImageUrl(step.image_path);
+                return (
+                  <li key={step.id} className="relative">
+                    <span className="absolute -left-[calc(2rem+1px)] flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
+                      {index + 1}
+                    </span>
+                    <p className="text-sm leading-relaxed">{step.text}</p>
+                    {stepImageUrl && (
+                      <div className="relative mt-3 aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-surface-muted print:hidden">
+                        <Image src={stepImageUrl} alt="" fill className="object-cover" />
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
             </ol>
           </section>
         </div>

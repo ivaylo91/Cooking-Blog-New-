@@ -3,9 +3,23 @@ import { CategoryFilter } from "@/components/CategoryFilter";
 import { RecipeCard } from "@/components/RecipeCard";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
-export const metadata: Metadata = {
-  title: "Рецепти",
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string }>;
+}): Promise<Metadata> {
+  const { category: categorySlug } = await searchParams;
+  if (!categorySlug) return { title: "Рецепти" };
+
+  const categories = await getCategories();
+  const category = categories.find((c) => c.slug === categorySlug);
+  if (!category) return { title: "Рецепти" };
+
+  return {
+    title: category.name,
+    description: `Рецепти в категория ${category.name} — Кулинарният блог на Иво.`,
+  };
+}
 
 export default async function ReceptiPage({
   searchParams,
