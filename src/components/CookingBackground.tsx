@@ -24,11 +24,11 @@ export function CookingBackground({
           {/* whisk */}
           <g
             stroke="var(--accent)"
-            strokeWidth="1.5"
+            strokeWidth="2.2"
             strokeLinecap="round"
             strokeLinejoin="round"
             fill="none"
-            opacity="0.06"
+            opacity="0.5"
             transform="translate(55,70) rotate(-16)"
           >
             <line x1="0" y1="0" x2="0" y2="46" />
@@ -41,7 +41,7 @@ export function CookingBackground({
           {/* herb sprig */}
           <g
             fill="var(--secondary)"
-            opacity="0.06"
+            opacity="0.5"
             transform="translate(285,55) rotate(18)"
           >
             <path d="M0 0 Q 4 26 0 52 Q -4 26 0 0 Z" />
@@ -53,10 +53,10 @@ export function CookingBackground({
           {/* steam curls */}
           <g
             stroke="var(--accent)"
-            strokeWidth="1.5"
+            strokeWidth="2.2"
             strokeLinecap="round"
             fill="none"
-            opacity="0.06"
+            opacity="0.5"
             transform="translate(65,285)"
           >
             <path d="M 0 30 C -9 18, 9 10, 0 -2 C -9 -14, 9 -22, 0 -34" />
@@ -64,10 +64,10 @@ export function CookingBackground({
           </g>
 
           {/* citrus slice */}
-          <g transform="translate(285,280)" opacity="0.06">
+          <g transform="translate(285,280)" opacity="0.5">
             <circle r="22" fill="var(--accent-soft)" />
-            <circle r="22" fill="none" stroke="var(--accent)" strokeWidth="1.5" />
-            <g stroke="var(--accent)" strokeWidth="1">
+            <circle r="22" fill="none" stroke="var(--accent)" strokeWidth="2.2" />
+            <g stroke="var(--accent)" strokeWidth="1.5">
               <line x1="0" y1="-19" x2="0" y2="19" />
               <line x1="-16" y1="-9" x2="16" y2="9" />
               <line x1="-16" y1="9" x2="16" y2="-9" />
@@ -75,26 +75,26 @@ export function CookingBackground({
           </g>
 
           {/* soup bowl with spoon, seen from above */}
-          <g transform="translate(180,175)" opacity="0.06">
+          <g transform="translate(180,175)" opacity="0.5">
             <ellipse cx="0" cy="0" rx="30" ry="13" fill="var(--accent-soft)" />
-            <ellipse cx="0" cy="0" rx="30" ry="13" fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+            <ellipse cx="0" cy="0" rx="30" ry="13" fill="none" stroke="var(--accent)" strokeWidth="2.2" />
             <path
               d="M -15 -3 Q -8 -9 -1 -3 Q 5 3 12 -3"
               stroke="var(--accent)"
-              strokeWidth="1.2"
+              strokeWidth="1.8"
               fill="none"
             />
-            <g transform="translate(40,8) rotate(18)" stroke="var(--accent)" strokeWidth="1.5" fill="none">
+            <g transform="translate(40,8) rotate(18)" stroke="var(--accent)" strokeWidth="2.2" fill="none">
               <ellipse cx="0" cy="0" rx="6" ry="9" />
               <line x1="0" y1="9" x2="0" y2="30" />
             </g>
           </g>
 
           {/* basil leaf with cherry tomatoes */}
-          <g opacity="0.06">
+          <g opacity="0.5">
             <g fill="var(--secondary)" transform="translate(172,52) rotate(-10)">
               <path d="M0 -17 C 15 -15 15 12 0 18 C -15 12 -15 -15 0 -17 Z" />
-              <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--background)" strokeWidth="1" />
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--background)" strokeWidth="1.5" />
             </g>
             <circle cx="200" cy="66" r="6" fill="var(--accent)" />
             <circle cx="210" cy="52" r="5" fill="var(--accent)" />
