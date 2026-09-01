@@ -89,6 +89,16 @@ export function CookingBackground({
               <line x1="0" y1="9" x2="0" y2="30" />
             </g>
           </g>
+
+          {/* basil leaf with cherry tomatoes */}
+          <g opacity="0.06">
+            <g fill="var(--secondary)" transform="translate(172,52) rotate(-10)">
+              <path d="M0 -17 C 15 -15 15 12 0 18 C -15 12 -15 -15 0 -17 Z" />
+              <line x1="0" y1="-14" x2="0" y2="14" stroke="var(--background)" strokeWidth="1" />
+            </g>
+            <circle cx="200" cy="66" r="6" fill="var(--accent)" />
+            <circle cx="210" cy="52" r="5" fill="var(--accent)" />
+          </g>
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${patternId})`} />
