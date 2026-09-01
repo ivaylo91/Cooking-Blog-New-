@@ -73,6 +73,22 @@ export function CookingBackground({
               <line x1="-16" y1="9" x2="16" y2="-9" />
             </g>
           </g>
+
+          {/* soup bowl with spoon, seen from above */}
+          <g transform="translate(180,175)" opacity="0.06">
+            <ellipse cx="0" cy="0" rx="30" ry="13" fill="var(--accent-soft)" />
+            <ellipse cx="0" cy="0" rx="30" ry="13" fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+            <path
+              d="M -15 -3 Q -8 -9 -1 -3 Q 5 3 12 -3"
+              stroke="var(--accent)"
+              strokeWidth="1.2"
+              fill="none"
+            />
+            <g transform="translate(40,8) rotate(18)" stroke="var(--accent)" strokeWidth="1.5" fill="none">
+              <ellipse cx="0" cy="0" rx="6" ry="9" />
+              <line x1="0" y1="9" x2="0" y2="30" />
+            </g>
+          </g>
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${patternId})`} />
