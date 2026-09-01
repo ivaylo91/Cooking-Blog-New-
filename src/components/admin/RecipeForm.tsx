@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
+import { ChevronDown, ClipboardList, ListOrdered, Plus, Sparkles, X } from "lucide-react";
 import { createRecipe, updateRecipe } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import type { Category, Difficulty, RecipeWithRelations } from "@/types/recipe";
@@ -33,6 +34,50 @@ interface IngredientRow {
 interface StepRow {
   text: string;
   image_path: string | null;
+}
+
+const fieldClass =
+  "rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft";
+const labelClass = "flex flex-col gap-1.5 text-sm font-medium";
+const iconButtonClass =
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle text-muted-foreground transition hover:border-destructive hover:text-destructive";
+const sectionCardClass = "rounded-2xl border border-border-subtle bg-surface p-6";
+
+function SectionHeading({ icon: Icon, children }: { icon: typeof ClipboardList; children: React.ReactNode }) {
+  return (
+    <h2 className="mb-5 flex items-center gap-2 font-heading text-lg font-semibold">
+      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
+        <Icon size={14} />
+      </span>
+      {children}
+    </h2>
+  );
+}
+
+function Select({
+  value,
+  onChange,
+  children,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className={`w-full appearance-none pr-9 ${fieldClass}`}
+      >
+        {children}
+      </select>
+      <ChevronDown
+        size={15}
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+      />
+    </div>
+  );
 }
 
 export function RecipeForm({
@@ -134,188 +179,198 @@ export function RecipeForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
       {error && (
         <p className="rounded-lg border border-destructive-border bg-destructive-soft px-3 py-2 text-sm text-destructive-strong">
           {error}
         </p>
       )}
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <label className="flex flex-col gap-1.5 text-sm font-medium sm:col-span-2">
-          Заглавие
-          <input
-            required
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-              if (!slugTouched) setSlug(slugify(e.target.value));
-            }}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+      <section className={sectionCardClass}>
+        <SectionHeading icon={Sparkles}>Основна информация</SectionHeading>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <label className={`${labelClass} sm:col-span-2`}>
+            Заглавие
+            <input
+              required
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                if (!slugTouched) setSlug(slugify(e.target.value));
+              }}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium sm:col-span-2">
-          Slug (URL)
-          <input
-            required
-            value={slug}
-            onChange={(e) => {
-              setSlug(e.target.value);
-              setSlugTouched(true);
-            }}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 font-mono text-xs outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={`${labelClass} sm:col-span-2`}>
+            Slug (URL)
+            <input
+              required
+              value={slug}
+              onChange={(e) => {
+                setSlug(e.target.value);
+                setSlugTouched(true);
+              }}
+              className={`font-mono text-xs ${fieldClass}`}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium sm:col-span-2">
-          Описание
-          <textarea
-            rows={3}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={`${labelClass} sm:col-span-2`}>
+            Описание
+            <textarea
+              rows={3}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Категория
-          <select
-            value={categoryId ?? ""}
-            onChange={(e) => setCategoryId(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          >
-            <option value="">—</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
-        </label>
+          <label className={labelClass}>
+            Категория
+            <Select value={categoryId ?? ""} onChange={setCategoryId}>
+              <option value="">—</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </Select>
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Кухня
-          <input
-            value={cuisine}
-            onChange={(e) => setCuisine(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={labelClass}>
+            Кухня
+            <input
+              value={cuisine}
+              onChange={(e) => setCuisine(e.target.value)}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Трудност
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value as Difficulty)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          >
-            <option value="лесно">лесно</option>
-            <option value="средно">средно</option>
-            <option value="трудно">трудно</option>
-          </select>
-        </label>
+          <label className={labelClass}>
+            Трудност
+            <Select value={difficulty} onChange={(v) => setDifficulty(v as Difficulty)}>
+              <option value="лесно">лесно</option>
+              <option value="средно">средно</option>
+              <option value="трудно">трудно</option>
+            </Select>
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Порции
-          <input
-            type="number"
-            min={1}
-            value={servings}
-            onChange={(e) => setServings(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={labelClass}>
+            Порции
+            <input
+              type="number"
+              min={1}
+              value={servings}
+              onChange={(e) => setServings(e.target.value)}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Подготовка (мин)
-          <input
-            type="number"
-            min={0}
-            value={prepTime}
-            onChange={(e) => setPrepTime(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={labelClass}>
+            Подготовка (мин)
+            <input
+              type="number"
+              min={0}
+              value={prepTime}
+              onChange={(e) => setPrepTime(e.target.value)}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium">
-          Готвене (мин)
-          <input
-            type="number"
-            min={0}
-            value={cookTime}
-            onChange={(e) => setCookTime(e.target.value)}
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={labelClass}>
+            Готвене (мин)
+            <input
+              type="number"
+              min={0}
+              value={cookTime}
+              onChange={(e) => setCookTime(e.target.value)}
+              className={fieldClass}
+            />
+          </label>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium sm:col-span-2">
-          Тагове (разделени със запетая)
-          <input
-            value={tagsInput}
-            onChange={(e) => setTagsInput(e.target.value)}
-            placeholder="постно, лятно, без глутен"
-            className="rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent"
-          />
-        </label>
+          <label className={`${labelClass} sm:col-span-2`}>
+            Тагове (разделени със запетая)
+            <input
+              value={tagsInput}
+              onChange={(e) => setTagsInput(e.target.value)}
+              placeholder="постно, лятно, без глутен"
+              className={fieldClass}
+            />
+          </label>
 
-        <div className="sm:col-span-2">
-          <span className="mb-1.5 block text-sm font-medium">Снимка</span>
-          <ImageUpload path={imagePath} onChange={setImagePath} folder="recipes" />
+          <div className="sm:col-span-2">
+            <span className="mb-1.5 block text-sm font-medium">Снимка</span>
+            <ImageUpload path={imagePath} onChange={setImagePath} folder="recipes" />
+          </div>
+
+          <label className="flex cursor-pointer items-center gap-3 text-sm font-medium sm:col-span-2">
+            <span
+              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
+                published ? "bg-accent" : "bg-border-subtle"
+              }`}
+            >
+              <input
+                type="checkbox"
+                checked={published}
+                onChange={(e) => setPublished(e.target.checked)}
+                className="sr-only"
+              />
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform ${
+                  published ? "translate-x-6" : "translate-x-1"
+                }`}
+              />
+            </span>
+            Публикувана
+          </label>
         </div>
-
-        <label className="flex items-center gap-2 text-sm font-medium sm:col-span-2">
-          <input
-            type="checkbox"
-            checked={published}
-            onChange={(e) => setPublished(e.target.checked)}
-            className="accent-accent"
-          />
-          Публикувана
-        </label>
       </section>
 
-      <section>
-        <h2 className="mb-3 font-heading text-lg font-semibold">Продукти</h2>
+      <section className={sectionCardClass}>
+        <SectionHeading icon={ClipboardList}>Продукти</SectionHeading>
         <div className="flex flex-col gap-2">
           {ingredients.map((row, index) => (
-            <div key={index} className="grid grid-cols-12 gap-2">
+            <div
+              key={index}
+              className="grid grid-cols-12 items-center gap-2 rounded-xl border border-border-subtle bg-background/60 p-2"
+            >
               <input
                 placeholder="Група (по избор)"
                 value={row.group_name}
                 onChange={(e) => updateIngredient(index, { group_name: e.target.value })}
-                className="col-span-2 rounded-lg border border-border-subtle bg-background px-2 py-1.5 text-sm outline-none focus:border-accent"
+                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
               />
               <input
                 placeholder="Кол-во"
                 value={row.amount}
                 onChange={(e) => updateIngredient(index, { amount: e.target.value })}
-                className="col-span-1 rounded-lg border border-border-subtle bg-background px-2 py-1.5 text-sm outline-none focus:border-accent"
+                className={`col-span-1 py-1.5 text-sm ${fieldClass}`}
               />
               <input
                 placeholder="Мярка"
                 value={row.unit}
                 onChange={(e) => updateIngredient(index, { unit: e.target.value })}
-                className="col-span-2 rounded-lg border border-border-subtle bg-background px-2 py-1.5 text-sm outline-none focus:border-accent"
+                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
               />
               <input
                 placeholder="Продукт"
                 value={row.item}
                 onChange={(e) => updateIngredient(index, { item: e.target.value })}
-                className="col-span-4 rounded-lg border border-border-subtle bg-background px-2 py-1.5 text-sm outline-none focus:border-accent"
+                className={`col-span-4 py-1.5 text-sm ${fieldClass}`}
               />
               <input
                 placeholder="Бележка"
                 value={row.note}
                 onChange={(e) => updateIngredient(index, { note: e.target.value })}
-                className="col-span-2 rounded-lg border border-border-subtle bg-background px-2 py-1.5 text-sm outline-none focus:border-accent"
+                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
               />
               <button
                 type="button"
                 onClick={() => setIngredients((rows) => rows.filter((_, i) => i !== index))}
-                className="col-span-1 text-sm text-destructive"
+                className={`col-span-1 ${iconButtonClass}`}
+                aria-label="Премахни продукт"
               >
-                ✕
+                <X size={14} />
               </button>
             </div>
           ))}
@@ -328,30 +383,34 @@ export function RecipeForm({
               { group_name: "", amount: "", unit: "", item: "", note: "" },
             ])
           }
-          className="mt-2 text-sm text-accent hover:underline"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border-subtle py-2.5 text-sm font-medium text-accent transition hover:border-accent hover:bg-accent-soft"
         >
-          + Добави продукт
+          <Plus size={15} />
+          Добави продукт
         </button>
       </section>
 
-      <section>
-        <h2 className="mb-3 font-heading text-lg font-semibold">Стъпки</h2>
+      <section className={sectionCardClass}>
+        <SectionHeading icon={ListOrdered}>Стъпки</SectionHeading>
         <div className="flex flex-col gap-3">
           {steps.map((step, index) => (
-            <div key={index} className="flex gap-2">
-              <span className="pt-2 text-sm text-muted-foreground">{index + 1}.</span>
+            <div key={index} className="flex items-start gap-3">
+              <span className="mt-1.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-strong">
+                {index + 1}
+              </span>
               <textarea
                 rows={2}
                 value={step.text}
                 onChange={(e) => updateStep(index, { text: e.target.value })}
-                className="flex-1 rounded-lg border border-border-subtle bg-background px-3 py-2 text-sm outline-none focus:border-accent"
+                className={`flex-1 py-2 text-sm ${fieldClass}`}
               />
               <button
                 type="button"
                 onClick={() => setSteps((rows) => rows.filter((_, i) => i !== index))}
-                className="text-sm text-destructive"
+                className={`mt-1 ${iconButtonClass}`}
+                aria-label="Премахни стъпка"
               >
-                ✕
+                <X size={14} />
               </button>
             </div>
           ))}
@@ -359,9 +418,10 @@ export function RecipeForm({
         <button
           type="button"
           onClick={() => setSteps((rows) => [...rows, { text: "", image_path: null }])}
-          className="mt-2 text-sm text-accent hover:underline"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border-subtle py-2.5 text-sm font-medium text-accent transition hover:border-accent hover:bg-accent-soft"
         >
-          + Добави стъпка
+          <Plus size={15} />
+          Добави стъпка
         </button>
       </section>
 
