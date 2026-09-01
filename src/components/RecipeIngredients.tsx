@@ -41,9 +41,9 @@ export function RecipeIngredients({
   }
 
   return (
-    <div className="rounded-2xl border border-border-subtle bg-surface p-5 print:border-none print:p-0">
-      <div className="mb-5 flex items-center justify-between">
-        <span className="font-heading text-lg font-semibold">Продукти</span>
+    <div className="print:mt-0">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-3 border-b border-border-subtle pb-3">
+        <h2 className="font-heading text-xl font-semibold">Продукти</h2>
         <div className="flex items-center gap-2 print:hidden">
           <button
             type="button"
@@ -68,26 +68,26 @@ export function RecipeIngredients({
       </div>
 
       {groups.map(([groupName, items]) => (
-        <div key={groupName} className="mb-5 last:mb-0">
+        <div key={groupName} className="mb-4 last:mb-0">
           {groupName && (
             <h3 className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               {groupName}
             </h3>
           )}
-          <ul className="space-y-2.5">
+          <ul className="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
             {items.map((ingredient) => {
               const isChecked = checked.has(ingredient.id);
               return (
                 <li key={ingredient.id}>
-                  <label className="flex cursor-pointer items-start gap-3 text-sm">
+                  <label className="flex cursor-pointer items-baseline gap-2 text-sm">
                     <input
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => toggle(ingredient.id)}
-                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-border-subtle text-accent accent-accent print:hidden"
+                      className="h-3.5 w-3.5 shrink-0 translate-y-0.5 rounded border-border-subtle text-accent accent-accent print:hidden"
                     />
                     <span className={isChecked ? "text-muted-foreground line-through" : ""}>
-                      <span className="font-medium text-accent-strong">
+                      <span className="font-semibold">
                         {ingredient.amount != null
                           ? `${formatAmount(ingredient.amount * multiplier)} ${ingredient.unit}`
                           : ingredient.unit}
