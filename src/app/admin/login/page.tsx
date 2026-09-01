@@ -1,3 +1,4 @@
+import { Lock } from "lucide-react";
 import { login } from "@/app/admin/actions";
 
 export default async function LoginPage({
@@ -9,38 +10,52 @@ export default async function LoginPage({
 
   return (
     <div className="mx-auto flex max-w-sm flex-col px-6 py-20">
-      <h1 className="mb-6 text-2xl font-semibold">Вход в администрацията</h1>
-      {error && (
-        <p className="mb-4 rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 dark:bg-red-950 dark:text-red-400">
-          {error}
+      <div className="rounded-2xl border border-border-subtle bg-surface p-8 shadow-lg sm:p-10">
+        <span className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-accent text-accent-foreground">
+          <Lock size={22} strokeWidth={2} />
+        </span>
+        <h1 className="text-center font-heading text-2xl font-semibold">
+          Вход в администрацията
+        </h1>
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          Влезте, за да управлявате рецептите
         </p>
-      )}
-      <form action={login} className="flex flex-col gap-4">
-        <label className="flex flex-col gap-1 text-sm">
-          Имейл
-          <input
-            type="email"
-            name="email"
-            required
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          Парола
-          <input
-            type="password"
-            name="password"
-            required
-            className="rounded-md border border-black/15 px-3 py-2 dark:border-white/20"
-          />
-        </label>
-        <button
-          type="submit"
-          className="mt-2 rounded-md bg-black px-4 py-2 text-sm font-medium text-white dark:bg-white dark:text-black"
-        >
-          Вход
-        </button>
-      </form>
+
+        {error && (
+          <p className="mt-5 rounded-lg border border-destructive-border bg-destructive-soft px-3 py-2 text-sm text-destructive-strong">
+            {error}
+          </p>
+        )}
+
+        <form action={login} className="mt-6 flex flex-col gap-4">
+          <label className="flex flex-col gap-1.5 text-sm font-medium">
+            Имейл
+            <input
+              type="email"
+              name="email"
+              required
+              autoComplete="email"
+              className="rounded-lg border-2 border-border-subtle bg-background px-3 py-2.5 font-normal outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm font-medium">
+            Парола
+            <input
+              type="password"
+              name="password"
+              required
+              autoComplete="current-password"
+              className="rounded-lg border-2 border-border-subtle bg-background px-3 py-2.5 font-normal outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft"
+            />
+          </label>
+          <button
+            type="submit"
+            className="mt-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
+          >
+            Вход
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

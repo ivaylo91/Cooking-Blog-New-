@@ -13,8 +13,8 @@ export function PublishToggle({ id, published }: { id: string; published: boolea
       onClick={() => startTransition(() => togglePublish(id, !published))}
       className={`rounded-full px-3 py-1 text-xs font-medium ${
         published
-          ? "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-400"
-          : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+          ? "bg-secondary-soft text-secondary"
+          : "bg-surface-muted text-muted-foreground"
       }`}
     >
       {published ? "Публикувана" : "Чернова"}
@@ -34,7 +34,7 @@ export function DeleteRecipeButton({ id, title }: { id: string; title: string })
           startTransition(() => deleteRecipe(id));
         }
       }}
-      className="text-xs text-red-600 hover:underline dark:text-red-400"
+      className="text-xs text-destructive hover:underline"
     >
       Изтрий
     </button>

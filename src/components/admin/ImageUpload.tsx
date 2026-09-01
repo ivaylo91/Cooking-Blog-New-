@@ -40,7 +40,7 @@ export function ImageUpload({
   return (
     <div>
       {previewUrl && (
-        <div className="relative mb-2 h-32 w-48 overflow-hidden rounded-md bg-zinc-100 dark:bg-zinc-900">
+        <div className="relative mb-2 h-32 w-48 overflow-hidden rounded-lg bg-surface-muted">
           <Image src={previewUrl} alt="" fill className="object-cover" />
         </div>
       )}
@@ -54,8 +54,8 @@ export function ImageUpload({
         }}
         className="text-sm"
       />
-      {uploading && <p className="mt-1 text-xs text-zinc-500">Качване...</p>}
-      {error && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{error}</p>}
+      {uploading && <p className="mt-1 text-xs text-muted-foreground">Качване...</p>}
+      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
     </div>
   );
 }

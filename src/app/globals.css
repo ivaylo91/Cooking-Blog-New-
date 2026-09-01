@@ -13,6 +13,10 @@
   --accent-soft: #f3e0cd;
   --secondary: #5b7553;
   --secondary-soft: #e3ead9;
+  --destructive: #dc2626;
+  --destructive-strong: #b91c1c;
+  --destructive-soft: #fef2f2;
+  --destructive-border: #fecaca;
 }
 
 @theme inline {
@@ -28,6 +32,10 @@
   --color-accent-soft: var(--accent-soft);
   --color-secondary: var(--secondary);
   --color-secondary-soft: var(--secondary-soft);
+  --color-destructive: var(--destructive);
+  --color-destructive-strong: var(--destructive-strong);
+  --color-destructive-soft: var(--destructive-soft);
+  --color-destructive-border: var(--destructive-border);
   --font-sans: var(--font-geist-sans);
   --font-heading: var(--font-playfair);
   --font-mono: var(--font-geist-mono);
@@ -47,6 +55,10 @@
     --accent-soft: rgba(224, 138, 79, 0.16);
     --secondary: #92ab88;
     --secondary-soft: rgba(146, 171, 136, 0.16);
+    --destructive: #f87171;
+    --destructive-strong: #fca5a5;
+    --destructive-soft: rgba(248, 113, 113, 0.12);
+    --destructive-border: rgba(248, 113, 113, 0.3);
   }
 }
 
@@ -63,6 +75,10 @@
   --accent-soft: rgba(224, 138, 79, 0.16);
   --secondary: #92ab88;
   --secondary-soft: rgba(146, 171, 136, 0.16);
+  --destructive: #f87171;
+  --destructive-strong: #fca5a5;
+  --destructive-soft: rgba(248, 113, 113, 0.12);
+  --destructive-border: rgba(248, 113, 113, 0.3);
 }
 
 body {
