@@ -5,10 +5,12 @@ import { RecipeCard } from "@/components/RecipeCard";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
 export default async function Home() {
-  const [recipes, categories] = await Promise.all([
+  const [recipes, categories, topLiked] = await Promise.all([
     getRecipes({ limit: 6 }),
     getCategories(),
+    getRecipes({ limit: 3, sortBy: "likes" }),
   ]);
+  const trending = topLiked.filter((r) => r.likes_count > 0);
 
   return (
     <div>
@@ -47,6 +49,17 @@ export default async function Home() {
             </Link>
           ))}
         </section>
+
+        {trending.length > 0 && (
+          <section className="mb-14">
+            <h2 className="mb-6 font-heading text-2xl font-semibold">Най-харесвани</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+              {trending.map((recipe) => (
+                <RecipeCard key={recipe.id} recipe={recipe} />
+              ))}
+            </div>
+          </section>
+        )}
 
         <section>
           <div className="mb-6 flex items-end justify-between">

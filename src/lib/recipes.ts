@@ -16,6 +16,7 @@ export async function getRecipes(options: {
   categorySlug?: string;
   search?: string;
   limit?: number;
+  sortBy?: "recent" | "likes";
 } = {}): Promise<RecipeListItem[]> {
   const supabase = await createClient();
 
@@ -23,7 +24,7 @@ export async function getRecipes(options: {
     .from("recipes")
     .select("*, category:categories(*)")
     .eq("published", true)
-    .order("created_at", { ascending: false });
+    .order(options.sortBy === "likes" ? "likes_count" : "created_at", { ascending: false });
 
   if (options.categorySlug) {
     const { data: category } = await supabase
@@ -89,6 +90,42 @@ export function getRecipeBySlug(slug: string): Promise<RecipeWithRelations | nul
 
 export function getRecipeById(id: string): Promise<RecipeWithRelations | null> {
   return getRecipeByColumn("id", id);
+}
+
+export async function getRelatedRecipes(
+  recipeId: string,
+  categoryId: string | null,
+  limit = 3
+): Promise<RecipeListItem[]> {
+  const supabase = await createClient();
+
+  const related: RecipeListItem[] = [];
+
+  if (categoryId) {
+    const { data } = await supabase
+      .from("recipes")
+      .select("*, category:categories(*)")
+      .eq("published", true)
+      .eq("category_id", categoryId)
+      .neq("id", recipeId)
+      .order("created_at", { ascending: false })
+      .limit(limit);
+    related.push(...((data ?? []) as unknown as RecipeListItem[]));
+  }
+
+  if (related.length < limit) {
+    const excludeIds = [recipeId, ...related.map((r) => r.id)];
+    const { data } = await supabase
+      .from("recipes")
+      .select("*, category:categories(*)")
+      .eq("published", true)
+      .not("id", "in", `(${excludeIds.join(",")})`)
+      .order("created_at", { ascending: false })
+      .limit(limit - related.length);
+    related.push(...((data ?? []) as unknown as RecipeListItem[]));
+  }
+
+  return related;
 }
 
 export async function getRecipeComments(recipeId: string): Promise<Comment[]> {

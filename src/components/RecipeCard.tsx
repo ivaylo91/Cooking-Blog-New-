@@ -1,6 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChefHat, Clock, Users } from "lucide-react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 import { CookingBackground } from "@/components/CookingBackground";
 import { getImageUrl } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
@@ -48,6 +50,12 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
             <Users size={13} /> {recipe.servings}
           </span>
           <span className="capitalize">{recipe.difficulty}</span>
+          {recipe.likes_count > 0 && (
+            <span className="ml-auto flex items-center gap-1 text-accent">
+              <FontAwesomeIcon icon={faHeart} />
+              {recipe.likes_count}
+            </span>
+          )}
         </div>
       </div>
     </Link>

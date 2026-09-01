@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ChefHat, Menu, Search, X } from "lucide-react";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
   { href: "/recepti", label: "Рецепти" },
@@ -42,16 +43,20 @@ export function Header() {
               className="w-44 rounded-full border border-border-subtle bg-surface py-1.5 pl-8 pr-3 text-sm outline-none transition focus:border-accent"
             />
           </form>
+          <ThemeToggle />
         </nav>
 
-        <button
-          type="button"
-          onClick={() => setMenuOpen((v) => !v)}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle sm:hidden"
-          aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
-        >
-          {menuOpen ? <X size={18} /> : <Menu size={18} />}
-        </button>
+        <div className="flex items-center gap-2 sm:hidden">
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle"
+            aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
+          >
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+        </div>
       </div>
 
       {menuOpen && (

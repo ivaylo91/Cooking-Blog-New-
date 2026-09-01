@@ -4,13 +4,15 @@ import { notFound } from "next/navigation";
 import { ChefHat, Clock, Users } from "lucide-react";
 import { Comments } from "@/components/Comments";
 import { CookingBackground } from "@/components/CookingBackground";
+import { CookMode } from "@/components/CookMode";
 import { JsonLd } from "@/components/JsonLd";
 import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
+import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { ShareButtons } from "@/components/ShareButtons";
 import { getImageUrl } from "@/lib/images";
-import { getRecipeBySlug, getRecipeComments } from "@/lib/recipes";
+import { getRecipeBySlug, getRecipeComments, getRelatedRecipes } from "@/lib/recipes";
 
 function isoDuration(minutes: number): string {
   return `PT${minutes}M`;
@@ -42,7 +44,10 @@ export default async function RecipePage({
     notFound();
   }
 
-  const comments = await getRecipeComments(recipe.id);
+  const [comments, relatedRecipes] = await Promise.all([
+    getRecipeComments(recipe.id),
+    getRelatedRecipes(recipe.id, recipe.category_id),
+  ]);
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -152,7 +157,12 @@ export default async function RecipePage({
           </aside>
 
           <section>
-            <h2 className="mb-5 font-heading text-xl font-semibold">Приготвяне</h2>
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <h2 className="font-heading text-xl font-semibold">Приготвяне</h2>
+              <div className="print:hidden">
+                <CookMode title={recipe.title} steps={recipe.steps} />
+              </div>
+            </div>
             <ol className="relative space-y-6 border-l border-border-subtle pl-8">
               {recipe.steps.map((step, index) => (
                 <li key={step.id} className="relative">
@@ -176,6 +186,17 @@ export default async function RecipePage({
                 {tag.name}
               </span>
             ))}
+          </div>
+        )}
+
+        {relatedRecipes.length > 0 && (
+          <div className="mt-12 border-t border-border-subtle pt-8 print:hidden">
+            <h2 className="mb-5 font-heading text-xl font-semibold">Още рецепти</h2>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+              {relatedRecipes.map((related) => (
+                <RecipeCard key={related.id} recipe={related} />
+              ))}
+            </div>
           </div>
         )}
 
