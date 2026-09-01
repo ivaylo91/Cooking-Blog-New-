@@ -1,12 +1,22 @@
-export function CookingBackground() {
+import { useId } from "react";
+
+export function CookingBackground({
+  variant = "fixed",
+}: {
+  /** "fixed" layers behind the whole page; "absolute" fills a `relative` parent. */
+  variant?: "fixed" | "absolute";
+}) {
+  const patternId = `cooking-pattern-${useId()}`;
+  const positionClass = variant === "fixed" ? "fixed inset-0 -z-10" : "absolute inset-0";
+
   return (
     <svg
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 -z-10 h-full w-full print:hidden"
+      className={`pointer-events-none ${positionClass} h-full w-full print:hidden`}
     >
       <defs>
         <pattern
-          id="cooking-pattern"
+          id={patternId}
           width="360"
           height="360"
           patternUnits="userSpaceOnUse"
@@ -65,7 +75,7 @@ export function CookingBackground() {
           </g>
         </pattern>
       </defs>
-      <rect width="100%" height="100%" fill="url(#cooking-pattern)" />
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} />
     </svg>
   );
 }

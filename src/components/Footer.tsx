@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { ChefHat } from "lucide-react";
+import { CookingBackground } from "@/components/CookingBackground";
 
 export function Footer() {
   return (
-    <footer className="border-t border-border-subtle bg-surface-muted">
-      <div className="mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 py-10 text-center">
+    <footer className="relative overflow-hidden border-t border-border-subtle bg-surface-muted">
+      <CookingBackground variant="absolute" />
+      <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-3 px-6 py-10 text-center">
         <span className="flex items-center gap-2 font-heading text-base font-semibold">
           <ChefHat size={18} className="text-accent" />
           Кулинарният блог на Иво

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { ChefHat, Clock, Users } from "lucide-react";
 import { Comments } from "@/components/Comments";
+import { CookingBackground } from "@/components/CookingBackground";
 import { JsonLd } from "@/components/JsonLd";
 import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
@@ -89,10 +90,11 @@ export default async function RecipePage({
       <JsonLd data={jsonLd} />
 
       <div className="relative h-[42vh] min-h-[280px] w-full overflow-hidden bg-surface-muted print:hidden">
+        <CookingBackground variant="absolute" />
         {imageUrl ? (
           <Image src={imageUrl} alt={recipe.title} fill className="object-cover" priority />
         ) : (
-          <div className="flex h-full items-center justify-center text-muted-foreground">
+          <div className="relative flex h-full items-center justify-center text-muted-foreground">
             <ChefHat size={48} strokeWidth={1.5} />
           </div>
         )}

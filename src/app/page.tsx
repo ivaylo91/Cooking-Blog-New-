@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CookingBackground } from "@/components/CookingBackground";
 import { RecipeCard } from "@/components/RecipeCard";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
@@ -12,7 +13,8 @@ export default async function Home() {
   return (
     <div>
       <section className="relative overflow-hidden bg-surface-muted">
-        <div className="mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center sm:py-28">
+        <CookingBackground variant="absolute" />
+        <div className="relative mx-auto flex max-w-5xl flex-col items-center px-6 py-20 text-center sm:py-28">
           <span className="mb-4 rounded-full bg-accent-soft px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-accent-strong">
             Домашна кухня
           </span>
