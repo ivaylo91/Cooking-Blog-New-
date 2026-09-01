@@ -24,9 +24,8 @@ export function Header() {
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
             <ChefHat size={18} strokeWidth={2.25} />
           </span>
-          <span className="truncate font-heading text-lg font-semibold tracking-tight">
-            <span className="md:hidden">Иво</span>
-            <span className="hidden md:inline">Кулинарният блог на Иво</span>
+          <span className="truncate font-heading text-base font-semibold tracking-tight md:text-lg">
+            Кулинарният блог на Иво
           </span>
         </Link>
 
@@ -55,17 +54,14 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
-          <button
-            type="button"
-            onClick={() => setMenuOpen((v) => !v)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle"
-            aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
-          >
-            {menuOpen ? <X size={18} /> : <Menu size={18} />}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setMenuOpen((v) => !v)}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle md:hidden"
+          aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
+        >
+          {menuOpen ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
 
       {menuOpen && (
@@ -94,6 +90,10 @@ export function Header() {
               className="w-full rounded-full border border-border-subtle bg-surface py-2 pl-8 pr-3 text-sm outline-none focus:border-accent"
             />
           </form>
+          <div className="mt-4 flex items-center justify-between border-t border-border-subtle pt-4">
+            <span className="text-sm font-medium">Тема</span>
+            <ThemeToggle />
+          </div>
         </div>
       )}
     </header>
