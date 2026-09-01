@@ -16,18 +16,27 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/85 backdrop-blur-md">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground">
+        <Link
+          href="/"
+          className="flex min-w-0 items-center gap-2"
+          onClick={() => setMenuOpen(false)}
+        >
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
             <ChefHat size={18} strokeWidth={2.25} />
           </span>
-          <span className="font-heading text-lg font-semibold tracking-tight">
-            Кулинарният блог на Иво
+          <span className="truncate font-heading text-lg font-semibold tracking-tight">
+            <span className="md:hidden">Иво</span>
+            <span className="hidden md:inline">Кулинарният блог на Иво</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium sm:flex">
+        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
           {navLinks.map((link) => (
-            <Link key={link.href} href={link.href} className="transition hover:text-accent">
+            <Link
+              key={link.href}
+              href={link.href}
+              className="whitespace-nowrap transition hover:text-accent"
+            >
               {link.label}
             </Link>
           ))}
@@ -46,7 +55,7 @@ export function Header() {
           <ThemeToggle />
         </nav>
 
-        <div className="flex items-center gap-2 sm:hidden">
+        <div className="flex items-center gap-2 md:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -60,7 +69,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <div className="border-t border-border-subtle bg-background px-6 py-4 sm:hidden">
+        <div className="border-t border-border-subtle bg-background px-6 py-4 md:hidden">
           <nav className="flex flex-col gap-3 text-sm font-medium">
             {navLinks.map((link) => (
               <Link
