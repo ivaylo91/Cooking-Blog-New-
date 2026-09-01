@@ -7,6 +7,7 @@ import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { JsonLd } from "@/components/JsonLd";
 import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
+import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { SaladIllustration } from "@/components/SaladIllustration";
@@ -99,6 +100,7 @@ export default async function RecipePage({
 
   return (
     <article className="print:mx-6">
+      <ReadingProgressBar />
       <JsonLd data={jsonLd} />
 
       <div className="mx-auto max-w-6xl px-6 py-10 md:py-16">
