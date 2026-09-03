@@ -30,6 +30,17 @@ export async function generateMetadata({
   return {
     title: recipe.title,
     description: recipe.description,
+    alternates: { canonical: `/recepti/${recipe.slug}` },
+    openGraph: {
+      type: "article",
+      title: recipe.title,
+      description: recipe.description,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: recipe.title,
+      description: recipe.description,
+    },
   };
 }
 
@@ -91,6 +102,31 @@ export default async function RecipePage({
     ],
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Начало", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Рецепти", item: `${siteUrl}/recepti` },
+      ...(recipe.category
+        ? [
+            {
+              "@type": "ListItem",
+              position: 3,
+              name: recipe.category.name,
+              item: `${siteUrl}/recepti?category=${recipe.category.slug}`,
+            },
+          ]
+        : []),
+      {
+        "@type": "ListItem",
+        position: recipe.category ? 4 : 3,
+        name: recipe.title,
+        item: recipeUrl,
+      },
+    ],
+  };
+
   const metaParts = [
     `${recipe.servings} порции`,
     recipe.prep_time_minutes > 0 ? `подготовка: ${recipe.prep_time_minutes} мин` : null,
@@ -102,6 +138,7 @@ export default async function RecipePage({
     <article className="print:mx-6">
       <ReadingProgressBar />
       <JsonLd data={jsonLd} />
+      <JsonLd data={breadcrumbJsonLd} />
 
       <div className="mx-auto max-w-6xl px-6 py-10 md:py-16">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-14 print:grid-cols-1 lg:gap-20">

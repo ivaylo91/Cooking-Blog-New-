@@ -9,15 +9,22 @@ export async function generateMetadata({
   searchParams: Promise<{ category?: string }>;
 }): Promise<Metadata> {
   const { category: categorySlug } = await searchParams;
-  if (!categorySlug) return { title: "Рецепти" };
+  if (!categorySlug) {
+    return { title: "Рецепти", alternates: { canonical: "/recepti" } };
+  }
 
   const categories = await getCategories();
   const category = categories.find((c) => c.slug === categorySlug);
-  if (!category) return { title: "Рецепти" };
+  if (!category) {
+    return { title: "Рецепти", alternates: { canonical: "/recepti" } };
+  }
 
+  const description = `Рецепти в категория ${category.name} — Кулинарният блог на Иво.`;
   return {
     title: category.name,
-    description: `Рецепти в категория ${category.name} — Кулинарният блог на Иво.`,
+    description,
+    alternates: { canonical: `/recepti?category=${category.slug}` },
+    openGraph: { title: category.name, description },
   };
 }
 

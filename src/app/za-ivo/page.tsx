@@ -3,6 +3,8 @@ import { ChefHat } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "За Иво",
+  description: "Здравейте! Тук споделям домашни рецепти, изпробвани в собствената ми кухня.",
+  alternates: { canonical: "/za-ivo" },
 };
 
 export default function ZaIvoPage() {

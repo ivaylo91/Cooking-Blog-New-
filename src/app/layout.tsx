@@ -4,6 +4,11 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { CookingBackground } from "@/components/CookingBackground";
+import { JsonLd } from "@/components/JsonLd";
+
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const siteName = "Кулинарният блог на Иво";
+const siteDescription = "Домашни рецепти за хобиисти и ентусиасти на готвенето.";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,14 +27,40 @@ const playfairDisplay = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Кулинарният блог на Иво",
-    template: "%s | Кулинарният блог на Иво",
+    default: siteName,
+    template: `%s | ${siteName}`,
   },
-  description: "Домашни рецепти за хобиисти и ентусиасти на готвенето.",
+  description: siteDescription,
   alternates: {
+    canonical: "/",
     types: { "application/rss+xml": "/rss.xml" },
+  },
+  openGraph: {
+    type: "website",
+    locale: "bg_BG",
+    siteName,
+    title: siteName,
+    description: siteDescription,
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteName,
+    description: siteDescription,
+  },
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  url: siteUrl,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: `${siteUrl}/tarsene?q={search_term_string}`,
+    "query-input": "required name=search_term_string",
   },
 };
 
@@ -49,6 +80,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
+        <JsonLd data={websiteJsonLd} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-accent-foreground"
