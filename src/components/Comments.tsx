@@ -1,4 +1,4 @@
-import { addComment } from "@/app/recepti/actions";
+import { CommentForm } from "@/components/CommentForm";
 import type { Comment } from "@/types/recipe";
 
 function formatDate(iso: string): string {
@@ -34,40 +34,7 @@ export function Comments({
         </ul>
       )}
 
-      <form action={addComment.bind(null, recipeId, slug)} className="flex flex-col gap-3">
-        {/* eslint-disable-next-line react-hooks/purity -- per-request timestamp is required for the bot time-trap; a few ms of skew across re-invocations doesn't affect correctness */}
-        <input type="hidden" name="form_rendered_at" value={Date.now()} />
-        <input
-          type="text"
-          name="website"
-          tabIndex={-1}
-          autoComplete="off"
-          aria-hidden="true"
-          className="absolute -left-[9999px] h-0 w-0 opacity-0"
-        />
-        <input
-          type="text"
-          name="author_name"
-          required
-          maxLength={60}
-          placeholder="Вашето име"
-          className="rounded-md border border-border-subtle bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
-        />
-        <textarea
-          name="text"
-          required
-          maxLength={1000}
-          rows={3}
-          placeholder="Напишете коментар..."
-          className="rounded-md border border-border-subtle bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
-        />
-        <button
-          type="submit"
-          className="self-start rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
-        >
-          Публикувай коментар
-        </button>
-      </form>
+      <CommentForm recipeId={recipeId} slug={slug} />
     </section>
   );
 }
