@@ -16,7 +16,7 @@ export async function login(formData: FormData) {
     redirect(`/admin/login?error=${encodeURIComponent(error.message)}`);
   }
 
-  redirect("/admin");
+  redirect("/admin?welcome=1");
 }
 
 export async function logout() {

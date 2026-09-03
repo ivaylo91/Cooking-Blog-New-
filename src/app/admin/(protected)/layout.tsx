@@ -1,10 +1,15 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { ChefHat, Home, LogOut, MessageSquare } from "lucide-react";
 import { logout } from "@/app/admin/actions";
+import { WelcomeToast } from "@/components/admin/WelcomeToast";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="mx-auto max-w-5xl px-6 py-8">
+      <Suspense fallback={null}>
+        <WelcomeToast />
+      </Suspense>
       <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
         <Link href="/admin" className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-foreground">

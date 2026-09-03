@@ -1,5 +1,5 @@
 import { Lock } from "lucide-react";
-import { login } from "@/app/admin/actions";
+import { LoginForm } from "@/components/admin/LoginForm";
 
 export default async function LoginPage({
   searchParams,
@@ -27,34 +27,7 @@ export default async function LoginPage({
           </p>
         )}
 
-        <form action={login} className="mt-6 flex flex-col gap-4">
-          <label className="flex flex-col gap-1.5 text-sm font-medium">
-            Имейл
-            <input
-              type="email"
-              name="email"
-              required
-              autoComplete="email"
-              className="rounded-lg border-2 border-border-subtle bg-background px-3 py-2.5 font-normal outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft"
-            />
-          </label>
-          <label className="flex flex-col gap-1.5 text-sm font-medium">
-            Парола
-            <input
-              type="password"
-              name="password"
-              required
-              autoComplete="current-password"
-              className="rounded-lg border-2 border-border-subtle bg-background px-3 py-2.5 font-normal outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft"
-            />
-          </label>
-          <button
-            type="submit"
-            className="mt-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
-          >
-            Вход
-          </button>
-        </form>
+        <LoginForm />
       </div>
     </div>
   );
