@@ -41,7 +41,7 @@ export default async function AdminCommentsPage() {
                   </p>
                 </div>
                 {comment.recipe && (
-                  <form action={deleteComment.bind(null, comment.id, comment.recipe.slug)}>
+                  <form action={deleteComment.bind(null, comment.id)}>
                     <button type="submit" className="text-xs text-destructive hover:underline">
                       Изтрий
                     </button>

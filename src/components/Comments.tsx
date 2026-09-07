@@ -7,11 +7,9 @@ function formatDate(iso: string): string {
 
 export function Comments({
   recipeId,
-  slug,
   comments,
 }: {
   recipeId: string;
-  slug: string;
   comments: Comment[];
 }) {
   return (
@@ -34,7 +32,7 @@ export function Comments({
         </ul>
       )}
 
-      <CommentForm recipeId={recipeId} slug={slug} />
+      <CommentForm recipeId={recipeId} />
     </section>
   );
 }

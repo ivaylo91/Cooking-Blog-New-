@@ -1,9 +1,15 @@
 import { ImageResponse } from "next/og";
 import { getImageUrl } from "@/lib/images";
-import { getRecipeBySlug } from "@/lib/recipes";
+import { getRecipeBySlug, getRecipes } from "@/lib/recipes";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
+
+// Without this every social-share preview regenerates the PNG on demand.
+export async function generateStaticParams() {
+  const recipes = await getRecipes();
+  return recipes.map((recipe) => ({ slug: recipe.slug }));
+}
 
 export default async function Image({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

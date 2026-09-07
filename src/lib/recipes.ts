@@ -1,3 +1,5 @@
+import { cacheLife, cacheTag } from "next/cache";
+import { publicClient } from "@/lib/supabase/public";
 import { createClient } from "@/lib/supabase/server";
 import type { Category, Comment, Ingredient, Recipe, RecipeWithRelations, Step, Tag } from "@/types/recipe";
 
@@ -5,9 +7,17 @@ export interface RecipeListItem extends Recipe {
   category: Category | null;
 }
 
+/** Cache tags, invalidated from the admin server actions after a write. */
+export const RECIPES_TAG = "recipes";
+export const CATEGORIES_TAG = "categories";
+export const COMMENTS_TAG = "comments";
+
 export async function getCategories(): Promise<Category[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase.from("categories").select("*").order("name");
+  "use cache";
+  cacheLife("days");
+  cacheTag(CATEGORIES_TAG);
+
+  const { data, error } = await publicClient.from("categories").select("*").order("name");
   if (error) throw error;
   return data;
 }
@@ -18,16 +28,18 @@ export async function getRecipes(options: {
   limit?: number;
   sortBy?: "recent" | "likes";
 } = {}): Promise<RecipeListItem[]> {
-  const supabase = await createClient();
+  "use cache";
+  cacheLife("hours");
+  cacheTag(RECIPES_TAG);
 
-  let query = supabase
+  let query = publicClient
     .from("recipes")
     .select("*, category:categories(*)")
     .eq("published", true)
     .order(options.sortBy === "likes" ? "likes_count" : "created_at", { ascending: false });
 
   if (options.categorySlug) {
-    const { data: category } = await supabase
+    const { data: category } = await publicClient
       .from("categories")
       .select("id")
       .eq("slug", options.categorySlug)
@@ -52,26 +64,56 @@ export async function getRecipes(options: {
   return data as unknown as RecipeListItem[];
 }
 
-async function getRecipeByColumn(
-  column: "slug" | "id",
-  value: string
-): Promise<RecipeWithRelations | null> {
-  const supabase = await createClient();
+/**
+ * Published recipe for the public site, read through the anon key so the page
+ * can be prerendered. Unpublished recipes resolve to `null` here by design —
+ * the admin reads those through {@link getRecipeById}.
+ */
+export async function getRecipeBySlug(slug: string): Promise<RecipeWithRelations | null> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(RECIPES_TAG, `recipe:${slug}`);
 
-  const { data: recipe, error } = await supabase
+  const { data: recipe, error } = await publicClient
     .from("recipes")
     .select("*, category:categories(*)")
-    .eq(column, value)
+    .eq("slug", slug)
+    .eq("published", true)
     .single();
 
   if (error || !recipe) return null;
 
   const [{ data: ingredients }, { data: steps }, { data: recipeTags }] = await Promise.all([
-    supabase
-      .from("ingredients")
-      .select("*")
-      .eq("recipe_id", recipe.id)
-      .order("position"),
+    publicClient.from("ingredients").select("*").eq("recipe_id", recipe.id).order("position"),
+    publicClient.from("steps").select("*").eq("recipe_id", recipe.id).order("position"),
+    publicClient.from("recipe_tags").select("tag:tags(*)").eq("recipe_id", recipe.id),
+  ]);
+
+  return {
+    ...(recipe as unknown as Recipe & { category: Category | null }),
+    ingredients: (ingredients ?? []) as Ingredient[],
+    steps: (steps ?? []) as Step[],
+    tags: ((recipeTags ?? []) as unknown as Array<{ tag: Tag }>).map((rt) => rt.tag),
+  };
+}
+
+/**
+ * Admin-only read. Uses the session-aware client so unpublished drafts are
+ * visible, and stays uncached so the edit form never shows stale values.
+ */
+export async function getRecipeById(id: string): Promise<RecipeWithRelations | null> {
+  const supabase = await createClient();
+
+  const { data: recipe, error } = await supabase
+    .from("recipes")
+    .select("*, category:categories(*)")
+    .eq("id", id)
+    .single();
+
+  if (error || !recipe) return null;
+
+  const [{ data: ingredients }, { data: steps }, { data: recipeTags }] = await Promise.all([
+    supabase.from("ingredients").select("*").eq("recipe_id", recipe.id).order("position"),
     supabase.from("steps").select("*").eq("recipe_id", recipe.id).order("position"),
     supabase.from("recipe_tags").select("tag:tags(*)").eq("recipe_id", recipe.id),
   ]);
@@ -84,25 +126,19 @@ async function getRecipeByColumn(
   };
 }
 
-export function getRecipeBySlug(slug: string): Promise<RecipeWithRelations | null> {
-  return getRecipeByColumn("slug", slug);
-}
-
-export function getRecipeById(id: string): Promise<RecipeWithRelations | null> {
-  return getRecipeByColumn("id", id);
-}
-
 export async function getRelatedRecipes(
   recipeId: string,
   categoryId: string | null,
   limit = 3
 ): Promise<RecipeListItem[]> {
-  const supabase = await createClient();
+  "use cache";
+  cacheLife("hours");
+  cacheTag(RECIPES_TAG);
 
   const related: RecipeListItem[] = [];
 
   if (categoryId) {
-    const { data } = await supabase
+    const { data } = await publicClient
       .from("recipes")
       .select("*, category:categories(*)")
       .eq("published", true)
@@ -115,7 +151,7 @@ export async function getRelatedRecipes(
 
   if (related.length < limit) {
     const excludeIds = [recipeId, ...related.map((r) => r.id)];
-    const { data } = await supabase
+    const { data } = await publicClient
       .from("recipes")
       .select("*, category:categories(*)")
       .eq("published", true)
@@ -129,8 +165,13 @@ export async function getRelatedRecipes(
 }
 
 export async function getRecipeComments(recipeId: string): Promise<Comment[]> {
-  const supabase = await createClient();
-  const { data, error } = await supabase
+  // Safe to cache for hours because `addComment` expires this recipe's tag on
+  // every successful post, so a new comment shows up immediately.
+  "use cache";
+  cacheLife("hours");
+  cacheTag(COMMENTS_TAG, `comments:${recipeId}`);
+
+  const { data, error } = await publicClient
     .from("comments")
     .select("*")
     .eq("recipe_id", recipeId)

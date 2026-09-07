@@ -13,10 +13,17 @@ import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
-import { getRecipeBySlug, getRecipeComments, getRelatedRecipes } from "@/lib/recipes";
+import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
 function isoDuration(minutes: number): string {
   return `PT${minutes}M`;
+}
+
+// Prerender every published recipe at build time so visits are served from the
+// CDN instead of round-tripping to Supabase. New slugs still render on demand.
+export async function generateStaticParams() {
+  const recipes = await getRecipes();
+  return recipes.map((recipe) => ({ slug: recipe.slug }));
 }
 
 export async function generateMetadata({
@@ -52,7 +59,7 @@ export default async function RecipePage({
   const { slug } = await params;
   const recipe = await getRecipeBySlug(slug);
 
-  if (!recipe || !recipe.published) {
+  if (!recipe) {
     notFound();
   }
 
@@ -239,7 +246,7 @@ export default async function RecipePage({
         )}
 
         <div className="print:hidden">
-          <Comments recipeId={recipe.id} slug={recipe.slug} comments={comments} />
+          <Comments recipeId={recipe.id} comments={comments} />
         </div>
       </div>
     </article>

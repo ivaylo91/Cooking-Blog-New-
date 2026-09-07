@@ -5,10 +5,10 @@ import { addComment, type CommentActionState } from "@/app/recepti/actions";
 
 const initialState: CommentActionState = { status: "idle" };
 
-export function CommentForm({ recipeId, slug }: { recipeId: string; slug: string }) {
+export function CommentForm({ recipeId }: { recipeId: string }) {
   const [renderedAt] = useState(() => Date.now());
   const [state, formAction, isPending] = useActionState(
-    addComment.bind(null, recipeId, slug),
+    addComment.bind(null, recipeId),
     initialState
   );
   const formRef = useRef<HTMLFormElement>(null);

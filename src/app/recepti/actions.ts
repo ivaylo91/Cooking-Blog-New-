@@ -2,7 +2,7 @@
 
 import { createHash } from "crypto";
 import { headers } from "next/headers";
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 const IP_HASH_SALT = "kbi-comment-salt-v1";
@@ -22,7 +22,6 @@ async function getIpHash(): Promise<string> {
 
 export async function addComment(
   recipeId: string,
-  slug: string,
   _prevState: CommentActionState,
   formData: FormData
 ): Promise<CommentActionState> {
@@ -56,6 +55,8 @@ export async function addComment(
 
   if (error) return { status: "error" };
 
-  revalidatePath(`/recepti/${slug}`);
+  // Expire (not just refresh) so the commenter sees their own comment on the
+  // next request instead of a stale cached list.
+  updateTag(`comments:${recipeId}`);
   return { status: "success" };
 }

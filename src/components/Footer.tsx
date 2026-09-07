@@ -1,6 +1,15 @@
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 import { ChefHat, Rss } from "lucide-react";
 import { CookingBackground } from "@/components/CookingBackground";
+
+// Cached so the reading of the clock doesn't block the whole footer — and the
+// rest of the page — from being prerendered into the static shell.
+async function CopyrightYear() {
+  "use cache";
+  cacheLife("days");
+  return new Date().getFullYear();
+}
 
 export function Footer() {
   return (
@@ -28,7 +37,7 @@ export function Footer() {
           </a>
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Кулинарният блог на Иво
+          © <CopyrightYear /> Кулинарният блог на Иво
         </p>
       </div>
     </footer>

@@ -1,8 +1,9 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { COMMENTS_TAG, RECIPES_TAG } from "@/lib/recipes";
 import type { RecipeFormInput } from "@/types/recipe";
 
 export async function login(formData: FormData) {
@@ -120,8 +121,7 @@ export async function createRecipe(input: RecipeFormInput) {
 
   await replaceIngredientsAndSteps(recipe.id, input);
 
-  revalidatePath("/");
-  revalidatePath("/recepti");
+  updateTag(RECIPES_TAG);
   redirect("/admin");
 }
 
@@ -149,9 +149,7 @@ export async function updateRecipe(id: string, input: RecipeFormInput) {
 
   await replaceIngredientsAndSteps(id, input);
 
-  revalidatePath("/");
-  revalidatePath("/recepti");
-  revalidatePath(`/recepti/${input.slug}`);
+  updateTag(RECIPES_TAG);
   redirect("/admin");
 }
 
@@ -159,24 +157,19 @@ export async function deleteRecipe(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("recipes").delete().eq("id", id);
   if (error) throw error;
-  revalidatePath("/admin");
-  revalidatePath("/");
-  revalidatePath("/recepti");
+  updateTag(RECIPES_TAG);
 }
 
 export async function togglePublish(id: string, published: boolean) {
   const supabase = await createClient();
   const { error } = await supabase.from("recipes").update({ published }).eq("id", id);
   if (error) throw error;
-  revalidatePath("/admin");
-  revalidatePath("/");
-  revalidatePath("/recepti");
+  updateTag(RECIPES_TAG);
 }
 
-export async function deleteComment(id: string, slug: string) {
+export async function deleteComment(id: string) {
   const supabase = await createClient();
   const { error } = await supabase.from("comments").delete().eq("id", id);
   if (error) throw error;
-  revalidatePath("/admin/comments");
-  revalidatePath(`/recepti/${slug}`);
+  updateTag(COMMENTS_TAG);
 }
