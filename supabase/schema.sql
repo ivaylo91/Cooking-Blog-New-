@@ -47,6 +47,7 @@ create table if not exists recipes (
 );
 
 create index if not exists recipes_search_idx on recipes using gin (search_vector);
+create index if not exists recipes_author_id_idx on recipes (author_id);
 create index if not exists recipes_category_idx on recipes (category_id);
 create index if not exists recipes_published_idx on recipes (published);
 
@@ -88,11 +89,16 @@ create table if not exists recipe_tags (
   primary key (recipe_id, tag_id)
 );
 
+-- The primary key already covers recipe_id; tag_id needs its own index.
+create index if not exists recipe_tags_tag_id_idx on recipe_tags (tag_id);
+
 -- ---------------------------------------------------------------------------
 -- updated_at trigger
 -- ---------------------------------------------------------------------------
 create or replace function set_updated_at()
-returns trigger as $$
+returns trigger
+set search_path to 'public'
+as $$
 begin
   new.updated_at = now();
   return new;
@@ -117,53 +123,88 @@ alter table ingredients enable row level security;
 alter table steps enable row level security;
 alter table recipe_tags enable row level security;
 
+-- Write access is split per command rather than a single "for all" policy: a
+-- "for all" policy also applies to SELECT, so every read evaluated two
+-- permissive policies. auth.role() is wrapped in a subquery so it is evaluated
+-- once per statement instead of once per row.
+
 create policy "categories are publicly readable" on categories
   for select using (true);
-create policy "authenticated manage categories" on categories
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated insert categories" on categories
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update categories" on categories
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete categories" on categories
+  for delete using ((select auth.role()) = 'authenticated');
 
 create policy "tags are publicly readable" on tags
   for select using (true);
-create policy "authenticated manage tags" on tags
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated insert tags" on tags
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update tags" on tags
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete tags" on tags
+  for delete using ((select auth.role()) = 'authenticated');
 
 create policy "published recipes are publicly readable" on recipes
-  for select using (published = true or auth.role() = 'authenticated');
-create policy "authenticated manage recipes" on recipes
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+  for select using (published = true or (select auth.role()) = 'authenticated');
+create policy "authenticated insert recipes" on recipes
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update recipes" on recipes
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete recipes" on recipes
+  for delete using ((select auth.role()) = 'authenticated');
 
 create policy "ingredients of visible recipes are readable" on ingredients
   for select using (
     exists (
       select 1 from recipes r
       where r.id = ingredients.recipe_id
-        and (r.published = true or auth.role() = 'authenticated')
+        and (r.published = true or (select auth.role()) = 'authenticated')
     )
   );
-create policy "authenticated manage ingredients" on ingredients
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated insert ingredients" on ingredients
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update ingredients" on ingredients
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete ingredients" on ingredients
+  for delete using ((select auth.role()) = 'authenticated');
 
 create policy "steps of visible recipes are readable" on steps
   for select using (
     exists (
       select 1 from recipes r
       where r.id = steps.recipe_id
-        and (r.published = true or auth.role() = 'authenticated')
+        and (r.published = true or (select auth.role()) = 'authenticated')
     )
   );
-create policy "authenticated manage steps" on steps
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated insert steps" on steps
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update steps" on steps
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete steps" on steps
+  for delete using ((select auth.role()) = 'authenticated');
 
 create policy "recipe_tags of visible recipes are readable" on recipe_tags
   for select using (
     exists (
       select 1 from recipes r
       where r.id = recipe_tags.recipe_id
-        and (r.published = true or auth.role() = 'authenticated')
+        and (r.published = true or (select auth.role()) = 'authenticated')
     )
   );
-create policy "authenticated manage recipe_tags" on recipe_tags
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated insert recipe_tags" on recipe_tags
+  for insert with check ((select auth.role()) = 'authenticated');
+create policy "authenticated update recipe_tags" on recipe_tags
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete recipe_tags" on recipe_tags
+  for delete using ((select auth.role()) = 'authenticated');
 
 -- ---------------------------------------------------------------------------
 -- Storage bucket for recipe photos.
@@ -205,7 +246,7 @@ create policy "comments on visible recipes are readable" on comments
     exists (
       select 1 from recipes r
       where r.id = comments.recipe_id
-        and (r.published = true or auth.role() = 'authenticated')
+        and (r.published = true or (select auth.role()) = 'authenticated')
     )
   );
 
@@ -214,8 +255,11 @@ create policy "anyone can comment on published recipes" on comments
     exists (select 1 from recipes r where r.id = comments.recipe_id and r.published = true)
   );
 
-create policy "authenticated manage comments" on comments
-  for all using (auth.role() = 'authenticated') with check (auth.role() = 'authenticated');
+create policy "authenticated update comments" on comments
+  for update using ((select auth.role()) = 'authenticated')
+  with check ((select auth.role()) = 'authenticated');
+create policy "authenticated delete comments" on comments
+  for delete using ((select auth.role()) = 'authenticated');
 
 -- ---------------------------------------------------------------------------
 -- Likes — anonymous, one increment per browser (enforced client-side via
