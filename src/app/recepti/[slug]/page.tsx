@@ -151,7 +151,16 @@ export default async function RecipePage({
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-14 print:grid-cols-1 lg:gap-20">
           <div className="relative order-first aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-muted md:sticky md:top-24 md:order-last md:self-start print:hidden">
             {imageUrl ? (
-              <Image src={imageUrl} alt={recipe.title} fill className="object-cover" priority />
+              <Image
+                src={imageUrl}
+                alt={recipe.title}
+                fill
+                // Without this, `fill` assumes 100vw and fetches a 1920px-wide
+                // image for what is a half-width column on desktop.
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="object-cover"
+                priority
+              />
             ) : getPlaceholderVariant(recipe.id) === "salad" ? (
               <SaladIllustration />
             ) : (
@@ -210,7 +219,13 @@ export default async function RecipePage({
                       <p className="text-sm leading-relaxed">{step.text}</p>
                       {stepImageUrl && (
                         <div className="relative mt-3 aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-surface-muted print:hidden">
-                          <Image src={stepImageUrl} alt="" fill className="object-cover" />
+                          <Image
+                            src={stepImageUrl}
+                            alt=""
+                            fill
+                            sizes="(min-width: 400px) 384px, 100vw"
+                            className="object-cover"
+                          />
                         </div>
                       )}
                     </li>

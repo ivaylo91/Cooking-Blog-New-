@@ -54,8 +54,8 @@ export default async function Home() {
           <section className="mb-14">
             <h2 className="mb-6 font-heading text-2xl font-semibold">Най-харесвани</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-              {trending.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+              {trending.map((recipe, index) => (
+                <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />
               ))}
             </div>
           </section>
@@ -75,8 +75,12 @@ export default async function Home() {
             <p className="text-muted-foreground">Все още няма публикувани рецепти.</p>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-              {recipes.map((recipe) => (
-                <RecipeCard key={recipe.id} recipe={recipe} />
+              {recipes.map((recipe, index) => (
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  priority={trending.length === 0 && index < 3}
+                />
               ))}
             </div>
           )}

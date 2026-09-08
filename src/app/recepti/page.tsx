@@ -47,8 +47,8 @@ export default async function ReceptiPage({
         <p className="text-muted-foreground">Няма намерени рецепти в тази категория.</p>
       ) : (
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
-          {recipes.map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} />
+          {recipes.map((recipe, index) => (
+            <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />
           ))}
         </div>
       )}

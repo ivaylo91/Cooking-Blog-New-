@@ -8,7 +8,15 @@ import { SaladIllustration } from "@/components/SaladIllustration";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
-export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
+export function RecipeCard({
+  recipe,
+  // Set on the cards above the fold. Those carry the page's LCP, and lazy
+  // loading delays the request until layout, which pushes LCP out.
+  priority = false,
+}: {
+  recipe: RecipeListItem;
+  priority?: boolean;
+}) {
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const Placeholder =
@@ -27,6 +35,7 @@ export function RecipeCard({ recipe }: { recipe: RecipeListItem }) {
             fill
             sizes="(min-width: 768px) 33vw, 100vw"
             className="object-cover transition duration-500 group-hover:scale-105"
+            priority={priority}
           />
         ) : (
           <Placeholder className="transition duration-500 group-hover:scale-105" />
