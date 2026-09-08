@@ -173,3 +173,11 @@ export async function deleteComment(id: string) {
   if (error) throw error;
   updateTag(COMMENTS_TAG);
 }
+
+// The subscribers page reads through the session client and is never cached,
+// so the next render already reflects the delete.
+export async function deleteSubscriber(id: string) {
+  const supabase = await createClient();
+  const { error } = await supabase.from("subscribers").delete().eq("id", id);
+  if (error) throw error;
+}

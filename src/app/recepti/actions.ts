@@ -4,6 +4,7 @@ import { createHash } from "crypto";
 import { headers } from "next/headers";
 import { updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { RECIPES_TAG } from "@/lib/recipes";
 
 const IP_HASH_SALT = "kbi-comment-salt-v1";
 const MIN_SUBMIT_SECONDS = 2;
@@ -58,5 +59,71 @@ export async function addComment(
   // Expire (not just refresh) so the commenter sees their own comment on the
   // next request instead of a stale cached list.
   updateTag(`comments:${recipeId}`);
+  return { status: "success" };
+}
+
+export interface RatingActionState {
+  status: "idle" | "success" | "error";
+  value: number | null;
+}
+
+/**
+ * One rating per IP per recipe. The unique constraint on (recipe_id, ip_hash)
+ * turns a repeat vote into an update rather than a second vote, and a trigger
+ * keeps recipes.rating_sum / rating_count exact.
+ */
+export async function rateRecipe(
+  recipeId: string,
+  slug: string,
+  _prevState: RatingActionState,
+  formData: FormData
+): Promise<RatingActionState> {
+  const value = Number(formData.get("value"));
+  if (!Number.isInteger(value) || value < 1 || value > 5) {
+    return { status: "error", value: null };
+  }
+
+  const supabase = await createClient();
+  const ipHash = await getIpHash();
+
+  const { error } = await supabase
+    .from("ratings")
+    .upsert(
+      { recipe_id: recipeId, value, ip_hash: ipHash, updated_at: new Date().toISOString() },
+      { onConflict: "recipe_id,ip_hash" }
+    );
+
+  if (error) return { status: "error", value: null };
+
+  updateTag(`recipe:${slug}`);
+  updateTag(RECIPES_TAG);
+  return { status: "success", value };
+}
+
+export interface SubscribeActionState {
+  status: "idle" | "success" | "duplicate" | "invalid" | "error";
+}
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export async function subscribe(
+  _prevState: SubscribeActionState,
+  formData: FormData
+): Promise<SubscribeActionState> {
+  // Same honeypot the comment form uses.
+  if (String(formData.get("website") ?? "").trim()) return { status: "success" };
+
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
+  if (!EMAIL_PATTERN.test(email) || email.length > 254) return { status: "invalid" };
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("subscribers")
+    .insert({ email, ip_hash: await getIpHash() });
+
+  // 23505 = unique violation, i.e. already subscribed.
+  if (error?.code === "23505") return { status: "duplicate" };
+  if (error) return { status: "error" };
+
   return { status: "success" };
 }

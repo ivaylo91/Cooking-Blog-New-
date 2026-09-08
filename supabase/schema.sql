@@ -285,6 +285,114 @@ $$;
 grant execute on function increment_recipe_likes(uuid) to anon, authenticated;
 
 -- ---------------------------------------------------------------------------
+-- Total cook time, generated so it can be filtered and indexed directly.
+-- ---------------------------------------------------------------------------
+alter table recipes
+  add column if not exists total_time_minutes int
+  generated always as (coalesce(prep_time_minutes, 0) + coalesce(cook_time_minutes, 0)) stored;
+
+create index if not exists recipes_total_time_idx on recipes (total_time_minutes);
+create index if not exists recipes_difficulty_idx on recipes (difficulty);
+
+-- ---------------------------------------------------------------------------
+-- Ratings. The counters on recipes are denormalised so list pages and the
+-- Recipe JSON-LD can read an average without a join; the trigger keeps them
+-- exact rather than trusting callers to update them.
+-- ---------------------------------------------------------------------------
+alter table recipes
+  add column if not exists rating_sum int not null default 0,
+  add column if not exists rating_count int not null default 0;
+
+create table if not exists ratings (
+  id uuid primary key default gen_random_uuid(),
+  recipe_id uuid not null references recipes (id) on delete cascade,
+  value smallint not null check (value between 1 and 5),
+  ip_hash text not null,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  -- One vote per browser-ish identity: a repeat vote updates instead of adding.
+  unique (recipe_id, ip_hash)
+);
+
+create index if not exists ratings_recipe_idx on ratings (recipe_id);
+
+create or replace function sync_recipe_rating()
+returns trigger
+language plpgsql
+security definer
+set search_path to 'public'
+as $$
+declare
+  target uuid := coalesce(new.recipe_id, old.recipe_id);
+begin
+  update recipes r
+  set rating_sum = coalesce(agg.s, 0),
+      rating_count = coalesce(agg.c, 0)
+  from (
+    select sum(value)::int as s, count(*)::int as c
+    from ratings where recipe_id = target
+  ) agg
+  where r.id = target;
+  return null;
+end;
+$$;
+
+-- Invoked by the trigger, never through PostgREST.
+revoke execute on function sync_recipe_rating() from anon, authenticated, public;
+
+drop trigger if exists ratings_sync on ratings;
+create trigger ratings_sync
+  after insert or update or delete on ratings
+  for each row execute function sync_recipe_rating();
+
+alter table ratings enable row level security;
+
+create policy "ratings of visible recipes are readable" on ratings
+  for select using (
+    exists (
+      select 1 from recipes r
+      where r.id = ratings.recipe_id
+        and (r.published = true or (select auth.role()) = 'authenticated')
+    )
+  );
+create policy "anyone can rate a published recipe" on ratings
+  for insert with check (
+    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
+  );
+create policy "anyone can change their own rating" on ratings
+  for update using (
+    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
+  ) with check (
+    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
+  );
+create policy "authenticated delete ratings" on ratings
+  for delete using ((select auth.role()) = 'authenticated');
+
+-- ---------------------------------------------------------------------------
+-- Newsletter subscribers. Anyone may sign up, but only the admin may read the
+-- list -- the insert policy deliberately grants no select.
+-- ---------------------------------------------------------------------------
+create table if not exists subscribers (
+  id uuid primary key default gen_random_uuid(),
+  email text not null,
+  ip_hash text,
+  created_at timestamptz not null default now(),
+  constraint subscribers_email_format check (email ~* '^[^@\s]+@[^@\s]+\.[^@\s]+$'),
+  constraint subscribers_email_length check (char_length(email) between 5 and 254)
+);
+
+create unique index if not exists subscribers_email_key on subscribers (lower(email));
+
+alter table subscribers enable row level security;
+
+create policy "anyone can subscribe" on subscribers
+  for insert with check (true);
+create policy "only admins read subscribers" on subscribers
+  for select using ((select auth.role()) = 'authenticated');
+create policy "authenticated delete subscribers" on subscribers
+  for delete using ((select auth.role()) = 'authenticated');
+
+-- ---------------------------------------------------------------------------
 -- Starter categories
 -- ---------------------------------------------------------------------------
 insert into categories (slug, name) values

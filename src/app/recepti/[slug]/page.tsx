@@ -9,9 +9,11 @@ import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { RecipeCard } from "@/components/RecipeCard";
+import { RatingStars } from "@/components/RatingStars";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
@@ -69,6 +71,8 @@ export default async function RecipePage({
   ]);
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
+  const ratingAverage =
+    recipe.rating_count > 0 ? recipe.rating_sum / recipe.rating_count : 0;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const recipeUrl = `${siteUrl}/recepti/${recipe.slug}`;
 
@@ -95,6 +99,19 @@ export default async function RecipePage({
       text: s.text,
       image: getImageUrl(s.image_path) ?? undefined,
     })),
+    // Omitted entirely when nobody has rated yet: Google rejects an
+    // aggregateRating with a zero count, and inventing one would be a
+    // structured-data policy violation.
+    aggregateRating:
+      recipe.rating_count > 0
+        ? {
+            "@type": "AggregateRating",
+            ratingValue: Number(ratingAverage.toFixed(1)),
+            ratingCount: recipe.rating_count,
+            bestRating: 5,
+            worstRating: 1,
+          }
+        : undefined,
     interactionStatistic: [
       {
         "@type": "InteractionCounter",
@@ -189,7 +206,16 @@ export default async function RecipePage({
 
             <p className="mt-4 text-base text-muted-foreground">{recipe.description}</p>
 
-            <div className="mt-5 flex flex-wrap items-center justify-between gap-4 print:hidden">
+            <div className="mt-5 print:hidden">
+              <RatingStars
+                recipeId={recipe.id}
+                slug={recipe.slug}
+                average={ratingAverage}
+                count={recipe.rating_count}
+              />
+            </div>
+
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-4 print:hidden">
               <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
               <div className="flex items-center gap-2">
                 <PrintButton />
@@ -259,6 +285,10 @@ export default async function RecipePage({
             </div>
           </div>
         )}
+
+        <div className="mt-12 print:hidden">
+          <SubscribeForm />
+        </div>
 
         <div className="print:hidden">
           <Comments recipeId={recipe.id} comments={comments} />

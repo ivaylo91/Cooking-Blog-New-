@@ -1,7 +1,18 @@
 import { cacheLife, cacheTag } from "next/cache";
 import { publicClient } from "@/lib/supabase/public";
 import { createClient } from "@/lib/supabase/server";
-import type { Category, Comment, Ingredient, Recipe, RecipeWithRelations, Step, Tag } from "@/types/recipe";
+import { TIME_FILTERS } from "@/types/recipe";
+import type {
+  Category,
+  Comment,
+  Difficulty,
+  Ingredient,
+  Recipe,
+  RecipeWithRelations,
+  Step,
+  Tag,
+  TimeFilter,
+} from "@/types/recipe";
 
 export interface RecipeListItem extends Recipe {
   category: Category | null;
@@ -26,17 +37,37 @@ export async function getRecipes(options: {
   categorySlug?: string;
   search?: string;
   limit?: number;
-  sortBy?: "recent" | "likes";
+  sortBy?: "recent" | "likes" | "rating";
+  time?: TimeFilter;
+  difficulty?: Difficulty;
 } = {}): Promise<RecipeListItem[]> {
   "use cache";
   cacheLife("hours");
   cacheTag(RECIPES_TAG);
 
+  const orderColumn =
+    options.sortBy === "likes"
+      ? "likes_count"
+      : options.sortBy === "rating"
+        ? "rating_sum"
+        : "created_at";
+
   let query = publicClient
     .from("recipes")
     .select("*, category:categories(*)")
     .eq("published", true)
-    .order(options.sortBy === "likes" ? "likes_count" : "created_at", { ascending: false });
+    .order(orderColumn, { ascending: false });
+
+  if (options.time) {
+    const { maxMinutes } = TIME_FILTERS[options.time];
+    query = maxMinutes === null
+      ? query.gt("total_time_minutes", 60)
+      : query.lte("total_time_minutes", maxMinutes);
+  }
+
+  if (options.difficulty) {
+    query = query.eq("difficulty", options.difficulty);
+  }
 
   if (options.categorySlug) {
     const { data: category } = await publicClient

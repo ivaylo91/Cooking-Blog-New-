@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CookingBackground } from "@/components/CookingBackground";
 import { RecipeCard } from "@/components/RecipeCard";
+import { SubscribeForm } from "@/components/SubscribeForm";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
 export default async function Home() {
@@ -85,6 +86,10 @@ export default async function Home() {
             </div>
           )}
         </section>
+
+        <div className="mt-14">
+          <SubscribeForm />
+        </div>
       </div>
     </div>
   );

@@ -52,9 +52,23 @@ export interface Recipe {
   image_path: string | null;
   published: boolean;
   likes_count: number;
+  /** Generated column: prep_time_minutes + cook_time_minutes. */
+  total_time_minutes: number;
+  rating_sum: number;
+  rating_count: number;
   created_at: string;
   updated_at: string;
 }
+
+export const TIME_FILTERS = {
+  "30": { label: "До 30 мин", maxMinutes: 30 },
+  "60": { label: "До 60 мин", maxMinutes: 60 },
+  "60plus": { label: "Над 60 мин", maxMinutes: null },
+} as const;
+
+export type TimeFilter = keyof typeof TIME_FILTERS;
+
+export const DIFFICULTIES: Difficulty[] = ["лесно", "средно", "трудно"];
 
 export interface RecipeWithRelations extends Recipe {
   category: Category | null;
