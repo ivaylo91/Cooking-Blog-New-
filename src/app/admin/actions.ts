@@ -181,3 +181,44 @@ export async function deleteSubscriber(id: string) {
   const { error } = await supabase.from("subscribers").delete().eq("id", id);
   if (error) throw error;
 }
+
+export interface PasswordActionState {
+  status: "idle" | "success" | "mismatch" | "weak" | "wrong_current" | "error";
+  message?: string;
+}
+
+const MIN_PASSWORD_LENGTH = 12;
+
+/**
+ * Lets the admin set their own password, so it never has to be shared with
+ * anyone. The current password is re-checked first: the session cookie alone
+ * should not be enough to take over the account.
+ */
+export async function changePassword(
+  _prevState: PasswordActionState,
+  formData: FormData
+): Promise<PasswordActionState> {
+  const current = String(formData.get("current_password") ?? "");
+  const next = String(formData.get("new_password") ?? "");
+  const confirm = String(formData.get("confirm_password") ?? "");
+
+  if (next !== confirm) return { status: "mismatch" };
+  if (next.length < MIN_PASSWORD_LENGTH) return { status: "weak" };
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user?.email) return { status: "error" };
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: user.email,
+    password: current,
+  });
+  if (signInError) return { status: "wrong_current" };
+
+  const { error } = await supabase.auth.updateUser({ password: next });
+  if (error) return { status: "error", message: error.message };
+
+  return { status: "success" };
+}

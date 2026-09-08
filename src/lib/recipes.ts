@@ -44,18 +44,52 @@ export async function getCategories(): Promise<Category[]> {
   return data;
 }
 
-export async function getRecipes(options: {
+export interface RecipeQuery {
   categorySlug?: string;
   search?: string;
   limit?: number;
   sortBy?: "recent" | "likes" | "rating";
   time?: TimeFilter;
   difficulty?: Difficulty;
-} = {}): Promise<RecipeListItem[]> {
-  "use cache";
-  cacheLife("hours");
-  cacheTag(RECIPES_TAG);
+}
 
+export const RECIPES_PER_PAGE = 12;
+
+export interface PagedRecipes {
+  recipes: RecipeListItem[];
+  total: number;
+  page: number;
+  pageCount: number;
+}
+
+/**
+ * Structural view of the PostgREST builder methods used below. The builder's
+ * real generics are deep enough that referring to them here trips TypeScript's
+ * recursion limit, so the cast is confined to `applyRecipeFilters`.
+ */
+interface FilterableQuery {
+  eq(column: string, value: unknown): FilterableQuery;
+  lte(column: string, value: unknown): FilterableQuery;
+  gt(column: string, value: unknown): FilterableQuery;
+  order(column: string, options: { ascending: boolean }): FilterableQuery;
+  textSearch(
+    column: string,
+    query: string,
+    options: { type: "websearch"; config: string }
+  ): FilterableQuery;
+}
+
+/**
+ * Filtering by category uses an inner join on the embedded resource rather
+ * than a separate lookup of the category id, which saves a round trip.
+ */
+function recipeSelect(options: RecipeQuery): string {
+  return options.categorySlug
+    ? `${RECIPE_COLUMNS}, category:categories!inner(*)`
+    : RECIPE_SELECT;
+}
+
+function applyRecipeFilters<Q>(query: Q, options: RecipeQuery): Q {
   const orderColumn =
     options.sortBy === "likes"
       ? "likes_count"
@@ -63,39 +97,74 @@ export async function getRecipes(options: {
         ? "rating_sum"
         : "created_at";
 
-  let query = publicClient
-    .from("recipes")
-    .select(RECIPE_SELECT)
+  let q = (query as FilterableQuery)
     .eq("published", true)
     .order(orderColumn, { ascending: false });
 
+  if (options.categorySlug) {
+    q = q.eq("category.slug", options.categorySlug);
+  }
+
   if (options.time) {
     const { maxMinutes } = TIME_FILTERS[options.time];
-    query = maxMinutes === null
-      ? query.gt("total_time_minutes", 60)
-      : query.lte("total_time_minutes", maxMinutes);
+    q = maxMinutes === null
+      ? q.gt("total_time_minutes", 60)
+      : q.lte("total_time_minutes", maxMinutes);
   }
 
   if (options.difficulty) {
-    query = query.eq("difficulty", options.difficulty);
-  }
-
-  if (options.categorySlug) {
-    const { data: category } = await publicClient
-      .from("categories")
-      .select("id")
-      .eq("slug", options.categorySlug)
-      .single();
-    if (!category) return [];
-    query = query.eq("category_id", category.id);
+    q = q.eq("difficulty", options.difficulty);
   }
 
   if (options.search) {
-    query = query.textSearch("search_vector", options.search, {
+    q = q.textSearch("search_vector", options.search, {
       type: "websearch",
       config: "simple",
     });
   }
+
+  return q as Q;
+}
+
+/**
+ * One page of results plus the total, so the listing can render page links.
+ * The exact count comes back on the same request rather than a second query.
+ */
+export async function getPagedRecipes(
+  options: RecipeQuery & { page?: number } = {}
+): Promise<PagedRecipes> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(RECIPES_TAG);
+
+  const page = Math.max(1, Math.floor(options.page ?? 1));
+  const from = (page - 1) * RECIPES_PER_PAGE;
+
+  const { data, error, count } = await applyRecipeFilters(
+    publicClient.from("recipes").select(recipeSelect(options), { count: "exact" }),
+    options
+  ).range(from, from + RECIPES_PER_PAGE - 1);
+
+  if (error) throw error;
+
+  const total = count ?? 0;
+  return {
+    recipes: (data ?? []) as unknown as RecipeListItem[],
+    total,
+    page,
+    pageCount: Math.max(1, Math.ceil(total / RECIPES_PER_PAGE)),
+  };
+}
+
+export async function getRecipes(options: RecipeQuery = {}): Promise<RecipeListItem[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag(RECIPES_TAG);
+
+  let query = applyRecipeFilters(
+    publicClient.from("recipes").select(recipeSelect(options)),
+    options
+  );
 
   if (options.limit) {
     query = query.limit(options.limit);

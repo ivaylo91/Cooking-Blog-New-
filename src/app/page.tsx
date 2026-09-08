@@ -6,12 +6,13 @@ import { SubscribeForm } from "@/components/SubscribeForm";
 import { getCategories, getRecipes } from "@/lib/recipes";
 
 export default async function Home() {
-  const [recipes, categories, topLiked] = await Promise.all([
+  const [recipes, categories, topRated] = await Promise.all([
     getRecipes({ limit: 6 }),
     getCategories(),
-    getRecipes({ limit: 3, sortBy: "likes" }),
+    getRecipes({ limit: 3, sortBy: "rating" }),
   ]);
-  const trending = topLiked.filter((r) => r.likes_count > 0);
+  // Rated, not liked: liking never caught on, so this section stayed empty.
+  const trending = topRated.filter((r) => r.rating_count > 0);
 
   return (
     <div>
@@ -53,7 +54,7 @@ export default async function Home() {
 
         {trending.length > 0 && (
           <section className="mb-14">
-            <h2 className="mb-6 font-heading text-2xl font-semibold">Най-харесвани</h2>
+            <h2 className="mb-6 font-heading text-2xl font-semibold">Най-високо оценени</h2>
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
               {trending.map((recipe, index) => (
                 <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />

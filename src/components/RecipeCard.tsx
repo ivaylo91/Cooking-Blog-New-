@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, Users } from "lucide-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
@@ -59,12 +59,23 @@ export function RecipeCard({
             <Users size={13} /> {recipe.servings}
           </span>
           <span className="capitalize">{recipe.difficulty}</span>
-          {recipe.likes_count > 0 && (
-            <span className="ml-auto flex items-center gap-1 text-accent">
-              <FontAwesomeIcon icon={faHeart} />
-              {recipe.likes_count}
-            </span>
-          )}
+          <span className="ml-auto flex items-center gap-2">
+            {recipe.rating_count > 0 && (
+              <span
+                className="flex items-center gap-1 text-accent"
+                title={`${(recipe.rating_sum / recipe.rating_count).toFixed(1)} от 5 (${recipe.rating_count})`}
+              >
+                <FontAwesomeIcon icon={faStar} />
+                {(recipe.rating_sum / recipe.rating_count).toFixed(1)}
+              </span>
+            )}
+            {recipe.likes_count > 0 && (
+              <span className="flex items-center gap-1 text-accent">
+                <FontAwesomeIcon icon={faHeart} />
+                {recipe.likes_count}
+              </span>
+            )}
+          </span>
         </div>
       </div>
     </Link>

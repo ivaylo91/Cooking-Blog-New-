@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ChefHat, Home, LogOut, Mail, MessageSquare } from "lucide-react";
+import { ChefHat, Home, LogOut, Mail, MessageSquare, Settings } from "lucide-react";
 import { logout } from "@/app/admin/actions";
 import { WelcomeToast } from "@/components/admin/WelcomeToast";
 
@@ -41,6 +41,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
           >
             <Mail size={16} />
+          </Link>
+          <Link
+            href="/admin/settings"
+            title="Настройки"
+            aria-label="Настройки"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
+          >
+            <Settings size={16} />
           </Link>
           <form action={logout}>
             <button
