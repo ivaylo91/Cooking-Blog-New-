@@ -18,6 +18,17 @@ export interface RecipeListItem extends Recipe {
   category: Category | null;
 }
 
+/**
+ * Explicit column list. `select("*")` also ships `search_vector`, a full-text
+ * index blob that is only ever used server-side by the search filter but was
+ * about a quarter of the list payload, and `author_id`, which nothing renders.
+ */
+const RECIPE_COLUMNS =
+  "id, slug, title, description, category_id, cuisine, difficulty, " +
+  "prep_time_minutes, cook_time_minutes, servings, image_path, published, " +
+  "likes_count, rating_sum, rating_count, total_time_minutes, created_at, updated_at";
+const RECIPE_SELECT = `${RECIPE_COLUMNS}, category:categories(*)`;
+
 /** Cache tags, invalidated from the admin server actions after a write. */
 export const RECIPES_TAG = "recipes";
 export const CATEGORIES_TAG = "categories";
@@ -54,7 +65,7 @@ export async function getRecipes(options: {
 
   let query = publicClient
     .from("recipes")
-    .select("*, category:categories(*)")
+    .select(RECIPE_SELECT)
     .eq("published", true)
     .order(orderColumn, { ascending: false });
 
@@ -107,7 +118,7 @@ export async function getRecipeBySlug(slug: string): Promise<RecipeWithRelations
 
   const { data: recipe, error } = await publicClient
     .from("recipes")
-    .select("*, category:categories(*)")
+    .select(RECIPE_SELECT)
     .eq("slug", slug)
     .eq("published", true)
     .single();
@@ -137,7 +148,7 @@ export async function getRecipeById(id: string): Promise<RecipeWithRelations | n
 
   const { data: recipe, error } = await supabase
     .from("recipes")
-    .select("*, category:categories(*)")
+    .select(RECIPE_SELECT)
     .eq("id", id)
     .single();
 
@@ -171,7 +182,7 @@ export async function getRelatedRecipes(
   if (categoryId) {
     const { data } = await publicClient
       .from("recipes")
-      .select("*, category:categories(*)")
+      .select(RECIPE_SELECT)
       .eq("published", true)
       .eq("category_id", categoryId)
       .neq("id", recipeId)
@@ -184,7 +195,7 @@ export async function getRelatedRecipes(
     const excludeIds = [recipeId, ...related.map((r) => r.id)];
     const { data } = await publicClient
       .from("recipes")
-      .select("*, category:categories(*)")
+      .select(RECIPE_SELECT)
       .eq("published", true)
       .not("id", "in", `(${excludeIds.join(",")})`)
       .order("created_at", { ascending: false })
