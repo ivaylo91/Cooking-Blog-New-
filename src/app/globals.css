@@ -7,11 +7,14 @@
   --surface-muted: #f3ece2;
   --border-subtle: rgba(43, 36, 29, 0.1);
   --muted-foreground: #6e6255;
-  --accent: #c1622b;
-  --accent-strong: #a34f20;
+  /* Tuned for WCAG AA: --accent-foreground on --accent is 4.70:1 and --accent
+     as text on --background is 4.57:1; both were below 4.5 before. */
+  --accent: #b05927;
+  --accent-strong: #9f4d1f;
   --accent-foreground: #fffaf5;
   --accent-soft: #f3e0cd;
-  --secondary: #5b7553;
+  /* 4.56:1 on --secondary-soft, used by the tag chips. */
+  --secondary: #566e4e;
   --secondary-soft: #e3ead9;
   --destructive: #dc2626;
   --destructive-strong: #b91c1c;
