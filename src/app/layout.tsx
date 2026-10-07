@@ -5,7 +5,6 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { CookingBackground } from "@/components/CookingBackground";
 import { JsonLd } from "@/components/JsonLd";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
@@ -89,7 +88,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Прескочи към съдържанието
         </a>
-        <CookingBackground />
         <Header />
         <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
           {children}
