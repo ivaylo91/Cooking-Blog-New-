@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { Pagination } from "@/components/Pagination";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeFilters } from "@/components/RecipeFilters";
-import { getCategories, getPagedRecipes } from "@/lib/recipes";
+import { getCategories, getPagedRecipes, getStockedCategories } from "@/lib/recipes";
 import { DIFFICULTIES, TIME_FILTERS } from "@/types/recipe";
 import type { Difficulty, TimeFilter } from "@/types/recipe";
 
@@ -68,7 +68,7 @@ export default async function ReceptiPage({
       difficulty: active.difficulty,
       page: active.page,
     }),
-    getCategories(),
+    getStockedCategories(),
   ]);
 
   // A page number past the end is a dead URL rather than an empty grid.
@@ -87,16 +87,25 @@ export default async function ReceptiPage({
   }
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
-      <h1 className="mb-6 font-heading text-3xl font-semibold">Рецепти</h1>
+    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+      <h1 className="mb-6 border-b-[3px] border-rule pb-2 font-heading text-[clamp(3.5rem,16vw,6rem)] font-black uppercase leading-[0.85] tracking-wide">
+        Рецепти
+      </h1>
       <RecipeFilters categories={categories} active={active} resultCount={total} />
       {recipes.length === 0 ? (
-        <p className="text-muted-foreground">
-          Няма рецепти, които отговарят на избраните филтри.
-        </p>
+        <div className="border-2 border-rule p-6">
+          <p className="font-heading text-2xl font-extrabold uppercase tracking-wide">
+            Празен рафт
+          </p>
+          <p className="mt-2 text-muted-foreground">
+            Няма рецепти, които отговарят на избраните филтри. Махнете някой от тях
+            или вижте всички рецепти.
+          </p>
+        </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3">
+          <h2 className="sr-only">Резултати</h2>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {recipes.map((recipe, index) => (
               <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />
             ))}

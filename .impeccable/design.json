@@ -1,0 +1,933 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-10T09:30:17.948Z",
+  "title": "Design System: Кулинарният блог на Иво",
+  "extensions": {
+    "colorMeta": {
+      "label-stock": {
+        "role": "neutral",
+        "displayName": "Label Stock",
+        "purpose": "Light-theme page and panel ground.",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#808080",
+          "#a1a1a1",
+          "#c7c7c7",
+          "#eeeeee"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Print Ink",
+        "purpose": "Text, every rule (--rule), selected fills. Light theme.",
+        "canonical": "#14161a",
+        "oklch": "oklch(20.0% 0.009 264.4)",
+        "tonalRamp": [
+          "#090b0f",
+          "#222428",
+          "#3d4044",
+          "#5b5e63",
+          "#7e8085",
+          "#9fa1a7",
+          "#c4c7cd",
+          "#ebeef4"
+        ]
+      },
+      "ink-muted": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "purpose": "Secondary text, notes, checked items.",
+        "canonical": "#4a505a",
+        "oklch": "oklch(43.0% 0.018 260.7)",
+        "tonalRamp": [
+          "#070b13",
+          "#1f242d",
+          "#3a404a",
+          "#585e68",
+          "#7a818b",
+          "#9ba2ad",
+          "#c1c8d4",
+          "#e8effb"
+        ]
+      },
+      "surface-muted": {
+        "role": "neutral",
+        "displayName": "Shelf Grey",
+        "purpose": "Hover fill, image wells, skeletons.",
+        "canonical": "#f1f2f4",
+        "oklch": "oklch(96.1% 0.003 264.5)",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#232425",
+          "#3f4041",
+          "#5d5e5f",
+          "#7f8082",
+          "#a0a1a3",
+          "#c6c7c9",
+          "#edeef0"
+        ]
+      },
+      "border-subtle": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "purpose": "Row dividers inside panels.",
+        "canonical": "rgba(20, 22, 26, 0.16)"
+      },
+      "brand-cobalt": {
+        "role": "primary",
+        "displayName": "Kiselo Mlyako Cobalt",
+        "purpose": "The blog lid: header wordmark, hero fields, Cook Mode filled buttons. Constant across themes.",
+        "canonical": "#1f3fbf",
+        "oklch": "oklch(43.8% 0.202 266.3)",
+        "tonalRamp": [
+          "#010035",
+          "#060077",
+          "#1127a8",
+          "#294dcd",
+          "#4874f7",
+          "#769dff",
+          "#afc7fe",
+          "#e7effe"
+        ]
+      },
+      "brand-cobalt-deep": {
+        "role": "primary",
+        "displayName": "Deep Cobalt",
+        "purpose": "Hover for brand-cobalt buttons.",
+        "canonical": "#172f91",
+        "oklch": "oklch(36.1% 0.163 266.6)",
+        "tonalRamp": [
+          "#010035",
+          "#070971",
+          "#193294",
+          "#3354b8",
+          "#5379e1",
+          "#779dfe",
+          "#afc7fe",
+          "#e7efff"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Accent",
+        "purpose": "Interactive colour (light): focus, selection, caret, progress bar, accent buttons.",
+        "canonical": "#1f3fbf",
+        "oklch": "oklch(43.8% 0.202 266.3)",
+        "tonalRamp": [
+          "#010035",
+          "#060077",
+          "#1127a8",
+          "#294dcd",
+          "#4874f7",
+          "#769dff",
+          "#afc7fe",
+          "#e7effe"
+        ]
+      },
+      "accent-strong": {
+        "role": "primary",
+        "displayName": "Accent Strong",
+        "purpose": "Accent button hover (light).",
+        "canonical": "#172f91",
+        "oklch": "oklch(36.1% 0.163 266.6)",
+        "tonalRamp": [
+          "#010035",
+          "#070971",
+          "#193294",
+          "#3354b8",
+          "#5379e1",
+          "#779dfe",
+          "#afc7fe",
+          "#e7efff"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Accent Soft",
+        "purpose": "Tint; used by the admin.",
+        "canonical": "#e4e9fb",
+        "oklch": "oklch(93.6% 0.025 273.5)",
+        "tonalRamp": [
+          "#080a16",
+          "#202330",
+          "#3b3f4d",
+          "#595d6c",
+          "#7b8090",
+          "#9ca1b2",
+          "#c2c7d8",
+          "#e9eefe"
+        ]
+      },
+      "secondary": {
+        "role": "secondary",
+        "displayName": "Field Green",
+        "purpose": "Success messages.",
+        "canonical": "#1b6e37",
+        "oklch": "oklch(47.6% 0.116 150.2)",
+        "tonalRamp": [
+          "#001003",
+          "#012d10",
+          "#024e21",
+          "#1d6f38",
+          "#45935a",
+          "#68b67a",
+          "#8edd9f",
+          "#c8ffd2"
+        ]
+      },
+      "secondary-soft": {
+        "role": "secondary",
+        "displayName": "Field Green Soft",
+        "purpose": "Tint (admin).",
+        "canonical": "#e3f1e7",
+        "oklch": "oklch(94.5% 0.020 154.9)",
+        "tonalRamp": [
+          "#050e08",
+          "#1c2720",
+          "#38433b",
+          "#556159",
+          "#77847b",
+          "#98a59c",
+          "#becbc2",
+          "#e5f3e9"
+        ]
+      },
+      "destructive": {
+        "role": "tertiary",
+        "displayName": "Destructive",
+        "purpose": "Error state.",
+        "canonical": "#c8231b",
+        "oklch": "oklch(53.8% 0.200 28.9)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4b0001",
+          "#7c0202",
+          "#b20104",
+          "#de3d31",
+          "#ff6c5c",
+          "#ffb0a4",
+          "#fee9e5"
+        ]
+      },
+      "destructive-strong": {
+        "role": "tertiary",
+        "displayName": "Destructive Strong",
+        "purpose": "Error message text.",
+        "canonical": "#a01b14",
+        "oklch": "oklch(45.6% 0.169 28.9)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4b0000",
+          "#7d0102",
+          "#a8251c",
+          "#d24e41",
+          "#f97261",
+          "#feb1a5",
+          "#ffe9e5"
+        ]
+      },
+      "destructive-soft": {
+        "role": "tertiary",
+        "displayName": "Destructive Soft",
+        "purpose": "Error panel tint (admin).",
+        "canonical": "#fdecea",
+        "oklch": "oklch(95.6% 0.019 25.6)",
+        "tonalRamp": [
+          "#120807",
+          "#2d211f",
+          "#493c3b",
+          "#685a58",
+          "#8b7c7a",
+          "#ad9d9b",
+          "#d3c3c1",
+          "#fbeae8"
+        ]
+      },
+      "destructive-border": {
+        "role": "tertiary",
+        "displayName": "Destructive Border",
+        "purpose": "Error panel border (admin).",
+        "canonical": "#f3b9b4",
+        "oklch": "oklch(83.7% 0.068 24.3)",
+        "tonalRamp": [
+          "#1f0001",
+          "#3f1413",
+          "#5f302e",
+          "#804e4b",
+          "#a5706c",
+          "#c9918d",
+          "#f1b7b2",
+          "#fee9e7"
+        ]
+      },
+      "stamp-red": {
+        "role": "tertiary",
+        "displayName": "Stamp Red",
+        "purpose": "Quality stamp ink, resume tab, error top rule. Constant.",
+        "canonical": "#c8231b",
+        "oklch": "oklch(53.8% 0.200 28.9)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4b0001",
+          "#7c0202",
+          "#b20104",
+          "#de3d31",
+          "#ff6c5c",
+          "#ffb0a4",
+          "#fee9e5"
+        ]
+      },
+      "kraft": {
+        "role": "neutral",
+        "displayName": "Kraft",
+        "purpose": "Footer field; also the Тестени lid. Constant.",
+        "canonical": "#c89b63",
+        "oklch": "oklch(71.9% 0.091 71.6)",
+        "tonalRamp": [
+          "#130800",
+          "#341f01",
+          "#593801",
+          "#7d5419",
+          "#a2773f",
+          "#c59860",
+          "#edbe85",
+          "#ffebd4"
+        ]
+      },
+      "tin-background": {
+        "role": "neutral",
+        "displayName": "Dark Tin",
+        "purpose": "Dark-theme page ground.",
+        "canonical": "#0e1013",
+        "oklch": "oklch(17.2% 0.007 258.4)",
+        "tonalRamp": [
+          "#090b0e",
+          "#222427",
+          "#3d4044",
+          "#5b5e62",
+          "#7e8084",
+          "#9fa2a6",
+          "#c4c7cc",
+          "#eceff3"
+        ]
+      },
+      "tin-surface": {
+        "role": "neutral",
+        "displayName": "Tin Surface",
+        "purpose": "Dark-theme panel ground.",
+        "canonical": "#16191d",
+        "oklch": "oklch(21.2% 0.009 255.6)",
+        "tonalRamp": [
+          "#090b0f",
+          "#212428",
+          "#3d4045",
+          "#5a5e63",
+          "#7d8186",
+          "#9ea2a7",
+          "#c3c8cd",
+          "#eaeff5"
+        ]
+      },
+      "tin-surface-muted": {
+        "role": "neutral",
+        "displayName": "Tin Shelf",
+        "purpose": "Dark-theme hover fill.",
+        "canonical": "#1d2126",
+        "oklch": "oklch(24.6% 0.011 254.0)",
+        "tonalRamp": [
+          "#080b10",
+          "#202429",
+          "#3c4046",
+          "#595e64",
+          "#7c8187",
+          "#9da2a9",
+          "#c2c8cf",
+          "#e9eff6"
+        ]
+      },
+      "tin-ink": {
+        "role": "neutral",
+        "displayName": "Tin Ink",
+        "purpose": "Dark-theme text and rules.",
+        "canonical": "#f1f2f4",
+        "oklch": "oklch(96.1% 0.003 264.5)",
+        "tonalRamp": [
+          "#0a0b0c",
+          "#232425",
+          "#3f4041",
+          "#5d5e5f",
+          "#7f8082",
+          "#a0a1a3",
+          "#c6c7c9",
+          "#edeef0"
+        ]
+      },
+      "tin-ink-muted": {
+        "role": "neutral",
+        "displayName": "Tin Faded Ink",
+        "purpose": "Dark-theme secondary text.",
+        "canonical": "#a6acb6",
+        "oklch": "oklch(74.3% 0.016 260.7)",
+        "tonalRamp": [
+          "#080b12",
+          "#20242c",
+          "#3b4048",
+          "#595e67",
+          "#7b818a",
+          "#9ca2ac",
+          "#c1c8d2",
+          "#e8effa"
+        ]
+      },
+      "tin-border-subtle": {
+        "role": "neutral",
+        "displayName": "Tin Hairline",
+        "purpose": "Dark-theme row dividers.",
+        "canonical": "rgba(241, 242, 244, 0.16)"
+      },
+      "tin-accent": {
+        "role": "primary",
+        "displayName": "Tin Accent",
+        "purpose": "Dark-theme accent: lighter for text and outline contrast; takes dark text when filled.",
+        "canonical": "#8ea2ff",
+        "oklch": "oklch(73.5% 0.137 273.4)",
+        "tonalRamp": [
+          "#050032",
+          "#151164",
+          "#2b3486",
+          "#4654a9",
+          "#6778d1",
+          "#869af6",
+          "#b6c4fe",
+          "#e9eefe"
+        ]
+      },
+      "tin-accent-strong": {
+        "role": "primary",
+        "displayName": "Tin Accent Strong",
+        "purpose": "Dark-theme accent hover.",
+        "canonical": "#b4c1ff",
+        "oklch": "oklch(82.3% 0.089 275.1)",
+        "tonalRamp": [
+          "#06012f",
+          "#191d4e",
+          "#333a6e",
+          "#4f598f",
+          "#717cb5",
+          "#919dd9",
+          "#b7c4ff",
+          "#eaeefe"
+        ]
+      },
+      "tin-accent-soft": {
+        "role": "primary",
+        "displayName": "Tin Accent Soft",
+        "purpose": "Dark-theme tint.",
+        "canonical": "rgba(142, 162, 255, 0.16)"
+      },
+      "tin-secondary": {
+        "role": "secondary",
+        "displayName": "Tin Green",
+        "purpose": "Dark-theme success text.",
+        "canonical": "#5fc27e",
+        "oklch": "oklch(73.7% 0.136 151.9)",
+        "tonalRamp": [
+          "#001004",
+          "#002d12",
+          "#024d24",
+          "#017137",
+          "#2f9756",
+          "#56b976",
+          "#7ee19b",
+          "#c7ffd4"
+        ]
+      },
+      "tin-destructive": {
+        "role": "tertiary",
+        "displayName": "Tin Destructive",
+        "purpose": "Dark-theme error.",
+        "canonical": "#ff6b63",
+        "oklch": "oklch(71.0% 0.182 25.9)",
+        "tonalRamp": [
+          "#1f0001",
+          "#4b0105",
+          "#7c000d",
+          "#ad171e",
+          "#d74642",
+          "#ff6b63",
+          "#ffb0a8",
+          "#ffe9e6"
+        ]
+      },
+      "tin-destructive-strong": {
+        "role": "tertiary",
+        "displayName": "Tin Destructive Strong",
+        "purpose": "Dark-theme error text.",
+        "canonical": "#ff9b95",
+        "oklch": "oklch(79.1% 0.121 23.8)",
+        "tonalRamp": [
+          "#1f0001",
+          "#4b0007",
+          "#721b1e",
+          "#963d3b",
+          "#be605c",
+          "#e3827d",
+          "#feb0aa",
+          "#ffe9e6"
+        ]
+      },
+      "lid-osnovni-yastia": {
+        "role": "lid",
+        "displayName": "Основни ястия Red",
+        "purpose": "Category lid; white ink.",
+        "canonical": "#c8231b",
+        "oklch": "oklch(53.8% 0.200 28.9)",
+        "tonalRamp": [
+          "#1f0000",
+          "#4b0001",
+          "#7c0202",
+          "#b20104",
+          "#de3d31",
+          "#ff6c5c",
+          "#ffb0a4",
+          "#fee9e5"
+        ]
+      },
+      "lid-supi": {
+        "role": "lid",
+        "displayName": "Супи Cobalt",
+        "purpose": "Category lid; white ink.",
+        "canonical": "#1f3fbf",
+        "oklch": "oklch(43.8% 0.202 266.3)",
+        "tonalRamp": [
+          "#010035",
+          "#060077",
+          "#1127a8",
+          "#294dcd",
+          "#4874f7",
+          "#769dff",
+          "#afc7fe",
+          "#e7effe"
+        ]
+      },
+      "lid-salati": {
+        "role": "lid",
+        "displayName": "Салати Green",
+        "purpose": "Category lid; white ink.",
+        "canonical": "#1b6e37",
+        "oklch": "oklch(47.6% 0.116 150.2)",
+        "tonalRamp": [
+          "#001003",
+          "#012d10",
+          "#024e21",
+          "#1d6f38",
+          "#45935a",
+          "#68b67a",
+          "#8edd9f",
+          "#c8ffd2"
+        ]
+      },
+      "lid-testeni": {
+        "role": "lid",
+        "displayName": "Тестени Kraft",
+        "purpose": "Category lid; near-black ink.",
+        "canonical": "#c89b63",
+        "oklch": "oklch(71.9% 0.091 71.6)",
+        "tonalRamp": [
+          "#130800",
+          "#341f01",
+          "#593801",
+          "#7d5419",
+          "#a2773f",
+          "#c59860",
+          "#edbe85",
+          "#ffebd4"
+        ]
+      },
+      "lid-postni": {
+        "role": "lid",
+        "displayName": "Постни Olive",
+        "purpose": "Category lid; white ink.",
+        "canonical": "#55631a",
+        "oklch": "oklch(47.3% 0.097 119.7)",
+        "tonalRamp": [
+          "#090d00",
+          "#212800",
+          "#3a4600",
+          "#57651d",
+          "#798942",
+          "#9aab63",
+          "#bfd188",
+          "#e6f9ae"
+        ]
+      },
+      "lid-deserti": {
+        "role": "lid",
+        "displayName": "Десерти Sunflower",
+        "purpose": "Category lid; near-black ink.",
+        "canonical": "#f5c400",
+        "oklch": "oklch(84.0% 0.172 90.4)",
+        "tonalRamp": [
+          "#100a00",
+          "#2e2301",
+          "#4f3d00",
+          "#735a01",
+          "#9c7c04",
+          "#c49c09",
+          "#f1c100",
+          "#ffeebe"
+        ]
+      },
+      "lid-konservi": {
+        "role": "lid",
+        "displayName": "Консерви Tomato",
+        "purpose": "Category lid; near-black ink.",
+        "canonical": "#e8590c",
+        "oklch": "oklch(64.4% 0.192 41.7)",
+        "tonalRamp": [
+          "#1a0400",
+          "#421200",
+          "#6e2501",
+          "#9d3800",
+          "#d44f01",
+          "#ff7031",
+          "#feb296",
+          "#ffe9e1"
+        ]
+      },
+      "lid-fallback": {
+        "role": "lid",
+        "displayName": "Uncategorised Ink",
+        "purpose": "Lid for a recipe with no category; white ink.",
+        "canonical": "#14161a",
+        "oklch": "oklch(20.0% 0.009 264.4)",
+        "tonalRamp": [
+          "#090b0f",
+          "#222428",
+          "#3d4044",
+          "#5b5e63",
+          "#7e8085",
+          "#9fa1a7",
+          "#c4c7cd",
+          "#ebeef4"
+        ]
+      },
+      "lid-ink-light": {
+        "role": "lid",
+        "displayName": "Lid Ink Light",
+        "purpose": "Ink printed on dark lids.",
+        "canonical": "#ffffff",
+        "oklch": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#242424",
+          "#404040",
+          "#5d5d5d",
+          "#808080",
+          "#a1a1a1",
+          "#c7c7c7",
+          "#eeeeee"
+        ]
+      },
+      "lid-ink-dark": {
+        "role": "lid",
+        "displayName": "Lid Ink Dark",
+        "purpose": "Ink printed on light lids.",
+        "canonical": "#14161a",
+        "oklch": "oklch(20.0% 0.009 264.4)",
+        "tonalRamp": [
+          "#090b0f",
+          "#222428",
+          "#3d4044",
+          "#5b5e63",
+          "#7e8085",
+          "#9fa1a7",
+          "#c4c7cd",
+          "#ebeef4"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Recipe name on its lid field, heroes, page titles, 404/error. Caps, max 6rem."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Printed section heads on a 3px rule."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Recipe card names, shelf tiles, panel heads."
+      },
+      "numeral": {
+        "displayName": "Numeral",
+        "purpose": "Net-weight facts row: portions, prep, cook."
+      },
+      "quantity": {
+        "displayName": "Quantity",
+        "purpose": "Ingredient amounts with true fractions."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text at 17px/1.6."
+      },
+      "body-step": {
+        "displayName": "Step Body",
+        "purpose": "Method steps, 65ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, nav, tabs, filters."
+      },
+      "label-lid": {
+        "displayName": "Lid Label",
+        "purpose": "Card lid stripe and small fact captions."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sticker-lift",
+        "value": "drop-shadow(0 1px 2px rgb(0 0 0 / 0.15))",
+        "purpose": "Stamp only (CSS filter, Tailwind drop-shadow-sm). The system is otherwise flat."
+      }
+    ],
+    "motion": [
+      {
+        "name": "stamp-press",
+        "value": "stamp-press 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both",
+        "purpose": "The one authored motion: rotate(-14deg) scale(1.35) to rotate(-9deg) scale(1). Disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "state-transition",
+        "value": "150ms cubic-bezier(0.4, 0, 0.2, 1) (Tailwind transition-colors)",
+        "purpose": "Hover fills on tiles, buttons and cards; collapsed to 0.01ms under reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ],
+    "focus": {
+      "value": "outline: 3px solid var(--accent); outline-offset: 2px",
+      "onLidField": "outline-color: currentColor",
+      "textInputs": "border-color: var(--accent); no outline"
+    },
+    "themes": {
+      "light": {
+        "background": "#ffffff",
+        "foreground": "#14161a",
+        "surface": "#ffffff",
+        "surface-muted": "#f1f2f4",
+        "muted-foreground": "#4a505a",
+        "accent": "#1f3fbf",
+        "accent-foreground": "#ffffff"
+      },
+      "dark": {
+        "selector": ":root[data-theme=\"dark\"], or prefers-color-scheme: dark unless data-theme=\"light\"",
+        "background": "#0e1013",
+        "foreground": "#f1f2f4",
+        "surface": "#16191d",
+        "surface-muted": "#1d2126",
+        "muted-foreground": "#a6acb6",
+        "accent": "#8ea2ff",
+        "accent-foreground": "#0e1013"
+      },
+      "constantAcrossThemes": [
+        "--brand #1f3fbf",
+        "--stamp #c8231b",
+        "--kraft #c89b63",
+        "all category lids and their lid ink"
+      ]
+    },
+    "doodle": {
+      "source": "src/components/CookingBackground.tsx",
+      "ink": "currentColor, one ink",
+      "placement": "bands only, in their own ruled strip (56px hero bands, 96px footer band)",
+      "forbidden": "under any text"
+    },
+    "scopedExceptions": [
+      {
+        "scope": "src/app/admin/**, src/components/admin/**",
+        "rule": "Inherits colour tokens only; keeps its own rounded controls (rounded-lg/xl/2xl/full) and small shadows by design. Not part of the public system."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Cook Mode Button",
+      "kind": "button",
+      "refersTo": "button-brand",
+      "description": "Brand-cobalt filled primary heading the method; white text in both themes.",
+      "html": "<button class=\"ds-btn-brand\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2\"/><path d=\"M7 2v20\"/><path d=\"M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7\"/></svg>Готви стъпка по стъпка</button>",
+      "css": ".ds-btn-brand{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:10px;height:56px;padding:0 24px;background:var(--brand);color:#fff;border:0;border-radius:0;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.25rem;font-weight:800;cursor:pointer;transition:background-color .15s}.ds-btn-brand:hover{background:var(--brand-deep)}.ds-btn-brand:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "Accent Button",
+      "kind": "button",
+      "refersTo": "button-accent",
+      "description": "Filled accent action (newsletter, 404, error). Lightens with dark text in dark theme.",
+      "html": "<button class=\"ds-btn-accent\">Запиши ме <svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\"><path d=\"M5 12h14M12 5l7 7-7 7\"/></svg></button>",
+      "css": ".ds-btn-accent{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:inline-flex;align-items:center;gap:8px;height:56px;padding:0 24px;background:var(--accent);color:#fff;border:0;border-radius:0;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.25rem;font-weight:800;cursor:pointer;transition:background-color .15s}.ds-btn-accent:hover{background:var(--accent-strong)}.ds-btn-accent:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "Ink Button",
+      "kind": "button",
+      "refersTo": "button-ink",
+      "description": "Ink-filled submit (comments, search).",
+      "html": "<button class=\"ds-btn-ink\">Публикувай</button>",
+      "css": ".ds-btn-ink{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;height:56px;padding:0 24px;background:var(--ink);color:var(--stock);border:0;border-radius:0;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.25rem;font-weight:800;cursor:pointer;transition:opacity .15s}.ds-btn-ink:hover{opacity:.85}.ds-btn-ink:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "2px ink box, 44px; hover fills shelf grey.",
+      "html": "<button class=\"ds-btn-outline\">Сподели</button>",
+      "css": ".ds-btn-outline{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;height:44px;padding:0 12px;background:var(--stock);color:var(--ink);border:2px solid var(--ink);border-radius:0;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.125rem;font-weight:700;cursor:pointer;transition:background-color .15s}.ds-btn-outline:hover{background:var(--shelf)}.ds-btn-outline:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "Filter Tiles",
+      "kind": "chip",
+      "refersTo": "filter-tile",
+      "description": "Square category tiles: lid swatch when off, lid fill when selected; neutral tiles fill ink.",
+      "html": "<div class=\"ds-tiles\"><a class=\"ds-tile ds-tile-on\" href=\"#\">Всички</a><a class=\"ds-tile\" href=\"#\"><span class=\"ds-sw\" style=\"background:#1f3fbf\"></span>Супи</a><a class=\"ds-tile ds-tile-lid\" href=\"#\" style=\"background:#f5c400;color:#14161a\">Десерти</a></div>",
+      "css": ".ds-tiles{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:flex;gap:8px;flex-wrap:wrap}.ds-tile{display:flex;align-items:center;gap:8px;height:44px;padding:0 12px;border:2px solid var(--ink);color:var(--ink);background:var(--stock);text-decoration:none;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.125rem;font-weight:700;transition:background-color .15s}.ds-tile:hover{background:var(--shelf)}.ds-tile:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}.ds-tile-on,.ds-tile-on:hover{background:var(--ink);color:var(--stock)}.ds-tile-lid:focus-visible{outline-color:currentColor}.ds-sw{width:14px;height:14px;box-shadow:0 0 0 1px var(--ink)}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Square 2px ink field; focus shifts border to accent.",
+      "html": "<input class=\"ds-input\" type=\"search\" placeholder=\"Търсене\">",
+      "css": ".ds-input{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;height:44px;width:260px;padding:0 12px;border:2px solid var(--ink);border-radius:0;background:var(--stock);color:var(--ink);font-family:var(--sans);font-size:1rem;outline:none;caret-color:var(--accent);transition:border-color .15s}.ds-input::placeholder{color:var(--muted)}.ds-input:focus{border-color:var(--accent)}"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Sticky header: cobalt wordmark lid, caps links, 3px rule beneath.",
+      "html": "<header class=\"ds-header\"><a class=\"ds-mark\" href=\"#\">Кулинарният блог на Иво</a><nav><a href=\"#\">Рецепти</a><a href=\"#\">За Иво</a></nav></header>",
+      "css": ".ds-header{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:16px;height:64px;padding:0 16px;background:var(--stock);border-bottom:3px solid var(--ink)}.ds-mark{display:flex;align-items:center;height:44px;padding:0 12px;background:var(--brand);color:#fff;text-decoration:none;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.35rem;font-weight:800}.ds-header nav{display:flex;gap:8px}.ds-header nav a{display:flex;align-items:center;height:44px;padding:0 12px;color:var(--ink);text-decoration:none;font-family:var(--xc);text-transform:uppercase;letter-spacing:.025em;line-height:1;font-size:1.125rem;font-weight:700;text-underline-offset:6px}.ds-header nav a:hover{text-decoration:underline;text-decoration-thickness:2px}.ds-header a:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}"
+    },
+    {
+      "name": "Recipe Card",
+      "kind": "card",
+      "refersTo": "recipe-card",
+      "description": "Pack facing: photo window, lid stripe, caps title, ruled tabular facts.",
+      "html": "<a class=\"ds-card\" href=\"#\"><div class=\"ds-card-img\"></div><div class=\"ds-card-lid\">Супи</div><div class=\"ds-card-body\"><h3>Спаначена супа</h3><p>Лека и ароматна супа от пресен спанак с ориз.</p><dl><dd>45<small>мин</small></dd><dd>6<small>порц.</small></dd><dd class=\"d\">Лесно</dd></dl></div></a>",
+      "css": ".ds-card{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:flex;flex-direction:column;width:300px;border:2px solid var(--ink);background:var(--stock);color:var(--ink);text-decoration:none;transition:background-color .15s}.ds-card:hover{background:var(--shelf)}.ds-card:hover h3{text-decoration:underline}.ds-card:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}.ds-card-img{aspect-ratio:4/3;background:var(--shelf);border-bottom:2px solid var(--ink)}.ds-card-lid{display:flex;align-items:center;height:32px;padding:0 12px;background:#1f3fbf;color:#fff;font-family:var(--xc);text-transform:uppercase;font-weight:800;font-size:.875rem;letter-spacing:.12em}.ds-card-body{padding:12px}.ds-card h3{margin:0;font-family:var(--xc);text-transform:uppercase;font-weight:800;font-size:1.75rem;line-height:.95;letter-spacing:.025em}.ds-card p{margin:8px 0 0;font-family:var(--sans);font-size:.95rem;line-height:1.375;color:var(--muted)}.ds-card dl{display:flex;margin:12px 0 0;padding-top:8px;border-top:2px solid var(--ink);font-family:var(--xc);text-transform:uppercase;font-variant-numeric:tabular-nums;line-height:1}.ds-card dd{margin:0;padding:0 12px;font-size:1.25rem;font-weight:800;border-left:1px solid var(--hair)}.ds-card dd:first-child{padding-left:0;border-left:0}.ds-card dd small{margin-left:4px;font-size:.875rem;font-weight:700}.ds-card dd.d{font-size:.875rem;font-weight:700}"
+    },
+    {
+      "name": "Step Number",
+      "kind": "custom",
+      "refersTo": "step-number",
+      "description": "56px numbered box that is also the done toggle; fills ink with a tick when done.",
+      "html": "<div class=\"ds-steps\"><button class=\"ds-step\" aria-pressed=\"false\">1</button><button class=\"ds-step ds-step-done\" aria-pressed=\"true\"><svg viewBox=\"0 0 16 16\" width=\"28\" height=\"28\"><path d=\"M2.5 8.5 L6.5 12.5 L13.5 4\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"square\"/></svg></button></div>",
+      "css": ".ds-steps{--ink:#14161a;--stock:#ffffff;--muted:#4a505a;--shelf:#f1f2f4;--hair:rgba(20,22,26,.16);--brand:#1f3fbf;--brand-deep:#172f91;--accent:#1f3fbf;--accent-strong:#172f91;--stamp:#c8231b;--xc:\"Sofia Sans Extra Condensed\",\"Sofia Sans\",ui-sans-serif,sans-serif;--sans:\"Sofia Sans\",ui-sans-serif,system-ui,sans-serif;display:flex;gap:12px}.ds-step{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border:2px solid var(--ink);border-radius:0;background:var(--stock);color:var(--ink);font-family:var(--xc);font-weight:900;font-size:2rem;line-height:1;font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color .15s}.ds-step:hover{background:var(--shelf)}.ds-step:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}.ds-step-done,.ds-step-done:hover{background:var(--ink);color:var(--stock)}"
+    },
+    {
+      "name": "Quality Stamp",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "Round red ink stamp on a white sticker, pressed on once; the only authored motion.",
+      "html": "<svg class=\"ds-stamp\" viewBox=\"0 0 120 120\" width=\"112\" height=\"112\" role=\"img\" aria-label=\"Изпробвано в кухнята на Иво\"><circle cx=\"60\" cy=\"60\" r=\"58\" fill=\"#fff\"/><circle cx=\"60\" cy=\"60\" r=\"54\" fill=\"none\" stroke=\"#c8231b\" stroke-width=\"3\"/><circle cx=\"60\" cy=\"60\" r=\"35\" fill=\"none\" stroke=\"#c8231b\" stroke-width=\"1.5\"/><defs><path id=\"ds-ring\" d=\"M 60,60 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0\"/></defs><text fill=\"#c8231b\" font-family=\"Sofia Sans Extra Condensed, sans-serif\" font-weight=\"800\" font-size=\"13\"><textPath href=\"#ds-ring\" textLength=\"272\" lengthAdjust=\"spacing\">ИЗПРОБВАНО · В КУХНЯТА · НА ИВО ·</textPath></text><path d=\"M 46 61 L 56 71 L 76 49\" fill=\"none\" stroke=\"#c8231b\" stroke-width=\"6\" stroke-linecap=\"square\"/></svg>",
+      "css": ".ds-stamp{transform:rotate(-9deg);filter:drop-shadow(0 1px 2px rgb(0 0 0 / .15));animation:ds-stamp-press .5s cubic-bezier(.16,1,.3,1) .25s both}@keyframes ds-stamp-press{0%{transform:rotate(-14deg) scale(1.35)}100%{transform:rotate(-9deg) scale(1)}}@media (prefers-reduced-motion:reduce){.ds-stamp{animation:none}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Бакалия: the pantry label",
+    "overview": "Every recipe is printed like a Bulgarian pantry staple. The front of the pack is a full-bleed field in the category's lid colour that names the dish in towering extra-condensed caps and prints its net-weight facts (portions, prep minutes, cook minutes) as huge tabular numerals, sealed with a round red ink stamp. The back of the pack is plain white label stock carrying the method: a ruled ingredient panel and numbered steps, set in a colourless reading column.\n\nThe world is flat, square and ruled. Structure comes from ink: heavy 3px rules under headers and section heads, 2px panel boxes around cards, buttons and fields, hairline dividers between rows. Corners are die-cut square everywhere on the public site. Colour is wayfinding, not decoration: it arrives only as category lid fields and stripes, the cobalt blog lid, the kraft footer and the red stamp. Density is generous for a phone propped on a counter: 17px body, 44px minimum targets, 56px primary controls.\n\nThe dark theme is \"the same label printed on a dark tin\": the ground goes near-black and ink goes light, while lid fields, kraft, the stamp and the brand cobalt keep their exact printed values in both themes. It explicitly refuses the cooking-blog category default of cream ground, serif display, terracotta accent and a rounded photo-card grid.",
+    "keyCharacteristics": [
+      "White label stock and ink-black print; heavy 3px rules and 2px panel boxes.",
+      "Square corners (0px) on every public element; no pills.",
+      "Colour only on full-bleed category lid fields and lid stripes, never in the reading column.",
+      "Sofia Sans Extra Condensed caps for names, labels and numerals; Sofia Sans for reading.",
+      "Tabular numerals and true fractions (½, ¼, ¾) for every quantity.",
+      "One authored motion: the stamp pressed onto the label once.",
+      "The doodle pattern printed in one ink as a band, never under text."
+    ],
+    "rules": [
+      {
+        "name": "The Lid Rule",
+        "body": "Colour means category. It appears only as a full-bleed lid field, a card's 32px lid stripe, a selected category tile, or a 14px lid swatch; the reading column (ingredients, steps, comments) is ink on stock only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Printed Ink Rule",
+        "body": "Lid fields, kraft, stamp red and brand cobalt are printed values and do not change with the theme. Only the stock, ink, muted, hairline and interactive accent tokens swap for dark.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Blues Rule",
+        "body": "Brand cobalt is the blog's lid and Cook Mode's filled action, white text in both themes. The accent token is the interactive colour and lightens in dark mode for contrast. Never use the dark-mode accent as a fill under white text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Caps-Are-Print Rule",
+        "body": "Everything that names or labels (dish names, section heads, buttons, tabs, filters, categories) is extra-condensed uppercase. Everything meant to be read through (descriptions, steps, comments) is Sofia Sans in sentence case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Net-Weight Rule",
+        "body": "Every number a cook acts on (portions, minutes, quantities, page numbers, counts) is set tabular. Quantities print halves and quarters as true fractions (1½, ¾), round mass to 5 g below 100 and 10 g above, switch to кг/л at 1000, never print fewer than ½ of a countable unit, and never print decimals like 1,33.",
+        "section": "typography"
+      },
+      {
+        "name": "The 6rem Ceiling",
+        "body": "Display type never exceeds 6rem.",
+        "section": "typography"
+      },
+      {
+        "name": "The Doodle Band Rule",
+        "body": "The doodle pattern (whisk, herb sprig, steam, citrus, soup bowl, basil, tomatoes) is a pinned brand asset printed in one ink via `currentColor`. It appears only as a band in its own ruled strip (56px bands above and below the cobalt hero; a 96px band at the top of the kraft footer) and never sits under any text.",
+        "section": "layout"
+      },
+      {
+        "name": "The Ruled-Not-Raised Rule",
+        "body": "Separation is a printed line, not a shadow. If a surface needs to stand apart, box it in a 2px ink rule.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Die-Cut Rule",
+        "body": "No `rounded-*` and no pills on public UI. Corners are square.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** keep every public corner square (0px) and frame controls and panels in 2px ink, structure in 3px ink.",
+      "**Do** put colour only on lid fields, lid stripes, selected category tiles and lid swatches, using the lid table and its fixed lid ink.",
+      "**Do** set names, labels and buttons in Sofia Sans Extra Condensed uppercase, and reading text in Sofia Sans at 17px/1.6 or larger.",
+      "**Do** set every actionable number tabular and print quantities through the fraction and rounding rules.",
+      "**Do** make touch targets at least 44px on mobile, and 56px for primary actions.",
+      "**Do** use brand cobalt (#1f3fbf) with white text for Cook Mode's filled buttons in both themes.",
+      "**Do** show state with ink fills and the 3px accent focus outline (currentColor on lid fields).",
+      "**Do** keep the stamp press as the only authored motion and honour `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "**Don't** use pills or `rounded-full` (or any radius) on public UI.",
+      "**Don't** put kicker or eyebrow labels above headings.",
+      "**Don't** build hero-metric stat boxes; the stamp stands beside the name instead.",
+      "**Don't** set display text above 6rem.",
+      "**Don't** place the doodle pattern under body copy or any text; it is a band in its own ruled strip.",
+      "**Don't** add colour to the reading column or use lid colours as decoration.",
+      "**Don't** add shadows to cards, panels or buttons; the stamp's sticker lift is the only one.",
+      "**Don't** fill with the dark-mode accent under white text."
+    ]
+  }
+}

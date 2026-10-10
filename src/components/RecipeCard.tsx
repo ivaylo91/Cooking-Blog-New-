@@ -1,13 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Users } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faStar } from "@fortawesome/free-solid-svg-icons";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
+import { lidStyle } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
+/**
+ * A recipe as a pack facing on the shelf. One strict label grid rules every
+ * card: product window, lid stripe with the category, the name, then a ruled
+ * run of minutes, portions and difficulty.
+ */
 export function RecipeCard({
   recipe,
   // Set on the cards above the fold. Those carry the page's LCP, and lazy
@@ -21,62 +24,71 @@ export function RecipeCard({
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const Placeholder =
     getPlaceholderVariant(recipe.id) === "salad" ? SaladIllustration : IngredientsIllustration;
+  const rating =
+    recipe.rating_count > 0 ? (recipe.rating_sum / recipe.rating_count).toFixed(1) : null;
 
   return (
     <Link
       href={`/recepti/${recipe.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border-subtle bg-surface shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
+      style={lidStyle(recipe.category?.slug)}
+      className="group flex flex-col border-2 border-rule bg-surface transition-colors hover:bg-surface-muted"
     >
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-muted">
+      <div className="relative aspect-[4/3] w-full overflow-hidden border-b-2 border-rule bg-surface-muted">
         {imageUrl ? (
           <Image
             src={imageUrl}
-            alt={recipe.title}
+            alt=""
             fill
-            sizes="(min-width: 768px) 33vw, 100vw"
-            className="object-cover transition duration-500 group-hover:scale-105"
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            className="object-cover"
             priority={priority}
           />
         ) : (
-          <Placeholder className="transition duration-500 group-hover:scale-105" />
-        )}
-        {recipe.category && (
-          <span className="absolute left-3 top-3 rounded-full bg-background/90 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent-strong backdrop-blur-sm">
-            {recipe.category.name}
-          </span>
+          <Placeholder />
         )}
       </div>
-      <div className="flex flex-1 flex-col gap-2 p-4">
-        <h3 className="font-heading text-lg font-semibold leading-snug">{recipe.title}</h3>
-        <p className="line-clamp-2 text-sm text-muted-foreground">{recipe.description}</p>
-        <div className="mt-auto flex gap-4 pt-3 text-xs text-muted-foreground">
+
+      {/* Lid stripe: the category's colour, read before the name. */}
+      <div className="flex h-8 items-center bg-[var(--lid)] px-3 font-heading text-sm font-extrabold uppercase tracking-[0.12em] text-[var(--lid-fg)]">
+        {recipe.category?.name ?? "Рецепта"}
+      </div>
+
+      <div className="flex flex-1 flex-col px-3 pb-3 pt-3">
+        <h3 className="font-heading text-[1.75rem] font-extrabold uppercase leading-[0.95] tracking-wide group-hover:underline">
+          {recipe.title}
+        </h3>
+        <p className="mt-2 line-clamp-2 text-[0.95rem] leading-snug text-muted-foreground">
+          {recipe.description}
+        </p>
+
+        <dl className="mt-auto flex items-end divide-x divide-border-subtle border-t-2 border-rule pt-2 font-heading uppercase leading-none tabular-nums">
           {totalTime > 0 && (
-            <span className="flex items-center gap-1">
-              <Clock size={13} /> {totalTime} мин
-            </span>
+            <div className="pr-3">
+              <dt className="sr-only">Време</dt>
+              <dd className="text-xl font-extrabold">
+                {totalTime}
+                <span className="ml-1 text-sm font-bold tracking-wide">мин</span>
+              </dd>
+            </div>
           )}
-          <span className="flex items-center gap-1">
-            <Users size={13} /> {recipe.servings}
-          </span>
-          <span className="capitalize">{recipe.difficulty}</span>
-          <span className="ml-auto flex items-center gap-2">
-            {recipe.rating_count > 0 && (
-              <span
-                className="flex items-center gap-1 text-accent"
-                title={`${(recipe.rating_sum / recipe.rating_count).toFixed(1)} от 5 (${recipe.rating_count})`}
-              >
-                <FontAwesomeIcon icon={faStar} />
-                {(recipe.rating_sum / recipe.rating_count).toFixed(1)}
-              </span>
-            )}
-            {recipe.likes_count > 0 && (
-              <span className="flex items-center gap-1 text-accent">
-                <FontAwesomeIcon icon={faHeart} />
-                {recipe.likes_count}
-              </span>
-            )}
-          </span>
-        </div>
+          <div className="px-3 first:pl-0">
+            <dt className="sr-only">Порции</dt>
+            <dd className="text-xl font-extrabold">
+              {recipe.servings}
+              <span className="ml-1 text-sm font-bold tracking-wide">порц.</span>
+            </dd>
+          </div>
+          <div className="px-3">
+            <dt className="sr-only">Трудност</dt>
+            <dd className="text-sm font-bold tracking-wide">{recipe.difficulty}</dd>
+          </div>
+          {rating && (
+            <div className="ml-auto pl-3">
+              <dt className="sr-only">Оценка от 5</dt>
+              <dd className="text-sm font-extrabold">{rating}/5</dd>
+            </div>
+          )}
+        </dl>
       </div>
     </Link>
   );

@@ -5,6 +5,9 @@ import { addComment, type CommentActionState } from "@/app/recepti/actions";
 
 const initialState: CommentActionState = { status: "idle" };
 
+const field =
+  "w-full border-2 border-rule bg-surface px-3 text-lg outline-none transition-colors placeholder:text-muted-foreground focus:border-accent";
+
 export function CommentForm({ recipeId }: { recipeId: string }) {
   const [renderedAt] = useState(() => Date.now());
   const [state, formAction, isPending] = useActionState(
@@ -20,7 +23,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
   }, [state]);
 
   return (
-    <form ref={formRef} action={formAction} className="flex flex-col gap-3">
+    <form ref={formRef} action={formAction} className="flex flex-col gap-4">
       <input type="hidden" name="form_rendered_at" value={renderedAt} />
       <input
         type="text"
@@ -30,43 +33,62 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
         aria-hidden="true"
         className="absolute -left-[9999px] h-0 w-0 opacity-0"
       />
-      <input
-        type="text"
-        name="author_name"
-        required
-        maxLength={60}
-        placeholder="Вашето име"
-        className="rounded-md border border-border-subtle bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
-      />
-      <textarea
-        name="text"
-        required
-        maxLength={1000}
-        rows={3}
-        placeholder="Напишете коментар..."
-        className="rounded-md border border-border-subtle bg-surface px-3 py-2 text-sm outline-none focus:border-accent"
-      />
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="comment-name"
+          className="font-heading text-base font-bold uppercase tracking-[0.12em]"
+        >
+          Име
+        </label>
+        <input
+          id="comment-name"
+          type="text"
+          name="author_name"
+          required
+          maxLength={60}
+          autoComplete="name"
+          className={`${field} h-12`}
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label
+          htmlFor="comment-text"
+          className="font-heading text-base font-bold uppercase tracking-[0.12em]"
+        >
+          Коментар
+        </label>
+        <textarea
+          id="comment-text"
+          name="text"
+          required
+          maxLength={1000}
+          rows={4}
+          className={`${field} py-2`}
+        />
+      </div>
       <button
         type="submit"
         disabled={isPending}
-        className="self-start rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong disabled:opacity-60"
+        className="h-14 self-start bg-foreground px-6 font-heading text-xl font-extrabold uppercase tracking-wide text-background transition-opacity hover:opacity-85 disabled:opacity-60"
       >
-        {isPending ? "Публикуване..." : "Публикувай коментар"}
+        {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 
-      {state.status === "success" && (
-        <p className="text-sm font-medium text-secondary">
-          Коментарът е публикуван успешно!
-        </p>
-      )}
-      {state.status === "rate_limited" && (
-        <p className="text-sm text-destructive">
-          Твърде много коментари за кратко време. Опитайте отново след малко.
-        </p>
-      )}
-      {state.status === "error" && (
-        <p className="text-sm text-destructive">Нещо се обърка. Опитайте отново.</p>
-      )}
+      <p aria-live="polite" className="min-h-6 text-base font-semibold">
+        {state.status === "success" && (
+          <span className="text-secondary">Коментарът е публикуван.</span>
+        )}
+        {state.status === "rate_limited" && (
+          <span className="text-destructive-strong">
+            Твърде много коментари за кратко време. Опитайте отново след малко.
+          </span>
+        )}
+        {state.status === "error" && (
+          <span className="text-destructive-strong">
+            Коментарът не беше публикуван. Проверете името и текста и опитайте отново.
+          </span>
+        )}
+      </p>
     </form>
   );
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { Comments } from "@/components/Comments";
 import { CookMode } from "@/components/CookMode";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
@@ -11,9 +13,14 @@ import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RatingStars } from "@/components/RatingStars";
 import { RecipeIngredients } from "@/components/RecipeIngredients";
+import { RecipeSteps } from "@/components/RecipeSteps";
+import { RecipeTabs } from "@/components/RecipeTabs";
+import { SectionHead } from "@/components/SectionHead";
+import { Stamp } from "@/components/Stamp";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { lidStyle } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
@@ -151,30 +158,87 @@ export default async function RecipePage({
     ],
   };
 
-  const metaParts = [
-    `${recipe.servings} порции`,
-    recipe.prep_time_minutes > 0 ? `подготовка: ${recipe.prep_time_minutes} мин` : null,
-    recipe.cook_time_minutes > 0 ? `готвене: ${recipe.cook_time_minutes} мин` : null,
-    recipe.difficulty,
-  ].filter(Boolean);
+  // Net weight, as the label prints it: the facts a cook decides on first.
+  const facts = [
+    { label: "Порции", value: recipe.servings, unit: "" },
+    recipe.prep_time_minutes > 0
+      ? { label: "Подготовка", value: recipe.prep_time_minutes, unit: "мин" }
+      : null,
+    recipe.cook_time_minutes > 0
+      ? { label: "Готвене", value: recipe.cook_time_minutes, unit: "мин" }
+      : null,
+  ].filter((fact): fact is { label: string; value: number; unit: string } => fact !== null);
+
+  const stepViews = recipe.steps.map((step) => ({
+    id: step.id,
+    text: step.text,
+    imageUrl: getImageUrl(step.image_path),
+  }));
 
   return (
-    <article className="print:mx-6">
-      <ReadingProgressBar />
+    <article>
+      <ReadingProgressBar targetId="recipe-body" />
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
-      <div className="mx-auto max-w-6xl px-6 py-10 md:py-16">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 md:gap-14 print:grid-cols-1 lg:gap-20">
-          <div className="relative order-first aspect-[4/5] w-full overflow-hidden rounded-2xl bg-surface-muted md:sticky md:top-24 md:order-last md:self-start print:hidden">
+      {/* Front of the pack: the category's lid colour, the dish's name, its
+          net-weight facts and the quality stamp. */}
+      <header
+        style={lidStyle(recipe.category?.slug)}
+        className="lid-field border-b-[3px] border-rule bg-[var(--lid)] text-[var(--lid-fg)] print:border-b-2 print:bg-transparent print:text-black"
+      >
+        <div className="mx-auto grid max-w-6xl gap-x-12 px-4 pt-4 sm:px-6 md:grid-cols-[1.15fr_1fr] md:py-10">
+          <div className="pb-8 md:pb-0">
+            {recipe.category && (
+              <Link
+                href={`/recepti?category=${recipe.category.slug}`}
+                className="inline-flex h-11 items-center gap-1.5 font-heading text-lg font-bold uppercase tracking-[0.1em] underline-offset-4 hover:underline print:hidden"
+              >
+                <ArrowLeft size={18} strokeWidth={2.75} />
+                {recipe.category.name}
+              </Link>
+            )}
+            <h1 className="mt-3 font-heading text-[clamp(3rem,13vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.005em] [text-wrap:balance]">
+              {recipe.title}
+            </h1>
+            <p className="mt-5 max-w-xl text-lg leading-snug sm:text-xl">{recipe.description}</p>
+
+            <div className="mt-7 flex items-center">
+              <dl className="grid flex-1 grid-flow-col border-y-2 border-current font-heading uppercase tabular-nums">
+                {facts.map((fact) => (
+                  <div
+                    key={fact.label}
+                    className="border-r border-current/40 py-3 pl-3 pr-3 first:pl-0 last:border-r-0"
+                  >
+                    <dt className="text-xs font-bold tracking-[0.12em] sm:text-sm">{fact.label}</dt>
+                    <dd className="mt-1 text-[2.6rem] font-black leading-none sm:text-5xl">
+                      {fact.value}
+                      {fact.unit && (
+                        <span className="ml-1 text-base font-extrabold tracking-wide sm:text-lg">
+                          {fact.unit}
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <Stamp size={92} className="-ml-3 sm:size-[108px] print:hidden" />
+            </div>
+            <p className="mt-3 font-heading text-lg font-bold uppercase tracking-[0.1em]">
+              Трудност: {recipe.difficulty}
+            </p>
+          </div>
+
+          {/* The product window: the photo, cut into the label. */}
+          <div className="relative -mx-4 aspect-[4/3] overflow-hidden border-t-[3px] border-current sm:-mx-6 md:mx-0 md:aspect-[5/4] md:self-center md:border-[3px] print:hidden">
             {imageUrl ? (
               <Image
                 src={imageUrl}
                 alt={recipe.title}
                 fill
                 // Without this, `fill` assumes 100vw and fetches a 1920px-wide
-                // image for what is a half-width column on desktop.
-                sizes="(min-width: 768px) 50vw, 100vw"
+                // image for what is a column on desktop.
+                sizes="(min-width: 768px) 45vw, 100vw"
                 className="object-cover"
                 priority
               />
@@ -184,113 +248,99 @@ export default async function RecipePage({
               <IngredientsIllustration />
             )}
           </div>
+        </div>
+      </header>
 
-          <div>
-            {recipe.category && (
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-                {recipe.category.name}
-              </p>
-            )}
-            <h1 className="font-heading text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl">
-              {recipe.title}
-            </h1>
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <RecipeTabs />
 
-            <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-border-subtle pt-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-              {metaParts.map((part, index) => (
-                <span key={part} className="flex items-center gap-2">
-                  {index > 0 && <span className="text-border-subtle">/</span>}
-                  {part}
-                </span>
-              ))}
-            </p>
+        {/* Back of the pack: what goes in, then how. */}
+        <div
+          id="recipe-body"
+          className="grid gap-14 py-10 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
+        >
+          <div className="md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto md:pr-1 print:static print:max-h-none">
+            <RecipeIngredients
+              recipeId={recipe.id}
+              ingredients={recipe.ingredients}
+              baseServings={recipe.servings}
+            />
+          </div>
 
-            <p className="mt-4 text-base text-muted-foreground">{recipe.description}</p>
-
+          <section id="prigotvyane" aria-labelledby="prigotvyane-head">
+            <h2
+              id="prigotvyane-head"
+              className="border-b-[3px] border-rule pb-2 font-heading text-[2.75rem] font-extrabold uppercase leading-[0.9] tracking-wide"
+            >
+              Начин на приготвяне
+            </h2>
             <div className="mt-5 print:hidden">
-              <RatingStars
+              <CookMode
                 recipeId={recipe.id}
-                slug={recipe.slug}
-                average={ratingAverage}
-                count={recipe.rating_count}
+                title={recipe.title}
+                steps={recipe.steps}
+                ingredients={recipe.ingredients}
+                servings={recipe.servings}
+                categorySlug={recipe.category?.slug}
               />
             </div>
-
-            <div className="mt-3 flex flex-wrap items-center justify-between gap-4 print:hidden">
-              <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
-              <div className="flex items-center gap-2">
-                <PrintButton />
-                <ShareButtons title={recipe.title} url={recipeUrl} />
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <RecipeIngredients ingredients={recipe.ingredients} baseServings={recipe.servings} />
-            </div>
-
-            <div className="mt-8">
-              <div className="mb-5 flex flex-wrap items-center justify-between gap-3 border-b border-border-subtle pb-3">
-                <h2 className="font-heading text-xl font-semibold">Приготвяне</h2>
-                <div className="print:hidden">
-                  <CookMode title={recipe.title} steps={recipe.steps} />
-                </div>
-              </div>
-              <ol className="relative space-y-6 border-l border-border-subtle pl-8">
-                {recipe.steps.map((step, index) => {
-                  const stepImageUrl = getImageUrl(step.image_path);
-                  return (
-                    <li key={step.id} className="relative">
-                      <span className="absolute -left-[calc(2rem+1px)] flex h-7 w-7 items-center justify-center rounded-full bg-accent text-xs font-semibold text-accent-foreground">
-                        {index + 1}
-                      </span>
-                      <p className="text-sm leading-relaxed">{step.text}</p>
-                      {stepImageUrl && (
-                        <div className="relative mt-3 aspect-video w-full max-w-sm overflow-hidden rounded-xl bg-surface-muted print:hidden">
-                          <Image
-                            src={stepImageUrl}
-                            alt=""
-                            fill
-                            sizes="(min-width: 400px) 384px, 100vw"
-                            className="object-cover"
-                          />
-                        </div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
+            <div className="mt-3">
+              <RecipeSteps recipeId={recipe.id} steps={stepViews} />
             </div>
 
             {recipe.tags.length > 0 && (
-              <div className="mt-8 flex flex-wrap gap-2 print:hidden">
-                {recipe.tags.map((tag) => (
-                  <span
-                    key={tag.id}
-                    className="rounded-full bg-secondary-soft px-3 py-1 text-xs font-medium text-secondary"
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
+              <p className="mt-8 border-t border-border-subtle pt-4 text-base text-muted-foreground print:hidden">
+                <span className="font-heading font-bold uppercase tracking-[0.1em]">Етикети: </span>
+                {recipe.tags.map((tag) => tag.name).join(", ")}
+              </p>
             )}
-          </div>
+
+            {/* Asked after cooking, not before: rating, keeping and passing it on. */}
+            <div className="mt-10 border-2 border-rule print:hidden">
+              <h2 className="border-b-2 border-rule px-4 py-3 font-heading text-2xl font-extrabold uppercase tracking-wide">
+                Как се получи?
+              </h2>
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3">
+                <RatingStars
+                  recipeId={recipe.id}
+                  slug={recipe.slug}
+                  average={ratingAverage}
+                  count={recipe.rating_count}
+                />
+                <div className="flex items-center gap-2">
+                  <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
+                  <PrintButton />
+                  <ShareButtons title={recipe.title} url={recipeUrl} />
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
 
         {relatedRecipes.length > 0 && (
-          <div className="mt-16 border-t border-border-subtle pt-8 print:hidden">
-            <h2 className="mb-5 font-heading text-xl font-semibold">Още рецепти</h2>
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+          <section aria-labelledby="related-head" className="mt-6 print:hidden">
+            <SectionHead
+              title="Още от рафта"
+              id="related-head"
+              action={
+                recipe.category
+                  ? { href: `/recepti?category=${recipe.category.slug}`, label: recipe.category.name }
+                  : { href: "/recepti", label: "Всички рецепти" }
+              }
+            />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {relatedRecipes.map((related) => (
                 <RecipeCard key={related.id} recipe={related} />
               ))}
             </div>
-          </div>
+          </section>
         )}
 
-        <div className="mt-12 print:hidden">
+        <div className="mt-16 print:hidden">
           <SubscribeForm />
         </div>
 
-        <div className="print:hidden">
+        <div className="mb-16 print:hidden">
           <Comments recipeId={recipe.id} comments={comments} />
         </div>
       </div>

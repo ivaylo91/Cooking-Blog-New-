@@ -1,8 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { Heart } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
 function noopSubscribe() {
@@ -49,14 +48,14 @@ export function LikeButton({
       type="button"
       onClick={handleLike}
       disabled={liked || pending}
-      className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition ${
-        liked
-          ? "border-accent bg-accent-soft text-accent-strong"
-          : "border-border-subtle hover:border-accent hover:text-accent"
+      aria-pressed={liked}
+      aria-label={liked ? `Харесано, ${likes}` : `Харесай, ${likes}`}
+      className={`flex h-11 min-w-11 items-center justify-center gap-1.5 border-2 border-rule px-3 font-heading text-xl font-extrabold tabular-nums transition-colors ${
+        liked ? "bg-foreground text-background" : "hover:bg-surface-muted"
       }`}
     >
-      <FontAwesomeIcon icon={faHeart} className={liked ? "text-accent" : ""} />
-      {likes}
+      <Heart size={20} strokeWidth={2.5} className={liked ? "fill-current" : ""} />
+      {likes > 0 && likes}
     </button>
   );
 }

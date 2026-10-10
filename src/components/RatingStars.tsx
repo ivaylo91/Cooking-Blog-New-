@@ -1,8 +1,7 @@
 "use client";
 
 import { useActionState, useState, useSyncExternalStore } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { Star } from "lucide-react";
 import { rateRecipe, type RatingActionState } from "@/app/recepti/actions";
 
 const initialState: RatingActionState = { status: "idle", value: null };
@@ -61,19 +60,20 @@ export function RatingStars({
     try {
       localStorage.setItem(storageKey(recipeId), String(star));
     } catch {
-      // Private mode or blocked storage — the vote still counts server-side.
+      // Private mode or blocked storage: the vote still counts server-side.
     }
   }
 
   return (
     <div className="print:hidden">
-      <form action={formAction} className="flex flex-wrap items-center gap-2">
+      <form action={formAction} className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <div
-          className="flex items-center gap-0.5"
+          className="flex items-center"
           onMouseLeave={() => setHovered(null)}
           role="group"
           aria-label="Оцени рецептата"
         >
+          {/* Each star is a full 44px target: a mis-tap here is a real vote. */}
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
@@ -87,22 +87,23 @@ export function RatingStars({
               onBlur={() => setHovered(null)}
               aria-label={`${star} от 5`}
               aria-pressed={myRating === star}
-              className="rounded p-0.5 transition disabled:opacity-50"
+              className="flex size-11 items-center justify-center disabled:opacity-50"
             >
-              <FontAwesomeIcon
-                icon={faStar}
-                className={`h-4 w-4 text-accent ${star <= filledTo ? "" : "opacity-25"}`}
+              <Star
+                size={26}
+                strokeWidth={2.25}
+                className={star <= filledTo ? "fill-current" : "opacity-45"}
               />
             </button>
           ))}
         </div>
 
-        <span className="text-xs text-muted-foreground">
-          {count > 0 ? `${average.toFixed(1)} / 5 (${count})` : "Още няма оценки"}
+        <span className="font-heading text-lg font-bold uppercase tracking-wide tabular-nums">
+          {count > 0 ? `${average.toFixed(1)} от 5 · ${count}` : "Сготвихте ли я? Оценете я."}
         </span>
       </form>
 
-      <p aria-live="polite" className="mt-1 min-h-4 text-xs text-secondary">
+      <p aria-live="polite" className="min-h-6 text-base font-semibold text-secondary">
         {state.status === "success" && "Благодарим за оценката!"}
         {state.status === "error" && (
           <span className="text-destructive-strong">Оценката не беше записана.</span>

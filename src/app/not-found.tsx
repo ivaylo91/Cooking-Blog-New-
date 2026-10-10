@@ -1,24 +1,33 @@
 import Link from "next/link";
-import { ChefHat } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function NotFound() {
   return (
-    <div className="mx-auto max-w-2xl px-6 py-20 text-center">
-      <div className="rounded-2xl border border-border-subtle bg-surface p-10">
-        <span className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
-          <ChefHat size={28} strokeWidth={1.75} />
-        </span>
-        <h1 className="font-heading text-3xl font-bold">404</h1>
-        <p className="mt-2 text-lg font-medium">Тази страница липсва от менюто</p>
-        <p className="mt-2 text-muted-foreground">
-          Рецептата или страницата, която търсите, не съществува или е преместена.
-        </p>
-        <Link
-          href="/"
-          className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
-        >
-          Обратно към началото
-        </Link>
+    <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
+      <div className="border-2 border-rule">
+        <div className="p-5 sm:p-8">
+          <h1 className="font-heading text-[clamp(2.75rem,11vw,6rem)] font-black uppercase leading-[0.88] [text-wrap:balance]">
+            Тази страница липсва от менюто
+          </h1>
+          <p className="mt-5 max-w-xl text-lg text-muted-foreground">
+            Рецептата или страницата, която търсите, не съществува или е преместена.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/recepti"
+              className="inline-flex h-14 items-center gap-2 bg-accent px-6 font-heading text-xl font-extrabold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent-strong"
+            >
+              Към рецептите
+              <ArrowRight size={22} strokeWidth={2.5} />
+            </Link>
+            <Link
+              href="/"
+              className="inline-flex h-14 items-center border-2 border-rule px-6 font-heading text-xl font-extrabold uppercase tracking-wide transition-colors hover:bg-surface-muted"
+            >
+              Начало
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

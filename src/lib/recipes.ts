@@ -290,3 +290,13 @@ export async function getRecipeComments(recipeId: string): Promise<Comment[]> {
   if (error) throw error;
   return data;
 }
+
+/**
+ * Categories that hold at least one published recipe. An empty category is a
+ * dead end for a reader, so filters and suggestions offer only these.
+ */
+export async function getStockedCategories(): Promise<Category[]> {
+  const [categories, recipes] = await Promise.all([getCategories(), getRecipes()]);
+  const stocked = new Set(recipes.map((recipe) => recipe.category_id));
+  return categories.filter((category) => stocked.has(category.id));
+}

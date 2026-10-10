@@ -7,9 +7,10 @@ export function PrintButton() {
     <button
       type="button"
       onClick={() => window.print()}
-      className="ml-auto flex items-center gap-1.5 rounded-full border border-border-subtle px-3 py-1.5 text-xs font-medium hover:border-accent hover:text-accent print:hidden"
+      aria-label="Разпечатай"
+      className="flex size-11 items-center justify-center border-2 border-rule transition-colors hover:bg-surface-muted print:hidden"
     >
-      <Printer size={13} /> Разпечатай
+      <Printer size={20} strokeWidth={2.25} />
     </button>
   );
 }

@@ -17,15 +17,15 @@ export default function GlobalError({
   return (
     <html lang="bg">
       <body className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground">
-        <div className="max-w-md rounded-2xl border border-border-subtle bg-surface p-10 text-center">
-          <h1 className="font-heading text-2xl font-bold">Нещо се обърка</h1>
+        <div className="max-w-md border-2 border-rule bg-surface p-8">
+          <h1 className="font-heading text-5xl font-black uppercase leading-[0.9]">Нещо се обърка</h1>
           <p className="mt-2 text-muted-foreground">
             Сайтът не можа да се зареди. Опитайте отново след малко.
           </p>
           <button
             type="button"
             onClick={reset}
-            className="mt-6 rounded-full bg-accent px-6 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
+            className="mt-6 h-14 bg-accent px-6 font-heading text-xl font-extrabold uppercase tracking-wide text-accent-foreground transition-colors hover:bg-accent-strong"
           >
             Опитай отново
           </button>

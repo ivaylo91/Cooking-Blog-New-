@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChefHat, Menu, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
@@ -10,88 +10,85 @@ const navLinks = [
   { href: "/za-ivo", label: "За Иво" },
 ];
 
+function SearchField({ id, className = "" }: { id: string; className?: string }) {
+  return (
+    <form action="/tarsene" role="search" className={`relative ${className}`}>
+      <label htmlFor={id} className="sr-only">
+        Търсене на рецепта
+      </label>
+      <Search
+        size={17}
+        strokeWidth={2.25}
+        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+      />
+      <input
+        id={id}
+        type="search"
+        name="q"
+        placeholder="Търсене"
+        className="h-11 w-full border-2 border-rule bg-surface pl-10 pr-3 text-base outline-none transition-colors placeholder:text-muted-foreground focus:border-accent"
+      />
+    </form>
+  );
+}
+
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/85 backdrop-blur-md">
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
+    <header className="sticky top-0 z-40 border-b-[3px] border-rule bg-background">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+        {/* The blog's own lid: its name printed on a cobalt panel. */}
         <Link
           href="/"
-          className="flex min-w-0 items-center gap-2"
+          className="flex h-11 min-w-0 items-center bg-brand px-3 font-heading text-[1.35rem] font-extrabold uppercase leading-none tracking-wide text-white"
           onClick={() => setMenuOpen(false)}
         >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
-            <ChefHat size={18} strokeWidth={2.25} />
-          </span>
-          <span className="truncate font-heading text-base font-semibold tracking-tight md:text-lg">
-            Кулинарният блог на Иво
-          </span>
+          <span className="truncate">Кулинарният блог на Иво</span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm font-medium md:flex">
+        <nav aria-label="Основна навигация" className="hidden items-center gap-2 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="whitespace-nowrap transition hover:text-accent"
+              className="flex h-11 items-center px-3 font-heading text-lg font-bold uppercase tracking-wide underline-offset-[6px] hover:underline"
             >
               {link.label}
             </Link>
           ))}
-          <form action="/tarsene" className="relative">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <input
-              type="search"
-              name="q"
-              placeholder="Търсене..."
-              className="w-44 rounded-full border border-border-subtle bg-surface py-1.5 pl-8 pr-3 text-sm outline-none transition focus:border-accent"
-            />
-          </form>
+          <SearchField id="search-desktop" className="w-52" />
           <ThemeToggle />
         </nav>
 
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle md:hidden"
+          className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-rule md:hidden"
           aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
+          aria-expanded={menuOpen}
+          aria-controls="mobile-menu"
         >
-          {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          {menuOpen ? <X size={20} strokeWidth={2.25} /> : <Menu size={20} strokeWidth={2.25} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div className="border-t border-border-subtle bg-background px-6 py-4 md:hidden">
-          <nav className="flex flex-col gap-3 text-sm font-medium">
+        <div id="mobile-menu" className="border-t-2 border-rule bg-background md:hidden">
+          <nav aria-label="Основна навигация" className="flex flex-col">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="py-1"
+                className="flex h-14 items-center border-b border-border-subtle px-4 font-heading text-2xl font-bold uppercase tracking-wide"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          <form action="/tarsene" className="relative mt-3">
-            <Search
-              size={15}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-            <input
-              type="search"
-              name="q"
-              placeholder="Търсене..."
-              className="w-full rounded-full border border-border-subtle bg-surface py-2 pl-8 pr-3 text-sm outline-none focus:border-accent"
-            />
-          </form>
-          <div className="mt-4 flex items-center justify-between border-t border-border-subtle pt-4">
-            <span className="text-sm font-medium">Тема</span>
+          <div className="flex items-center gap-3 px-4 py-4">
+            <SearchField id="search-mobile" className="flex-1" />
             <ThemeToggle />
           </div>
         </div>

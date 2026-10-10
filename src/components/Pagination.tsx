@@ -23,10 +23,10 @@ function pageItems(page: number, pageCount: number): Array<number | "gap"> {
 }
 
 const base =
-  "flex h-9 min-w-9 items-center justify-center rounded-full border px-3 text-sm font-medium transition";
-const on = "border-accent bg-accent text-accent-foreground";
-const off = "border-border-subtle hover:border-accent hover:text-accent";
-const disabled = "border-border-subtle opacity-40";
+  "flex h-11 min-w-11 items-center justify-center border-2 border-rule px-3 font-heading text-xl font-extrabold tabular-nums transition-colors";
+const on = "bg-foreground text-background";
+const off = "hover:bg-surface-muted";
+const disabled = "opacity-30";
 
 export function Pagination({
   page,
@@ -41,20 +41,20 @@ export function Pagination({
   if (pageCount <= 1) return null;
 
   return (
-    <nav aria-label="Страници" className="mt-10 flex flex-wrap items-center justify-center gap-2">
+    <nav aria-label="Страници" className="mt-12 flex flex-wrap items-center justify-center gap-2">
       {page > 1 ? (
         <Link href={hrefFor(page - 1)} rel="prev" aria-label="Предишна страница" className={`${base} ${off}`}>
-          <ChevronLeft size={16} />
+          <ChevronLeft size={20} strokeWidth={2.5} />
         </Link>
       ) : (
         <span aria-hidden="true" className={`${base} ${disabled}`}>
-          <ChevronLeft size={16} />
+          <ChevronLeft size={20} strokeWidth={2.5} />
         </span>
       )}
 
       {pageItems(page, pageCount).map((item, index) =>
         item === "gap" ? (
-          <span key={`gap-${index}`} className="px-1 text-muted-foreground">
+          <span key={`gap-${index}`} className="px-1 font-heading text-xl font-extrabold text-muted-foreground">
             …
           </span>
         ) : (
@@ -72,11 +72,11 @@ export function Pagination({
 
       {page < pageCount ? (
         <Link href={hrefFor(page + 1)} rel="next" aria-label="Следваща страница" className={`${base} ${off}`}>
-          <ChevronRight size={16} />
+          <ChevronRight size={20} strokeWidth={2.5} />
         </Link>
       ) : (
         <span aria-hidden="true" className={`${base} ${disabled}`}>
-          <ChevronRight size={16} />
+          <ChevronRight size={20} strokeWidth={2.5} />
         </span>
       )}
     </nav>

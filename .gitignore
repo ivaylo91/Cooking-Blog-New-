@@ -40,3 +40,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# design-review captures and decision-page logs (regenerable, large)
+.impeccable/review/
+.impeccable/questions/
