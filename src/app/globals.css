@@ -1,35 +1,34 @@
 @import "tailwindcss";
 
 /*
- * Бакалия: the blog printed like a Bulgarian pantry label. White label stock,
- * ink-black print, heavy rules. Colour arrives only as full-bleed category
- * "lid" fields (see src/lib/categories.ts), never in the reading column.
+ * Списание: the blog as a modern food-magazine app. White ground, near-black
+ * ink, one tomato accent reserved for the primary action and active states.
+ * The food photograph carries the colour; the interface stays out of its way.
  */
 :root {
   color-scheme: light;
   --background: #ffffff;
-  --foreground: #14161a;
+  --foreground: #111111;
   --surface: #ffffff;
-  --surface-muted: #f1f2f4;
-  --border-subtle: rgba(20, 22, 26, 0.16);
-  /* The heavy printed rule: panel boxes, section heads, card frames. */
-  --rule: #14161a;
-  --muted-foreground: #4a505a;
-  --accent: #1f3fbf;
-  --accent-strong: #172f91;
+  --surface-muted: #f5f5f4;
+  --border-subtle: rgba(17, 17, 17, 0.1);
+  --rule: #e7e5e4;
+  --muted-foreground: #5f6368;
+  /* 5.2:1 with white text, and as text on white. */
+  --accent: #c2410c;
+  --accent-strong: #9a3412;
   --accent-foreground: #ffffff;
-  --accent-soft: #e4e9fb;
-  --secondary: #1b6e37;
-  --secondary-soft: #e3f1e7;
-  --destructive: #c8231b;
-  --destructive-strong: #a01b14;
-  --destructive-soft: #fdecea;
-  --destructive-border: #f3b9b4;
-  /* Printed sticker colours: identical in both themes, like ink on a label. */
-  --stamp: #c8231b;
-  --kraft: #c89b63;
-  /* The blog's own lid: the cobalt of a кисело мляко tub. */
-  --brand: #1f3fbf;
+  --accent-soft: #fff1ea;
+  --secondary: #15803d;
+  --secondary-soft: #ecfdf3;
+  --destructive: #b91c1c;
+  --destructive-strong: #991b1b;
+  --destructive-soft: #fef2f2;
+  --destructive-border: #fecaca;
+  /* Kept for the admin, which inherits tokens only. */
+  --stamp: #b91c1c;
+  --kraft: #f5f5f4;
+  --brand: #c2410c;
 }
 
 @theme inline {
@@ -53,54 +52,67 @@
   --color-stamp: var(--stamp);
   --color-kraft: var(--kraft);
   --color-brand: var(--brand);
-  --font-sans: var(--font-sofia), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-sofia-xc), var(--font-sofia), ui-sans-serif, sans-serif;
+  --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  /* The whole type scale: four sizes. Rank comes from weight and colour. */
+  --text-display: clamp(2.5rem, 1.9rem + 2.6vw, 3.75rem);
+  --text-display--line-height: 1.05;
+  --text-heading: 1.5rem;
+  --text-heading--line-height: 1.25;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.6;
+  --text-small: 0.875rem;
+  --text-small--line-height: 1.45;
 }
 
-/* The same label printed on a dark tin. */
+/* The evening kitchen: designed for cooking at night, not an inverted day. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --background: #0e1013;
-    --foreground: #f1f2f4;
-    --surface: #16191d;
-    --surface-muted: #1d2126;
-    --border-subtle: rgba(241, 242, 244, 0.16);
-    --rule: #f1f2f4;
-    --muted-foreground: #a6acb6;
-    --accent: #8ea2ff;
-    --accent-strong: #b4c1ff;
-    --accent-foreground: #0e1013;
-    --accent-soft: rgba(142, 162, 255, 0.16);
-    --secondary: #5fc27e;
-    --secondary-soft: rgba(95, 194, 126, 0.14);
-    --destructive: #ff6b63;
-    --destructive-strong: #ff9b95;
-    --destructive-soft: rgba(255, 107, 99, 0.12);
-    --destructive-border: rgba(255, 107, 99, 0.35);
+    --background: #121212;
+    --foreground: #f4f1ec;
+    --surface: #1c1c1c;
+    --surface-muted: #1f1f1f;
+    --border-subtle: rgba(244, 241, 236, 0.12);
+    --rule: #2c2c2c;
+    --muted-foreground: #a3a3a3;
+    --accent: #ff7a45;
+    --accent-strong: #ff9a6e;
+    --accent-foreground: #121212;
+    --accent-soft: rgba(255, 122, 69, 0.14);
+    --secondary: #4ade80;
+    --secondary-soft: rgba(74, 222, 128, 0.12);
+    --destructive: #f87171;
+    --destructive-strong: #fca5a5;
+    --destructive-soft: rgba(248, 113, 113, 0.12);
+    --destructive-border: rgba(248, 113, 113, 0.3);
+    --kraft: #1f1f1f;
+    --brand: #ff7a45;
   }
 }
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --background: #0e1013;
-  --foreground: #f1f2f4;
-  --surface: #16191d;
-  --surface-muted: #1d2126;
-  --border-subtle: rgba(241, 242, 244, 0.16);
-  --rule: #f1f2f4;
-  --muted-foreground: #a6acb6;
-  --accent: #8ea2ff;
-  --accent-strong: #b4c1ff;
-  --accent-foreground: #0e1013;
-  --accent-soft: rgba(142, 162, 255, 0.16);
-  --secondary: #5fc27e;
-  --secondary-soft: rgba(95, 194, 126, 0.14);
-  --destructive: #ff6b63;
-  --destructive-strong: #ff9b95;
-  --destructive-soft: rgba(255, 107, 99, 0.12);
-  --destructive-border: rgba(255, 107, 99, 0.35);
+  --background: #121212;
+  --foreground: #f4f1ec;
+  --surface: #1c1c1c;
+  --surface-muted: #1f1f1f;
+  --border-subtle: rgba(244, 241, 236, 0.12);
+  --rule: #2c2c2c;
+  --muted-foreground: #a3a3a3;
+  --accent: #ff7a45;
+  --accent-strong: #ff9a6e;
+  --accent-foreground: #121212;
+  --accent-soft: rgba(255, 122, 69, 0.14);
+  --secondary: #4ade80;
+  --secondary-soft: rgba(74, 222, 128, 0.12);
+  --destructive: #f87171;
+  --destructive-strong: #fca5a5;
+  --destructive-soft: rgba(248, 113, 113, 0.12);
+  --destructive-border: rgba(248, 113, 113, 0.3);
+  --kraft: #1f1f1f;
+  --brand: #ff7a45;
 }
 
 body {
@@ -109,10 +121,16 @@ body {
   /* Read at arm's length on a counter: 17px body, generous leading. */
   font-size: 1.0625rem;
   line-height: 1.6;
-  font-variant-numeric: lining-nums;
 }
 
-/* Browser surfaces carry the print too, not UA defaults. */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* Browser surfaces carry the design too, not UA defaults. */
 ::selection {
   background: var(--accent);
   color: var(--accent-foreground);
@@ -129,7 +147,7 @@ html {
 
 a {
   text-underline-offset: 0.2em;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1.5px;
 }
 
 /* Text inputs are excluded on purpose: they carry their own focus treatment
@@ -141,39 +159,16 @@ button:focus-visible,
 summary:focus-visible,
 input[type="checkbox"]:focus-visible,
 [tabindex]:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* On a coloured lid field the accent may not read; use the field's own ink. */
-.lid-field a:focus-visible,
-.lid-field button:focus-visible {
-  outline-color: currentColor;
-}
-
-/* The one authored motion: the stamp is pressed onto the label, once. */
-@keyframes stamp-press {
-  0% {
-    transform: rotate(-14deg) scale(1.35);
-  }
-  100% {
-    transform: rotate(-9deg) scale(1);
-  }
-}
-
-.stamp-press {
-  transform: rotate(-9deg);
-  animation: stamp-press 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
-}
-
 @media (prefers-reduced-motion: reduce) {
-  .stamp-press {
-    animation: none;
-  }
-
   *,
   *::before,
   *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }

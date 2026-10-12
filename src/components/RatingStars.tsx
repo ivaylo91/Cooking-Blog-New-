@@ -91,19 +91,20 @@ export function RatingStars({
             >
               <Star
                 size={26}
-                strokeWidth={2.25}
-                className={star <= filledTo ? "fill-current" : "opacity-45"}
+                className={
+                  star <= filledTo ? "fill-accent text-accent" : "text-muted-foreground/60"
+                }
               />
             </button>
           ))}
         </div>
 
-        <span className="font-heading text-lg font-bold uppercase tracking-wide tabular-nums">
-          {count > 0 ? `${average.toFixed(1)} от 5 · ${count}` : "Сготвихте ли я? Оценете я."}
+        <span className="font-medium text-muted-foreground tabular-nums">
+          {count > 0 ? `${average.toFixed(1)} от 5 · ${count} оценки` : "Още няма оценки"}
         </span>
       </form>
 
-      <p aria-live="polite" className="min-h-6 text-base font-semibold text-secondary">
+      <p aria-live="polite" className="min-h-6 font-medium text-secondary">
         {state.status === "success" && "Благодарим за оценката!"}
         {state.status === "error" && (
           <span className="text-destructive-strong">Оценката не беше записана.</span>

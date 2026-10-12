@@ -37,6 +37,7 @@ Every recipe is tested in Иво's own kitchen and photographed there, by him. T
 
 - The illustrated doodle pattern (whisk, herb sprig, steam curls, citrus slice, soup bowl, basil and tomatoes; `src/components/CookingBackground.tsx`) is a binding brand asset and stays in the redesign. Its placement and treatment may change, but it must not sit behind recipe body text (see the 2026-10-07 critique).
 - The terracotta accent, the current fonts and the current layout are not binding and may be replaced.
+- The blog must feel contemporary. The "Бакалия" grocery-label world (2026-10-10) was rejected on 2026-10-12 because it read as retro packaging rather than modern; do not return to retro, vintage-packaging or pastiche worlds.
 - Voice: plain, warm Bulgarian with kitchen idiom. The 404 line "Тази страница липсва от менюто" is the reference for tone.
 
 ## Evidence on Hand

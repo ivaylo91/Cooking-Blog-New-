@@ -16,51 +16,46 @@ const links = [
   { href: "/za-ivo", label: "За Иво" },
 ];
 
-/** The flour sack at the bottom of the shelf: kraft paper, one-ink print. */
 export function Footer() {
   return (
-    <footer className="lid-field border-t-[3px] border-rule bg-kraft text-[#14161a]">
+    <footer className="mt-24 bg-surface-muted">
       {/* The doodle band sits in its own strip so no text ever lands on it. */}
-      <div className="relative h-24 border-b-2 border-[#14161a]">
-        <CookingBackground className="absolute inset-0 text-[#14161a]" opacity={0.55} scale={0.42} />
+      <div className="relative h-20 text-muted-foreground">
+        <CookingBackground className="absolute inset-0" opacity={0.45} scale={0.4} />
       </div>
 
-      <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[1fr_auto] md:items-end">
+      <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="font-heading text-4xl font-extrabold uppercase leading-[0.95] tracking-wide sm:text-5xl">
-            Кулинарният блог на Иво
-          </p>
-          <p className="mt-3 max-w-md text-base">
+          <p className="text-heading font-bold tracking-tight">Кулинарният блог на Иво</p>
+          <p className="mt-2 max-w-md text-muted-foreground">
             Домашни рецепти, изпробвани в собствената ми кухня — за всеки, който
             обича да готви за удоволствие.
           </p>
         </div>
 
-        <nav aria-label="Долна навигация" className="flex flex-wrap border-2 border-[#14161a]">
+        <nav aria-label="Долна навигация" className="flex flex-wrap gap-1">
           {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex h-12 items-center border-r-2 border-[#14161a] px-5 font-heading text-lg font-bold uppercase tracking-wide transition-colors hover:bg-[#14161a] hover:text-kraft"
+              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-background"
             >
               {link.label}
             </Link>
           ))}
           <a
             href="/rss.xml"
-            className="flex h-12 items-center gap-2 px-5 font-heading text-lg font-bold uppercase tracking-wide transition-colors hover:bg-[#14161a] hover:text-kraft"
+            className="flex h-11 items-center gap-2 rounded-full px-4 font-medium transition-colors hover:bg-background"
           >
-            <Rss size={17} strokeWidth={2.5} />
+            <Rss size={17} />
             RSS
           </a>
         </nav>
       </div>
 
-      <div className="border-t-2 border-[#14161a]">
-        <p className="mx-auto max-w-6xl px-4 py-4 text-sm font-semibold tabular-nums sm:px-6">
-          © <CopyrightYear /> Кулинарният блог на Иво
-        </p>
-      </div>
+      <p className="mx-auto max-w-6xl px-4 pb-8 text-small text-muted-foreground tabular-nums sm:px-6">
+        © <CopyrightYear /> Кулинарният блог на Иво
+      </p>
     </footer>
   );
 }

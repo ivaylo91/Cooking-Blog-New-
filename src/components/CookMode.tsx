@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, ListChecks, Utensils, X } from "lucide-react";
-import { lidStyle } from "@/lib/categories";
+import { rememberCooking } from "@/lib/lastCooked";
 import { formatQuantity } from "@/lib/quantities";
 import type { Ingredient, Step } from "@/types/recipe";
 
@@ -10,26 +10,43 @@ const FOCUSABLE =
   'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
+ * Bulgarian inflects nouns, so "каймата" in a step should match "кайма" in the
+ * list. Comparing the first few letters of each word is crude but holds up
+ * for kitchen nouns, and a missed match only means one less highlight.
+ */
+function stem(word: string) {
+  const w = word.toLowerCase().replace(/[^a-zа-я]/g, "");
+  return w.length <= 4 ? w : w.slice(0, Math.max(4, w.length - 2));
+}
+
+function usedInStep(ingredient: Ingredient, stepText: string) {
+  const words = stepText.toLowerCase().split(/\s+/);
+  const keys = ingredient.item.split(/\s+/).map(stem).filter((k) => k.length >= 3);
+  return keys.some((key) => words.some((word) => word.replace(/[^a-zа-я]/g, "").startsWith(key)));
+}
+
+/**
  * Full-screen, one step at a time, screen kept awake: the recipe as you read
  * it at the stove. It is a modal dialog, so focus moves in and comes back,
  * Escape leaves, the arrow keys turn steps, and the page behind stays still.
- * It remembers the step you were on, and the ingredients are one tap away
- * so checking a quantity never costs your place.
+ * It remembers the step you were on, and the ingredients are one tap away,
+ * with the ones this step uses marked, so checking a quantity never costs
+ * your place.
  */
 export function CookMode({
   recipeId,
+  slug,
   title,
   steps,
   ingredients,
   servings,
-  categorySlug,
 }: {
   recipeId: string;
+  slug: string;
   title: string;
   steps: Step[];
   ingredients: Ingredient[];
   servings: number;
-  categorySlug: string | null | undefined;
 }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
@@ -41,9 +58,16 @@ export function CookMode({
   const titleId = useId();
   const storageKey = `cook:${recipeId}`;
 
+  const stepText = steps[index]?.text ?? "";
+  const usedNow = useMemo(
+    () => new Set(ingredients.filter((i) => usedInStep(i, stepText)).map((i) => i.id)),
+    [ingredients, stepText]
+  );
+
   function goTo(next: number) {
     const clamped = Math.max(0, Math.min(steps.length - 1, next));
     setIndex(clamped);
+    rememberCooking(slug, title, clamped);
     try {
       localStorage.setItem(storageKey, String(clamped));
     } catch {
@@ -62,6 +86,7 @@ export function CookMode({
     setIndex(start);
     setShowIngredients(false);
     setOpen(true);
+    rememberCooking(slug, title, start);
   }
 
   function close() {
@@ -166,6 +191,8 @@ export function CookMode({
   if (steps.length === 0) return null;
 
   const isLast = index === steps.length - 1;
+  const primary =
+    "flex h-16 items-center justify-center gap-2 rounded-full bg-accent text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong";
 
   return (
     <>
@@ -173,9 +200,9 @@ export function CookMode({
         ref={triggerRef}
         type="button"
         onClick={openCookMode}
-        className="flex h-14 w-full items-center justify-center gap-2.5 bg-brand px-6 font-heading text-xl font-extrabold uppercase tracking-wide text-white transition-colors hover:bg-[#172f91] sm:w-auto"
+        className="flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong sm:w-auto"
       >
-        <Utensils size={22} strokeWidth={2.5} />
+        <Utensils size={20} />
         Готви стъпка по стъпка
       </button>
 
@@ -187,89 +214,85 @@ export function CookMode({
           aria-labelledby={titleId}
           className="fixed inset-0 z-[60] flex flex-col bg-background"
         >
-          {/* The lid band: which dish, in its category's colour. */}
-          <div
-            style={lidStyle(categorySlug)}
-            className="lid-field flex items-center justify-between gap-3 border-b-[3px] border-rule bg-[var(--lid)] px-4 py-2 text-[var(--lid-fg)] sm:px-6"
-          >
-            <h2
-              id={titleId}
-              className="min-w-0 truncate font-heading text-2xl font-extrabold uppercase tracking-wide"
-            >
+          <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-8">
+            <h2 id={titleId} className="min-w-0 truncate text-body font-bold">
               {title}
             </h2>
             <button
               type="button"
               onClick={close}
-              className="flex size-12 shrink-0 items-center justify-center border-2 border-current"
+              className="flex size-12 shrink-0 items-center justify-center rounded-full bg-surface-muted"
               aria-label="Затвори режима за готвене"
             >
-              <X size={24} strokeWidth={2.5} />
+              <X size={22} />
             </button>
           </div>
 
-          {/* Progress: one ruled cell per step, filled as you go. */}
-          <div className="flex gap-1 border-b-2 border-rule px-4 py-2 sm:px-6" aria-hidden="true">
+          {/* Progress: one segment per step, filled as you go. */}
+          <div className="flex gap-1.5 px-4 pt-4 sm:px-8" aria-hidden="true">
             {steps.map((step, i) => (
               <span
                 key={step.id}
-                className={`h-2 flex-1 border border-rule ${i <= index ? "bg-foreground" : ""}`}
+                className={`h-1.5 flex-1 rounded-full ${i <= index ? "bg-accent" : "bg-surface-muted"}`}
               />
             ))}
           </div>
 
-          <div className="relative flex flex-1 flex-col overflow-y-auto px-5 py-8 sm:px-10">
-            <p
-              aria-live="polite"
-              className="font-heading text-xl font-extrabold uppercase tracking-[0.12em] tabular-nums"
-            >
+          <div className="relative flex flex-1 flex-col overflow-y-auto px-5 py-8 sm:px-12">
+            <p aria-live="polite" className="font-semibold text-muted-foreground tabular-nums">
               Стъпка {index + 1} от {steps.length}
             </p>
-            <p className="mt-4 max-w-3xl text-[1.85rem] font-medium leading-snug sm:text-[2.4rem]">
+            <p className="mt-3 max-w-3xl text-display font-medium leading-snug">
               {steps[index].text}
             </p>
 
             {showIngredients && (
               <div
-                className="absolute inset-0 overflow-y-auto bg-background px-5 py-6 sm:px-10"
+                className="absolute inset-0 overflow-y-auto bg-background px-5 py-6 sm:px-12"
                 aria-label="Съставки"
                 role="region"
               >
-                <div className="border-b-[3px] border-rule pb-2">
-                  <p className="font-heading text-3xl font-extrabold uppercase tracking-wide">
-                    Съставки
-                    <span className="ml-3 text-lg font-bold text-muted-foreground">
-                      за {servings} порции
-                    </span>
-                  </p>
-                </div>
-                <ul className="mt-2">
-                  {ingredients.map((ingredient) => (
-                    <li
-                      key={ingredient.id}
-                      className="flex items-baseline gap-4 border-b border-border-subtle py-3 text-xl"
-                    >
-                      <span className="min-w-[6rem] shrink-0 font-heading text-2xl font-extrabold tabular-nums">
-                        {formatQuantity(ingredient.amount, ingredient.unit)}
-                      </span>
-                      <span>{ingredient.item}</span>
-                    </li>
-                  ))}
+                <p className="text-heading font-bold">
+                  Съставки
+                  <span className="ml-2 text-body font-medium text-muted-foreground">
+                    за {servings} порции
+                  </span>
+                </p>
+                {usedNow.size > 0 && (
+                  <p className="mt-1 text-muted-foreground">Отбелязаните са за тази стъпка.</p>
+                )}
+                <ul className="mt-3">
+                  {ingredients.map((ingredient) => {
+                    const used = usedNow.has(ingredient.id);
+                    return (
+                      <li
+                        key={ingredient.id}
+                        className={`flex items-baseline gap-4 rounded-xl px-3 py-3 text-heading ${
+                          used ? "bg-accent-soft" : ""
+                        }`}
+                      >
+                        <span className="min-w-[5.5rem] shrink-0 font-semibold tabular-nums">
+                          {formatQuantity(ingredient.amount, ingredient.unit)}
+                        </span>
+                        <span className={used ? "font-semibold" : ""}>{ingredient.item}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             )}
           </div>
 
-          <div className="grid grid-cols-[auto_1fr_1fr] gap-2 border-t-[3px] border-rule px-4 py-4 sm:px-6">
+          <div className="grid grid-cols-[auto_1fr_1fr] gap-2 px-4 pb-5 pt-3 sm:px-8">
             <button
               type="button"
               onClick={() => setShowIngredients((v) => !v)}
               aria-pressed={showIngredients}
-              className={`flex h-16 items-center justify-center gap-2 border-2 border-rule px-4 font-heading text-lg font-extrabold uppercase tracking-wide ${
-                showIngredients ? "bg-foreground text-background" : ""
+              className={`flex h-16 items-center justify-center gap-2 rounded-full px-5 font-semibold transition-colors ${
+                showIngredients ? "bg-foreground text-background" : "bg-surface-muted"
               }`}
             >
-              <ListChecks size={22} strokeWidth={2.5} />
+              <ListChecks size={22} />
               <span className="hidden sm:inline">Съставки</span>
               <span className="sr-only sm:hidden">Съставки</span>
             </button>
@@ -277,27 +300,17 @@ export function CookMode({
               type="button"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
-              className="flex h-16 items-center justify-center gap-2 border-2 border-rule font-heading text-xl font-extrabold uppercase tracking-wide disabled:opacity-30"
+              className="flex h-16 items-center justify-center gap-2 rounded-full bg-surface-muted text-body font-semibold disabled:opacity-35"
             >
-              <ArrowLeft size={24} strokeWidth={2.5} /> Назад
+              <ArrowLeft size={22} /> Назад
             </button>
             {isLast ? (
-              <button
-                ref={nextRef}
-                type="button"
-                onClick={close}
-                className="flex h-16 items-center justify-center gap-2 bg-brand font-heading text-xl font-extrabold uppercase tracking-wide text-white"
-              >
+              <button ref={nextRef} type="button" onClick={close} className={primary}>
                 Готово
               </button>
             ) : (
-              <button
-                ref={nextRef}
-                type="button"
-                onClick={() => goTo(index + 1)}
-                className="flex h-16 items-center justify-center gap-2 bg-brand font-heading text-xl font-extrabold uppercase tracking-wide text-white"
-              >
-                Напред <ArrowRight size={24} strokeWidth={2.5} />
+              <button ref={nextRef} type="button" onClick={() => goTo(index + 1)} className={primary}>
+                Напред <ArrowRight size={22} />
               </button>
             )}
           </div>

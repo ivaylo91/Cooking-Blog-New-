@@ -25,7 +25,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           height: "100%",
           display: "flex",
           position: "relative",
-          background: imageUrl ? "#2b241d" : "linear-gradient(135deg, #fbf7f0, #f3e0cd)",
+          background: imageUrl ? "#111111" : "#f5f5f4",
         }}
       >
         {imageUrl && (
@@ -68,7 +68,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               width: 56,
               height: 56,
               borderRadius: 999,
-              background: "#c1622b",
+              background: "#c2410c",
             }}
           >
             <svg
@@ -76,7 +76,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               height="28"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="#fffaf5"
+              stroke="#ffffff"
               strokeWidth="2.25"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -90,7 +90,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               display: "flex",
               fontSize: 28,
               fontWeight: 600,
-              color: imageUrl ? "#fffaf5" : "#2b241d",
+              color: imageUrl ? "#ffffff" : "#111111",
             }}
           >
             Кулинарният блог на Иво
@@ -113,15 +113,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               style={{
                 display: "flex",
                 alignSelf: "flex-start",
-                background: "#c1622b",
-                color: "#fffaf5",
+                background: "#c2410c",
+                color: "#ffffff",
                 padding: "10px 22px",
                 borderRadius: 999,
                 fontSize: 24,
                 fontWeight: 600,
                 marginBottom: 24,
-                textTransform: "uppercase",
-                letterSpacing: 2,
               }}
             >
               {recipe.category.name}
@@ -133,7 +131,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               fontSize: 66,
               fontWeight: 700,
               lineHeight: 1.1,
-              color: imageUrl ? "#ffffff" : "#2b241d",
+              color: imageUrl ? "#ffffff" : "#111111",
               maxWidth: 1000,
             }}
           >

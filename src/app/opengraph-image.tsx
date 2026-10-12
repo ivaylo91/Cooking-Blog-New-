@@ -14,7 +14,7 @@ export default async function Image() {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          background: "linear-gradient(135deg, #fbf7f0, #f3e0cd)",
+          background: "#f5f5f4",
           padding: 80,
         }}
       >
@@ -26,7 +26,7 @@ export default async function Image() {
             width: 130,
             height: 130,
             borderRadius: 999,
-            background: "#c1622b",
+            background: "#c2410c",
             marginBottom: 44,
           }}
         >
@@ -35,7 +35,7 @@ export default async function Image() {
             height="64"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="#fffaf5"
+            stroke="#ffffff"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -44,10 +44,10 @@ export default async function Image() {
             <line x1="6" y1="17" x2="18" y2="17" />
           </svg>
         </div>
-        <div style={{ display: "flex", fontSize: 64, fontWeight: 700, color: "#2b241d" }}>
+        <div style={{ display: "flex", fontSize: 64, fontWeight: 700, color: "#111111" }}>
           Кулинарният блог на Иво
         </div>
-        <div style={{ display: "flex", fontSize: 30, color: "#857a6d", marginTop: 20 }}>
+        <div style={{ display: "flex", fontSize: 30, color: "#5f6368", marginTop: 20 }}>
           Домашни рецепти за хобиисти и ентусиасти на готвенето
         </div>
       </div>

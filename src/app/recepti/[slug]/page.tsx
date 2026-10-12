@@ -16,13 +16,18 @@ import { RecipeIngredients } from "@/components/RecipeIngredients";
 import { RecipeSteps } from "@/components/RecipeSteps";
 import { RecipeTabs } from "@/components/RecipeTabs";
 import { SectionHead } from "@/components/SectionHead";
-import { Stamp } from "@/components/Stamp";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
 import { SubscribeForm } from "@/components/SubscribeForm";
-import { lidStyle } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
+
+// "Средно" reads as an adverb on its own; as a phrase it needs the feminine form.
+const DIFFICULTY_LABEL: Record<string, string> = {
+  лесно: "Лесна трудност",
+  средно: "Средна трудност",
+  трудно: "Висока трудност",
+};
 
 function isoDuration(minutes: number): string {
   return `PT${minutes}M`;
@@ -158,7 +163,7 @@ export default async function RecipePage({
     ],
   };
 
-  // Net weight, as the label prints it: the facts a cook decides on first.
+  // The facts a cook decides on first: portions and minutes.
   const facts = [
     { label: "Порции", value: recipe.servings, unit: "" },
     recipe.prep_time_minutes > 0
@@ -181,126 +186,129 @@ export default async function RecipePage({
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
-      {/* Front of the pack: the category's lid colour, the dish's name, its
-          net-weight facts and the quality stamp. */}
-      <header
-        style={lidStyle(recipe.category?.slug)}
-        className="lid-field border-b-[3px] border-rule bg-[var(--lid)] text-[var(--lid-fg)] print:border-b-2 print:bg-transparent print:text-black"
-      >
-        <div className="mx-auto grid max-w-6xl gap-x-12 px-4 pt-4 sm:px-6 md:grid-cols-[1.15fr_1fr] md:py-10">
-          <div className="pb-8 md:pb-0">
+      {/* The dish first: the photograph leads, edge to edge on a phone. */}
+      <div className="mx-auto max-w-6xl sm:px-6 sm:pt-6 print:hidden">
+        <div className="relative h-[60svh] w-full overflow-hidden bg-surface-muted sm:h-auto sm:aspect-[4/3] sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]">
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={recipe.title}
+              fill
+              // Without this, `fill` assumes 100vw on desktop too and fetches
+              // an oversized image for a container capped at 72rem.
+              sizes="(min-width: 1152px) 1104px, 100vw"
+              className="object-cover"
+              priority
+            />
+          ) : getPlaceholderVariant(recipe.id) === "salad" ? (
+            <SaladIllustration />
+          ) : (
+            <IngredientsIllustration />
+          )}
+        </div>
+      </div>
+
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <header className="grid gap-x-12 pt-5 sm:pt-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end">
+          <div>
             {recipe.category && (
               <Link
                 href={`/recepti?category=${recipe.category.slug}`}
-                className="inline-flex h-11 items-center gap-1.5 font-heading text-lg font-bold uppercase tracking-[0.1em] underline-offset-4 hover:underline print:hidden"
+                className="inline-flex h-11 items-center gap-1.5 font-semibold text-accent hover:underline print:hidden"
               >
-                <ArrowLeft size={18} strokeWidth={2.75} />
+                <ArrowLeft size={18} />
                 {recipe.category.name}
               </Link>
             )}
-            <h1 className="mt-3 font-heading text-[clamp(3rem,13vw,6rem)] font-black uppercase leading-[0.86] tracking-[-0.005em] [text-wrap:balance]">
-              {recipe.title}
-            </h1>
-            <p className="mt-5 max-w-xl text-lg leading-snug sm:text-xl">{recipe.description}</p>
+            <h1 className="text-display font-bold">{recipe.title}</h1>
+            <p className="mt-3 max-w-2xl text-body text-muted-foreground">{recipe.description}</p>
+          </div>
 
-            <div className="mt-7 flex items-center">
-              <dl className="grid flex-1 grid-flow-col border-y-2 border-current font-heading uppercase tabular-nums">
-                {facts.map((fact) => (
-                  <div
-                    key={fact.label}
-                    className="border-r border-current/40 py-3 pl-3 pr-3 first:pl-0 last:border-r-0"
-                  >
-                    <dt className="text-xs font-bold tracking-[0.12em] sm:text-sm">{fact.label}</dt>
-                    <dd className="mt-1 text-[2.6rem] font-black leading-none sm:text-5xl">
-                      {fact.value}
-                      {fact.unit && (
-                        <span className="ml-1 text-base font-extrabold tracking-wide sm:text-lg">
-                          {fact.unit}
-                        </span>
-                      )}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <Stamp size={92} className="-ml-3 sm:size-[108px] print:hidden" />
-            </div>
-            <p className="mt-3 font-heading text-lg font-bold uppercase tracking-[0.1em]">
-              Трудност: {recipe.difficulty}
+          <div className="mt-6 lg:mt-0">
+            <dl className="flex flex-wrap gap-x-10 gap-y-4 tabular-nums">
+              {facts.map((fact) => (
+                <div key={fact.label}>
+                  <dt className="text-small text-muted-foreground">{fact.label}</dt>
+                  <dd className="mt-0.5 text-heading font-bold">
+                    {fact.value}
+                    {fact.unit && (
+                      <span className="ml-1 text-small font-medium text-muted-foreground">
+                        {fact.unit}
+                      </span>
+                    )}
+                  </dd>
+                </div>
+              ))}
+            </dl>
+            <p className="mt-3 text-small text-muted-foreground">
+              {DIFFICULTY_LABEL[recipe.difficulty] ?? recipe.difficulty}
+            </p>
+            {/* The blog's one claim, set apart in ink rather than buried in grey. */}
+            <p className="mt-1 text-small font-semibold">
+              {imageUrl ? "Сготвено и снимано в моята кухня." : "Сготвено в моята кухня."}
             </p>
           </div>
+        </header>
 
-          {/* The product window: the photo, cut into the label. */}
-          <div className="relative -mx-4 aspect-[4/3] overflow-hidden border-t-[3px] border-current sm:-mx-6 md:mx-0 md:aspect-[5/4] md:self-center md:border-[3px] print:hidden">
-            {imageUrl ? (
-              <Image
-                src={imageUrl}
-                alt={recipe.title}
-                fill
-                // Without this, `fill` assumes 100vw and fetches a 1920px-wide
-                // image for what is a column on desktop.
-                sizes="(min-width: 768px) 45vw, 100vw"
-                className="object-cover"
-                priority
-              />
-            ) : getPlaceholderVariant(recipe.id) === "salad" ? (
-              <SaladIllustration />
-            ) : (
-              <IngredientsIllustration />
-            )}
-          </div>
+        <div className="mt-6">
+          <RecipeTabs />
         </div>
-      </header>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <RecipeTabs />
-
-        {/* Back of the pack: what goes in, then how. */}
+        {/* What goes in, then how. */}
         <div
           id="recipe-body"
-          className="grid gap-14 py-10 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
+          className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
-          <div className="md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto md:pr-1 print:static print:max-h-none">
+          <div className="md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto md:pr-2 print:static print:max-h-none">
             <RecipeIngredients
               recipeId={recipe.id}
+              slug={recipe.slug}
+              title={recipe.title}
               ingredients={recipe.ingredients}
               baseServings={recipe.servings}
             />
           </div>
 
           <section id="prigotvyane" aria-labelledby="prigotvyane-head">
-            <h2
-              id="prigotvyane-head"
-              className="border-b-[3px] border-rule pb-2 font-heading text-[2.75rem] font-extrabold uppercase leading-[0.9] tracking-wide"
-            >
-              Начин на приготвяне
+            <h2 id="prigotvyane-head" className="sr-only text-heading font-bold md:not-sr-only">
+              Приготвяне
             </h2>
             <div className="mt-5 print:hidden">
               <CookMode
                 recipeId={recipe.id}
+                slug={recipe.slug}
                 title={recipe.title}
                 steps={recipe.steps}
                 ingredients={recipe.ingredients}
                 servings={recipe.servings}
-                categorySlug={recipe.category?.slug}
               />
             </div>
             <div className="mt-3">
-              <RecipeSteps recipeId={recipe.id} steps={stepViews} />
+              <RecipeSteps
+                recipeId={recipe.id}
+                slug={recipe.slug}
+                title={recipe.title}
+                steps={stepViews}
+              />
             </div>
 
             {recipe.tags.length > 0 && (
-              <p className="mt-8 border-t border-border-subtle pt-4 text-base text-muted-foreground print:hidden">
-                <span className="font-heading font-bold uppercase tracking-[0.1em]">Етикети: </span>
-                {recipe.tags.map((tag) => tag.name).join(", ")}
-              </p>
+              <ul className="mt-6 flex flex-wrap gap-2 print:hidden" aria-label="Етикети">
+                {recipe.tags.map((tag) => (
+                  <li
+                    key={tag.id}
+                    className="rounded-full bg-surface-muted px-3 py-1 text-small text-muted-foreground"
+                  >
+                    {tag.name}
+                  </li>
+                ))}
+              </ul>
             )}
 
             {/* Asked after cooking, not before: rating, keeping and passing it on. */}
-            <div className="mt-10 border-2 border-rule print:hidden">
-              <h2 className="border-b-2 border-rule px-4 py-3 font-heading text-2xl font-extrabold uppercase tracking-wide">
-                Как се получи?
-              </h2>
-              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-3">
+            <div className="mt-10 rounded-3xl bg-surface-muted p-5 sm:p-6 print:hidden">
+              <h2 className="text-heading font-bold">Как се получи?</h2>
+              <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <RatingStars
                   recipeId={recipe.id}
                   slug={recipe.slug}
@@ -318,9 +326,9 @@ export default async function RecipePage({
         </div>
 
         {relatedRecipes.length > 0 && (
-          <section aria-labelledby="related-head" className="mt-6 print:hidden">
+          <section aria-labelledby="related-head" className="mt-12 print:hidden">
             <SectionHead
-              title="Още от рафта"
+              title="Още рецепти"
               id="related-head"
               action={
                 recipe.category
@@ -328,7 +336,7 @@ export default async function RecipePage({
                   : { href: "/recepti", label: "Всички рецепти" }
               }
             />
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
               {relatedRecipes.map((related) => (
                 <RecipeCard key={related.id} recipe={related} />
               ))}
@@ -336,11 +344,11 @@ export default async function RecipePage({
           </section>
         )}
 
-        <div className="mt-16 print:hidden">
+        <div className="mt-20 print:hidden">
           <SubscribeForm />
         </div>
 
-        <div className="mb-16 print:hidden">
+        <div className="print:hidden">
           <Comments recipeId={recipe.id} comments={comments} />
         </div>
       </div>

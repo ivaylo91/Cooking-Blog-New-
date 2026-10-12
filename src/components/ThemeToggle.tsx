@@ -34,10 +34,10 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="flex h-11 w-11 items-center justify-center border-2 border-rule transition-colors hover:bg-foreground hover:text-background"
+      className="flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-surface-muted"
       aria-label={theme === "dark" ? "Светла тема" : "Тъмна тема"}
     >
-      {theme === "dark" ? <Sun size={18} strokeWidth={2.25} /> : <Moon size={18} strokeWidth={2.25} />}
+      {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
     </button>
   );
 }

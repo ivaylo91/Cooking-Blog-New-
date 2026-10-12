@@ -29,8 +29,8 @@ const sides: Array<{ id: Side; label: string }> = [
 ];
 
 /**
- * On a phone, ingredients and method are the pack's front and back: this bar
- * keeps both one tap away while cooking, and shows which side you are on.
+ * On a phone, ingredients and method stay one tap apart while cooking, and the
+ * segmented control shows which part you are reading.
  */
 export function RecipeTabs() {
   const active = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
@@ -38,23 +38,26 @@ export function RecipeTabs() {
   return (
     <nav
       aria-label="Части на рецептата"
-      className="sticky top-[67px] z-30 -mx-4 grid grid-cols-2 border-b-[3px] border-rule bg-background sm:-mx-6 md:hidden print:hidden"
+      // Sits directly under the 64px header and its 1px border.
+      className="sticky top-[65px] z-30 -mx-4 bg-background/90 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 md:hidden print:hidden"
     >
-      {sides.map((side) => {
-        const isActive = active === side.id;
-        return (
-          <a
-            key={side.id}
-            href={`#${side.id}`}
-            aria-current={isActive ? "location" : undefined}
-            className={`flex h-12 items-center justify-center font-heading text-xl font-extrabold uppercase tracking-wide transition-colors first:border-r-[3px] first:border-rule ${
-              isActive ? "bg-foreground text-background" : ""
-            }`}
-          >
-            {side.label}
-          </a>
-        );
-      })}
+      <div className="grid grid-cols-2 rounded-full bg-surface-muted p-1">
+        {sides.map((side) => {
+          const isActive = active === side.id;
+          return (
+            <a
+              key={side.id}
+              href={`#${side.id}`}
+              aria-current={isActive ? "location" : undefined}
+              className={`flex h-11 items-center justify-center rounded-full font-semibold transition-colors ${
+                isActive ? "bg-background shadow-sm" : "text-muted-foreground"
+              }`}
+            >
+              {side.label}
+            </a>
+          );
+        })}
+      </div>
     </nav>
   );
 }

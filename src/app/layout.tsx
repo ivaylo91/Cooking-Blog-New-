@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Sofia_Sans, Sofia_Sans_Extra_Condensed } from "next/font/google";
+import { Onest } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
@@ -11,16 +11,10 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const siteName = "Кулинарният блог на Иво";
 const siteDescription = "Домашни рецепти за хобиисти и ентусиасти на готвенето.";
 
-// Sofia Sans is drawn by Lettersoup in Sofia and ships Bulgarian-specific
-// Cyrillic forms, which the browser picks up from lang="bg". The extra
-// condensed cut sets names and labels the way pantry packaging does.
-const sofiaSans = Sofia_Sans({
-  variable: "--font-sofia",
-  subsets: ["latin", "cyrillic"],
-});
-
-const sofiaSansExtraCondensed = Sofia_Sans_Extra_Condensed({
-  variable: "--font-sofia-xc",
+// Onest is a contemporary grotesk drawn for Cyrillic first, so Bulgarian text
+// sets as naturally as Latin. One family, weights do the ranking.
+const onest = Onest({
+  variable: "--font-onest",
   subsets: ["latin", "cyrillic"],
 });
 
@@ -66,7 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="bg"
-      className={`${sofiaSans.variable} ${sofiaSansExtraCondensed.variable} h-full antialiased`}
+      className={`${onest.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -81,7 +75,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <JsonLd data={websiteJsonLd} />
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-accent focus:px-4 focus:py-3 focus:font-heading focus:text-base focus:font-bold focus:uppercase focus:tracking-wide focus:text-accent-foreground"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-body focus:font-semibold focus:text-accent-foreground"
         >
           Прескочи към съдържанието
         </a>

@@ -87,25 +87,20 @@ export default async function ReceptiPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
-      <h1 className="mb-6 border-b-[3px] border-rule pb-2 font-heading text-[clamp(3.5rem,16vw,6rem)] font-black uppercase leading-[0.85] tracking-wide">
-        Рецепти
-      </h1>
+    <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-12">
+      <h1 className="mb-6 text-display font-bold leading-[1.05]">Рецепти</h1>
       <RecipeFilters categories={categories} active={active} resultCount={total} />
       {recipes.length === 0 ? (
-        <div className="border-2 border-rule p-6">
-          <p className="font-heading text-2xl font-extrabold uppercase tracking-wide">
-            Празен рафт
-          </p>
+        <div className="rounded-3xl bg-surface-muted p-6 sm:p-8">
+          <p className="text-heading font-bold">Нищо не отговаря на тези филтри</p>
           <p className="mt-2 text-muted-foreground">
-            Няма рецепти, които отговарят на избраните филтри. Махнете някой от тях
-            или вижте всички рецепти.
+            Махнете някой от филтрите или вижте всички рецепти.
           </p>
         </div>
       ) : (
         <>
           <h2 className="sr-only">Резултати</h2>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {recipes.map((recipe, index) => (
               <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />
             ))}

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Minus, Plus, RotateCcw } from "lucide-react";
+import { Check, Minus, Plus, RotateCcw } from "lucide-react";
+import { rememberCooking } from "@/lib/lastCooked";
 import { formatQuantity } from "@/lib/quantities";
 import { useStoredSet } from "@/lib/useStoredSet";
 import type { Ingredient } from "@/types/recipe";
@@ -17,19 +18,22 @@ function groupByName(ingredients: Ingredient[]) {
 }
 
 const stepButton =
-  "flex size-11 items-center justify-center border-2 border-rule transition-colors hover:bg-surface-muted disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent";
+  "flex size-11 items-center justify-center rounded-full bg-surface-muted transition-colors hover:bg-border-subtle disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-surface-muted";
 
 /**
- * The "Съставки" panel of the label. Quantities are the loudest thing on it,
- * set like a net weight, and each row is a full-width tap target so a wet
- * finger can tick it off.
+ * The ingredient list. Quantities lead each row, and the whole row is the tap
+ * target so a wet finger can tick it off. Ticks survive switching apps.
  */
 export function RecipeIngredients({
   recipeId,
+  slug,
+  title,
   ingredients,
   baseServings,
 }: {
   recipeId: string;
+  slug: string;
+  title: string;
   ingredients: Ingredient[];
   baseServings: number;
 }) {
@@ -41,18 +45,18 @@ export function RecipeIngredients({
   const maxServings = baseServings * 2;
   const groups = useMemo(() => groupByName(ingredients), [ingredients]);
 
+  function toggle(id: string) {
+    checked.toggle(id);
+    rememberCooking(slug, title);
+  }
+
   return (
     <section id="sastavki" aria-labelledby="sastavki-head" className="print:mt-0">
-      <h2
-        id="sastavki-head"
-        className="border-b-[3px] border-rule pb-2 font-heading text-[2.75rem] font-extrabold uppercase leading-[0.9] tracking-wide"
-      >
-        Съставки
-      </h2>
-
-      <div className="flex items-center justify-between gap-3 border-b-2 border-rule py-3 print:hidden">
-        <span className="font-heading text-lg font-bold uppercase tracking-wide">Порции</span>
-        <div className="flex items-center">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 id="sastavki-head" className="sr-only text-heading font-bold md:not-sr-only">
+          Съставки
+        </h2>
+        <div className="flex items-center gap-1 print:hidden">
           <button
             type="button"
             onClick={() => setServings((s) => Math.max(1, s - 1))}
@@ -60,13 +64,10 @@ export function RecipeIngredients({
             className={stepButton}
             aria-label="Намали порциите"
           >
-            <Minus size={20} strokeWidth={2.75} />
+            <Minus size={18} />
           </button>
-          <output
-            aria-live="polite"
-            className="flex h-11 min-w-14 items-center justify-center border-y-2 border-rule px-2 font-heading text-3xl font-black tabular-nums"
-          >
-            {servings}
+          <output aria-live="polite" className="min-w-24 text-center font-semibold tabular-nums">
+            {servings} {servings === 1 ? "порция" : "порции"}
           </output>
           <button
             type="button"
@@ -75,17 +76,15 @@ export function RecipeIngredients({
             className={stepButton}
             aria-label="Увеличи порциите"
           >
-            <Plus size={20} strokeWidth={2.75} />
+            <Plus size={18} />
           </button>
         </div>
       </div>
 
       {groups.map(([groupName, items]) => (
-        <div key={groupName} className="mt-4">
+        <div key={groupName} className="mt-5">
           {groupName && (
-            <h3 className="mb-1 font-heading text-base font-extrabold uppercase tracking-[0.12em] text-muted-foreground">
-              {groupName}
-            </h3>
+            <h3 className="mb-1 text-small font-semibold text-muted-foreground">{groupName}</h3>
           )}
           <ul>
             {items.map((ingredient) => {
@@ -97,26 +96,19 @@ export function RecipeIngredients({
                       <input
                         type="checkbox"
                         checked={isChecked}
-                        onChange={() => checked.toggle(ingredient.id)}
-                        className="peer absolute inset-0 size-6 cursor-pointer appearance-none border-2 border-rule bg-surface checked:bg-foreground"
+                        onChange={() => toggle(ingredient.id)}
+                        className="peer absolute inset-0 size-6 cursor-pointer appearance-none rounded-md border-2 border-muted-foreground/50 transition-colors checked:border-accent checked:bg-accent"
                       />
-                      <svg
-                        viewBox="0 0 16 16"
+                      <Check
+                        size={16}
+                        strokeWidth={3}
                         aria-hidden="true"
-                        className="pointer-events-none relative hidden size-4 text-background peer-checked:block"
-                      >
-                        <path
-                          d="M2.5 8.5 L6.5 12.5 L13.5 4"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2.75"
-                          strokeLinecap="square"
-                        />
-                      </svg>
+                        className="pointer-events-none relative hidden text-accent-foreground peer-checked:block"
+                      />
                     </span>
                     <span
-                      className={`min-w-[5.25rem] shrink-0 font-heading text-[1.4rem] font-extrabold leading-none tabular-nums ${
-                        isChecked ? "text-muted-foreground line-through decoration-2" : ""
+                      className={`min-w-[4.75rem] shrink-0 font-semibold tabular-nums ${
+                        isChecked ? "text-muted-foreground line-through" : ""
                       }`}
                     >
                       {formatQuantity(ingredient.amount, ingredient.unit, multiplier)}
@@ -139,9 +131,9 @@ export function RecipeIngredients({
         <button
           type="button"
           onClick={checked.clear}
-          className="mt-4 inline-flex h-11 items-center gap-2 font-heading text-lg font-bold uppercase tracking-wide underline-offset-4 hover:underline print:hidden"
+          className="mt-3 inline-flex h-11 items-center gap-2 font-semibold text-accent hover:underline print:hidden"
         >
-          <RotateCcw size={18} strokeWidth={2.5} />
+          <RotateCcw size={17} />
           Махни отметките
         </button>
       )}

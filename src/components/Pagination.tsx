@@ -23,7 +23,7 @@ function pageItems(page: number, pageCount: number): Array<number | "gap"> {
 }
 
 const base =
-  "flex h-11 min-w-11 items-center justify-center border-2 border-rule px-3 font-heading text-xl font-extrabold tabular-nums transition-colors";
+  "flex size-11 items-center justify-center rounded-full font-semibold tabular-nums transition-colors";
 const on = "bg-foreground text-background";
 const off = "hover:bg-surface-muted";
 const disabled = "opacity-30";
@@ -41,20 +41,20 @@ export function Pagination({
   if (pageCount <= 1) return null;
 
   return (
-    <nav aria-label="Страници" className="mt-12 flex flex-wrap items-center justify-center gap-2">
+    <nav aria-label="Страници" className="mt-14 flex flex-wrap items-center justify-center gap-1">
       {page > 1 ? (
         <Link href={hrefFor(page - 1)} rel="prev" aria-label="Предишна страница" className={`${base} ${off}`}>
-          <ChevronLeft size={20} strokeWidth={2.5} />
+          <ChevronLeft size={20} />
         </Link>
       ) : (
         <span aria-hidden="true" className={`${base} ${disabled}`}>
-          <ChevronLeft size={20} strokeWidth={2.5} />
+          <ChevronLeft size={20} />
         </span>
       )}
 
       {pageItems(page, pageCount).map((item, index) =>
         item === "gap" ? (
-          <span key={`gap-${index}`} className="px-1 font-heading text-xl font-extrabold text-muted-foreground">
+          <span key={`gap-${index}`} className="px-1 text-muted-foreground">
             …
           </span>
         ) : (
@@ -72,11 +72,11 @@ export function Pagination({
 
       {page < pageCount ? (
         <Link href={hrefFor(page + 1)} rel="next" aria-label="Следваща страница" className={`${base} ${off}`}>
-          <ChevronRight size={20} strokeWidth={2.5} />
+          <ChevronRight size={20} />
         </Link>
       ) : (
         <span aria-hidden="true" className={`${base} ${disabled}`}>
-          <ChevronRight size={20} strokeWidth={2.5} />
+          <ChevronRight size={20} />
         </span>
       )}
     </nav>

@@ -17,16 +17,15 @@ function SearchField({ id, className = "" }: { id: string; className?: string })
         Търсене на рецепта
       </label>
       <Search
-        size={17}
-        strokeWidth={2.25}
-        className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2"
+        size={18}
+        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
       />
       <input
         id={id}
         type="search"
         name="q"
-        placeholder="Търсене"
-        className="h-11 w-full border-2 border-rule bg-surface pl-10 pr-3 text-base outline-none transition-colors placeholder:text-muted-foreground focus:border-accent"
+        placeholder="Търсете рецепта"
+        className="h-11 w-full rounded-full bg-surface-muted pl-10 pr-4 text-body outline-none ring-accent transition placeholder:text-muted-foreground focus:ring-2"
       />
     </form>
   );
@@ -36,58 +35,57 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-40 border-b-[3px] border-rule bg-background">
+    <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        {/* The blog's own lid: its name printed on a cobalt panel. */}
         <Link
           href="/"
-          className="flex h-11 min-w-0 items-center bg-brand px-3 font-heading text-[1.35rem] font-extrabold uppercase leading-none tracking-wide text-white"
+          className="flex h-11 min-w-0 items-center truncate text-body font-bold tracking-tight"
           onClick={() => setMenuOpen(false)}
         >
-          <span className="truncate">Кулинарният блог на Иво</span>
+          Кулинарният блог на Иво
         </Link>
 
-        <nav aria-label="Основна навигация" className="hidden items-center gap-2 md:flex">
+        <nav aria-label="Основна навигация" className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="flex h-11 items-center px-3 font-heading text-lg font-bold uppercase tracking-wide underline-offset-[6px] hover:underline"
+              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-surface-muted"
             >
               {link.label}
             </Link>
           ))}
-          <SearchField id="search-desktop" className="w-52" />
+          <SearchField id="search-desktop" className="ml-2 w-60" />
           <ThemeToggle />
         </nav>
 
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
-          className="flex h-11 w-11 shrink-0 items-center justify-center border-2 border-rule md:hidden"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full transition-colors hover:bg-surface-muted md:hidden"
           aria-label={menuOpen ? "Затвори менюто" : "Отвори менюто"}
           aria-expanded={menuOpen}
           aria-controls="mobile-menu"
         >
-          {menuOpen ? <X size={20} strokeWidth={2.25} /> : <Menu size={20} strokeWidth={2.25} />}
+          {menuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
       </div>
 
       {menuOpen && (
-        <div id="mobile-menu" className="border-t-2 border-rule bg-background md:hidden">
-          <nav aria-label="Основна навигация" className="flex flex-col">
+        <div id="mobile-menu" className="border-t border-border-subtle bg-background md:hidden">
+          <nav aria-label="Основна навигация" className="flex flex-col px-2 pt-2">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="flex h-14 items-center border-b border-border-subtle px-4 font-heading text-2xl font-bold uppercase tracking-wide"
+                className="flex h-14 items-center rounded-xl px-3 text-heading font-semibold"
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-3 px-4 py-4">
+          <div className="flex items-center gap-2 px-4 pb-4 pt-2">
             <SearchField id="search-mobile" className="flex-1" />
             <ThemeToggle />
           </div>

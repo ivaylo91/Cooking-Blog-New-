@@ -6,7 +6,7 @@ import { addComment, type CommentActionState } from "@/app/recepti/actions";
 const initialState: CommentActionState = { status: "idle" };
 
 const field =
-  "w-full border-2 border-rule bg-surface px-3 text-lg outline-none transition-colors placeholder:text-muted-foreground focus:border-accent";
+  "w-full rounded-xl bg-surface-muted px-4 text-body outline-none ring-accent transition placeholder:text-muted-foreground focus:ring-2";
 
 export function CommentForm({ recipeId }: { recipeId: string }) {
   const [renderedAt] = useState(() => Date.now());
@@ -36,7 +36,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="comment-name"
-          className="font-heading text-base font-bold uppercase tracking-[0.12em]"
+          className="font-semibold"
         >
           Име
         </label>
@@ -53,7 +53,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <div className="flex flex-col gap-1.5">
         <label
           htmlFor="comment-text"
-          className="font-heading text-base font-bold uppercase tracking-[0.12em]"
+          className="font-semibold"
         >
           Коментар
         </label>
@@ -69,12 +69,12 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="h-14 self-start bg-foreground px-6 font-heading text-xl font-extrabold uppercase tracking-wide text-background transition-opacity hover:opacity-85 disabled:opacity-60"
+        className="h-14 self-start rounded-full bg-foreground px-7 text-body font-semibold text-background transition-opacity hover:opacity-85 disabled:opacity-60"
       >
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 
-      <p aria-live="polite" className="min-h-6 text-base font-semibold">
+      <p aria-live="polite" className="min-h-6 font-medium">
         {state.status === "success" && (
           <span className="text-secondary">Коментарът е публикуван.</span>
         )}

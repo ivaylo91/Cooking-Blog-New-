@@ -10,7 +10,7 @@ function noopSubscribe() {
 }
 
 const item =
-  "flex h-12 w-full items-center gap-3 border-b border-border-subtle px-4 text-left font-heading text-lg font-bold uppercase tracking-wide transition-colors last:border-b-0 hover:bg-surface-muted";
+  "flex h-12 w-full items-center gap-3 rounded-xl px-3 text-left font-medium transition-colors hover:bg-surface-muted";
 
 /**
  * Sharing folded into one control. Four destinations side by side used to
@@ -76,13 +76,12 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-controls="share-menu"
-        className="flex h-11 items-center gap-2 border-2 border-rule px-3 font-heading text-lg font-bold uppercase tracking-wide transition-colors hover:bg-surface-muted"
+        className="flex h-11 items-center gap-2 rounded-full bg-surface-muted px-4 font-semibold transition-colors hover:bg-border-subtle"
       >
-        <Share2 size={18} strokeWidth={2.5} />
+        <Share2 size={18} />
         Сподели
         <ChevronDown
           size={18}
-          strokeWidth={2.5}
           className={`transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
@@ -90,11 +89,11 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
       {open && (
         <div
           id="share-menu"
-          className="absolute right-0 top-full z-20 mt-2 w-64 border-2 border-rule bg-background"
+          className="absolute right-0 top-full z-20 mt-2 w-64 rounded-2xl border border-border-subtle bg-background p-1.5 shadow-lg"
         >
           {canNativeShare && (
             <button type="button" onClick={handleNativeShare} className={item}>
-              <Share2 size={18} strokeWidth={2.5} /> Сподели от телефона
+              <Share2 size={18} /> Сподели от телефона
             </button>
           )}
           <a
@@ -117,7 +116,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
             <FontAwesomeIcon icon={faWhatsapp} className="w-[18px]" /> WhatsApp
           </a>
           <button type="button" onClick={handleCopy} className={item} aria-live="polite">
-            {copied ? <Check size={18} strokeWidth={2.75} /> : <Link2 size={18} strokeWidth={2.5} />}
+            {copied ? <Check size={18} /> : <Link2 size={18} />}
             {copied ? "Копирано" : "Копирай линк"}
           </button>
         </div>

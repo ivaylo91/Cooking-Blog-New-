@@ -8,9 +8,9 @@ export function PrintButton() {
       type="button"
       onClick={() => window.print()}
       aria-label="Разпечатай"
-      className="flex size-11 items-center justify-center border-2 border-rule transition-colors hover:bg-surface-muted print:hidden"
+      className="flex size-11 items-center justify-center rounded-full bg-surface-muted transition-colors hover:bg-border-subtle print:hidden"
     >
-      <Printer size={20} strokeWidth={2.25} />
+      <Printer size={20} />
     </button>
   );
 }
