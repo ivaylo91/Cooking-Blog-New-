@@ -17,7 +17,8 @@ export default function Error({
   reset: () => void;
 }) {
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-20">
+    <div className="bg-peach">
+      <div className="animate-rise mx-auto max-w-6xl px-4 pt-12 sm:px-6 sm:pt-20 pb-16 sm:pb-24">
       <h1 className="max-w-3xl text-display font-bold leading-[1.05]">
         Нещо изгоря в кухнята
       </h1>
@@ -29,14 +30,14 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong"
+          className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
         >
           <RotateCw size={20} />
           Опитай отново
         </button>
         <Link
           href="/"
-          className="inline-flex h-14 items-center rounded-full bg-surface-muted px-7 text-body font-semibold transition-colors hover:bg-border-subtle"
+          className="inline-flex h-14 items-center rounded-full bg-surface px-7 text-body font-semibold shadow-card transition-[transform] active:scale-[0.97]"
         >
           Към началото
         </Link>
@@ -46,6 +47,7 @@ export default function Error({
       {error.digest && (
         <p className="mt-8 font-mono text-small text-muted-foreground">Код: {error.digest}</p>
       )}
+    </div>
     </div>
   );
 }

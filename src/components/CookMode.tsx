@@ -51,6 +51,8 @@ export function CookMode({
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const [showIngredients, setShowIngredients] = useState(false);
+  // Which way the last step change went, so the new step slides in from that side.
+  const [direction, setDirection] = useState<"next" | "prev">("next");
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -66,6 +68,7 @@ export function CookMode({
 
   function goTo(next: number) {
     const clamped = Math.max(0, Math.min(steps.length - 1, next));
+    setDirection(clamped >= index ? "next" : "prev");
     setIndex(clamped);
     rememberCooking(slug, title, clamped);
     try {
@@ -139,6 +142,7 @@ export function CookMode({
 
     function step(next: number) {
       const clamped = Math.max(0, Math.min(steps.length - 1, next));
+      setDirection(clamped >= index ? "next" : "prev");
       setIndex(clamped);
       try {
         localStorage.setItem(storageKey, String(clamped));
@@ -192,7 +196,7 @@ export function CookMode({
 
   const isLast = index === steps.length - 1;
   const primary =
-    "flex h-16 items-center justify-center gap-2 rounded-full bg-accent text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong";
+    "flex h-16 items-center justify-center gap-2 rounded-full bg-accent text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]";
 
   return (
     <>
@@ -200,7 +204,7 @@ export function CookMode({
         ref={triggerRef}
         type="button"
         onClick={openCookMode}
-        className="flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong sm:w-auto"
+        className="flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] sm:w-auto"
       >
         <Utensils size={20} />
         Готви стъпка по стъпка
@@ -212,7 +216,7 @@ export function CookMode({
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
-          className="fixed inset-0 z-[60] flex flex-col bg-background"
+          className="animate-rise fixed inset-0 z-[60] flex flex-col bg-background"
         >
           <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-8">
             <h2 id={titleId} className="min-w-0 truncate text-body font-bold">
@@ -233,7 +237,7 @@ export function CookMode({
             {steps.map((step, i) => (
               <span
                 key={step.id}
-                className={`h-1.5 flex-1 rounded-full ${i <= index ? "bg-accent" : "bg-surface-muted"}`}
+                className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${i <= index ? "bg-accent" : "bg-surface-muted"}`}
               />
             ))}
           </div>
@@ -242,13 +246,18 @@ export function CookMode({
             <p aria-live="polite" className="font-semibold text-muted-foreground tabular-nums">
               Стъпка {index + 1} от {steps.length}
             </p>
-            <p className="mt-3 max-w-3xl text-display font-medium leading-snug">
+            <p
+              key={index}
+              className={`mt-3 max-w-3xl text-display font-medium leading-snug ${
+                direction === "next" ? "animate-slide-next" : "animate-slide-prev"
+              }`}
+            >
               {steps[index].text}
             </p>
 
             {showIngredients && (
               <div
-                className="absolute inset-0 overflow-y-auto bg-background px-5 py-6 sm:px-12"
+                className="animate-rise absolute inset-0 overflow-y-auto bg-background px-5 py-6 sm:px-12"
                 aria-label="Съставки"
                 role="region"
               >

@@ -89,7 +89,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
       {open && (
         <div
           id="share-menu"
-          className="absolute right-0 top-full z-20 mt-2 w-64 rounded-2xl border border-border-subtle bg-background p-1.5 shadow-lg"
+          className="animate-rise absolute right-0 top-full z-20 mt-2 w-64 rounded-2xl border border-border-subtle bg-background p-1.5 shadow-lift"
         >
           {canNativeShare && (
             <button type="button" onClick={handleNativeShare} className={item}>

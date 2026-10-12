@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
+import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
@@ -15,11 +16,14 @@ export function RecipeCard({
   // loading delays the request until layout, which pushes LCP out.
   priority = false,
   size = "default",
+  index = 0,
 }: {
   recipe: RecipeListItem;
   priority?: boolean;
   /** "feature" is the large lead card on the home page. */
   size?: "default" | "feature";
+  /** Position in its grid, for the entrance stagger (capped so long lists don't wait). */
+  index?: number;
 }) {
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
@@ -34,6 +38,14 @@ export function RecipeCard({
     rating ? `★ ${rating}` : null,
   ].filter(Boolean);
   const isFeature = size === "feature";
+  // The card body takes the category's food colour; the stagger is capped at
+  // six cards so a long grid never makes the reader wait.
+  const style = {
+    backgroundColor: categoryTint(recipe.category?.slug),
+    animationDelay: `${Math.min(index, 6) * 60}ms`,
+  };
+  const lift =
+    "shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
 
   if (isFeature) {
     // The lead story, magazine-style: a 7/5 split with the photo bleeding to
@@ -42,7 +54,8 @@ export function RecipeCard({
     return (
       <Link
         href={`/recepti/${recipe.slug}`}
-        className="group grid overflow-hidden rounded-3xl bg-surface-muted md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]"
+        style={style}
+        className={`animate-rise group grid overflow-hidden rounded-3xl md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] ${lift}`}
       >
         <div className="relative aspect-[4/3] w-full md:aspect-auto md:min-h-[26rem]">
           {imageUrl ? (
@@ -70,7 +83,8 @@ export function RecipeCard({
   return (
     <Link
       href={`/recepti/${recipe.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl bg-surface-muted"
+      style={style}
+      className={`animate-rise group flex flex-col overflow-hidden rounded-2xl ${lift}`}
     >
       <div className="relative aspect-[4/3] w-full">
         {imageUrl ? (

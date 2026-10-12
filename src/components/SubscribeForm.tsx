@@ -28,7 +28,7 @@ export function SubscribeForm() {
   return (
     <section
       aria-labelledby="subscribe-head"
-      className="grid gap-6 rounded-3xl bg-surface-muted p-6 sm:p-10 md:grid-cols-[1fr_1.1fr] md:items-center"
+      className="grid gap-6 md:grid-cols-[1fr_1.1fr] md:items-center"
     >
       <div>
         <h2 id="subscribe-head" className="text-heading font-bold">
@@ -61,12 +61,12 @@ export function SubscribeForm() {
             required
             autoComplete="email"
             placeholder="вашият@имейл.бг"
-            className="h-14 w-full flex-1 rounded-full bg-background px-5 text-body outline-none ring-accent transition placeholder:text-muted-foreground focus:ring-2"
+            className="field field-pill h-14 flex-1 px-5 text-body"
           />
           <button
             type="submit"
             disabled={pending}
-            className="h-14 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong disabled:opacity-60"
+            className="h-14 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
           >
             {pending ? "Записване…" : "Запиши ме"}
           </button>
@@ -76,7 +76,11 @@ export function SubscribeForm() {
           aria-live="polite"
           className={`mt-2 min-h-6 px-2 font-medium ${isError ? "text-destructive-strong" : "text-secondary"}`}
         >
-          {MESSAGES[state.status]}
+          {state.status === "success" ? (
+            <span className="animate-pop inline-block">{MESSAGES.success}</span>
+          ) : (
+            MESSAGES[state.status]
+          )}
         </p>
       </div>
     </section>

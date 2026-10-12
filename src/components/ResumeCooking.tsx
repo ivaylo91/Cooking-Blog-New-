@@ -13,10 +13,10 @@ export function ResumeCooking() {
   if (!last) return null;
 
   return (
-    <div className="mt-6 flex items-center gap-2 rounded-2xl bg-accent-soft p-2 pl-5">
+    <div className="animate-rise mt-6 flex items-center gap-2 rounded-2xl bg-surface p-2 pl-5 shadow-card">
       <Link
         href={`/recepti/${last.slug}${last.step != null ? "#prigotvyane" : ""}`}
-        className="flex min-h-11 flex-1 items-center gap-2 font-semibold text-accent"
+        className="flex min-h-11 flex-1 items-center gap-2 font-semibold text-link"
       >
         <span className="min-w-0">
           Продължете: {last.title}
@@ -30,7 +30,7 @@ export function ResumeCooking() {
         type="button"
         onClick={forgetCooking}
         aria-label="Скрий"
-        className="flex size-11 shrink-0 items-center justify-center rounded-full text-accent transition-colors hover:bg-background/60"
+        className="flex size-11 shrink-0 items-center justify-center rounded-full text-link transition-colors hover:bg-background/60"
       >
         <X size={18} />
       </button>

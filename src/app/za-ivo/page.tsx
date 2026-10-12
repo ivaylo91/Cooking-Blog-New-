@@ -10,7 +10,8 @@ export const metadata: Metadata = {
 
 export default function ZaIvoPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-12">
+    <div className="bg-peach">
+      <div className="animate-rise mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-12 pb-16 sm:pb-24">
       <h1 className="text-display font-bold leading-[1.05]">За Иво</h1>
       <p className="mt-6 max-w-[38ch] text-heading leading-snug">
         Здравейте! Тук споделям домашни рецепти, изпробвани в собствената ми
@@ -18,11 +19,12 @@ export default function ZaIvoPage() {
       </p>
       <Link
         href="/recepti"
-        className="mt-8 inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong"
+        className="mt-8 inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
       >
         Към рецептите
         <ArrowRight size={20} />
       </Link>
+    </div>
     </div>
   );
 }

@@ -19,6 +19,8 @@ import { SectionHead } from "@/components/SectionHead";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
 import { SubscribeForm } from "@/components/SubscribeForm";
+import { Band } from "@/components/Band";
+import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
@@ -186,9 +188,11 @@ export default async function RecipePage({
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
-      {/* The dish first: the photograph leads, edge to edge on a phone. */}
+      {/* The dish first, on its category's colour: the photograph leads,
+          edge to edge on a phone, and the header sits on the same band. */}
+      <div style={{ backgroundColor: categoryTint(recipe.category?.slug) }}>
       <div className="mx-auto max-w-6xl sm:px-6 sm:pt-6 print:hidden">
-        <div className="relative h-[60svh] w-full overflow-hidden bg-surface-muted sm:h-auto sm:aspect-[4/3] sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]">
+        <div className="animate-rise relative h-[60svh] w-full overflow-hidden bg-surface-muted shadow-card sm:h-auto sm:aspect-[4/3] sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -208,13 +212,13 @@ export default async function RecipePage({
         </div>
       </div>
 
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="mx-auto max-w-6xl px-4 pb-8 sm:px-6">
         <header className="grid gap-x-12 pt-5 sm:pt-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:items-end">
           <div>
             {recipe.category && (
               <Link
                 href={`/recepti?category=${recipe.category.slug}`}
-                className="inline-flex h-11 items-center gap-1.5 font-semibold text-accent hover:underline print:hidden"
+                className="inline-flex h-11 items-center gap-1.5 font-semibold text-link hover:underline print:hidden"
               >
                 <ArrowLeft size={18} />
                 {recipe.category.name}
@@ -249,8 +253,11 @@ export default async function RecipePage({
             </p>
           </div>
         </header>
+      </div>
+      </div>
 
-        <div className="mt-6">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mt-4">
           <RecipeTabs />
         </div>
 
@@ -259,7 +266,7 @@ export default async function RecipePage({
           id="recipe-body"
           className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
-          <div className="md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto md:pr-2 print:static print:max-h-none">
+          <div className="rounded-3xl bg-sage p-5 sm:p-6 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto print:static print:max-h-none print:bg-transparent print:p-0">
             <RecipeIngredients
               recipeId={recipe.id}
               slug={recipe.slug}
@@ -297,7 +304,7 @@ export default async function RecipePage({
                 {recipe.tags.map((tag) => (
                   <li
                     key={tag.id}
-                    className="rounded-full bg-surface-muted px-3 py-1 text-small text-muted-foreground"
+                    className="rounded-full bg-olive px-3 py-1 text-small text-muted-foreground"
                   >
                     {tag.name}
                   </li>
@@ -306,7 +313,7 @@ export default async function RecipePage({
             )}
 
             {/* Asked after cooking, not before: rating, keeping and passing it on. */}
-            <div className="mt-10 rounded-3xl bg-surface-muted p-5 sm:p-6 print:hidden">
+            <div className="mt-10 rounded-3xl bg-butter p-5 sm:p-6 print:hidden">
               <h2 className="text-heading font-bold">Как се получи?</h2>
               <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <RatingStars
@@ -337,20 +344,21 @@ export default async function RecipePage({
               }
             />
             <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-              {relatedRecipes.map((related) => (
-                <RecipeCard key={related.id} recipe={related} />
+              {relatedRecipes.map((related, index) => (
+                <RecipeCard key={related.id} recipe={related} index={index} />
               ))}
             </div>
           </section>
         )}
 
-        <div className="mt-20 print:hidden">
-          <SubscribeForm />
-        </div>
+      </div>
 
-        <div className="print:hidden">
-          <Comments recipeId={recipe.id} comments={comments} />
-        </div>
+      <Band tone="butter" className="mt-20 print:hidden" innerClassName="py-14">
+        <SubscribeForm />
+      </Band>
+
+      <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 print:hidden">
+        <Comments recipeId={recipe.id} comments={comments} />
       </div>
     </article>
   );

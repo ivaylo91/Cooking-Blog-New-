@@ -18,7 +18,7 @@ const links = [
 
 export function Footer() {
   return (
-    <footer className="mt-24 bg-surface-muted">
+    <footer className="bg-wheat">
       {/* The doodle band sits in its own strip so no text ever lands on it. */}
       <div className="relative h-20 text-muted-foreground">
         <CookingBackground className="absolute inset-0" opacity={0.45} scale={0.4} />
@@ -38,14 +38,14 @@ export function Footer() {
             <Link
               key={link.href}
               href={link.href}
-              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-background"
+              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-surface"
             >
               {link.label}
             </Link>
           ))}
           <a
             href="/rss.xml"
-            className="flex h-11 items-center gap-2 rounded-full px-4 font-medium transition-colors hover:bg-background"
+            className="flex h-11 items-center gap-2 rounded-full px-4 font-medium transition-colors hover:bg-surface"
           >
             <Rss size={17} />
             RSS

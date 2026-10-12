@@ -18,7 +18,7 @@ function groupByName(ingredients: Ingredient[]) {
 }
 
 const stepButton =
-  "flex size-11 items-center justify-center rounded-full bg-surface-muted transition-colors hover:bg-border-subtle disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-surface-muted";
+  "flex size-11 items-center justify-center rounded-full bg-surface shadow-card transition-[transform,opacity] hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:scale-100";
 
 /**
  * The ingredient list. Quantities lead each row, and the whole row is the tap
@@ -97,17 +97,17 @@ export function RecipeIngredients({
                         type="checkbox"
                         checked={isChecked}
                         onChange={() => toggle(ingredient.id)}
-                        className="peer absolute inset-0 size-6 cursor-pointer appearance-none rounded-md border-2 border-muted-foreground/50 transition-colors checked:border-accent checked:bg-accent"
+                        className="peer absolute inset-0 size-6 cursor-pointer appearance-none rounded-md border-2 transition-colors checked:border-accent checked:bg-accent transition-[background-color,border-color,transform] active:scale-90 border-field-border bg-field"
                       />
                       <Check
                         size={16}
                         strokeWidth={3}
                         aria-hidden="true"
-                        className="pointer-events-none relative hidden text-accent-foreground peer-checked:block"
+                        className="animate-pop pointer-events-none relative hidden text-accent-foreground peer-checked:block"
                       />
                     </span>
                     <span
-                      className={`min-w-[4.75rem] shrink-0 font-semibold tabular-nums ${
+                      className={`min-w-[4.75rem] shrink-0 font-semibold tabular-nums transition-colors ${
                         isChecked ? "text-muted-foreground line-through" : ""
                       }`}
                     >
@@ -131,7 +131,7 @@ export function RecipeIngredients({
         <button
           type="button"
           onClick={checked.clear}
-          className="mt-3 inline-flex h-11 items-center gap-2 font-semibold text-accent hover:underline print:hidden"
+          className="mt-3 inline-flex h-11 items-center gap-2 font-semibold text-link hover:underline print:hidden"
         >
           <RotateCcw size={17} />
           Махни отметките

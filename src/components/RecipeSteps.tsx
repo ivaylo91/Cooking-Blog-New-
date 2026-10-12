@@ -52,18 +52,18 @@ export function RecipeSteps({
                 onClick={() => toggle(step.id, index)}
                 aria-pressed={isDone}
                 aria-label={`Стъпка ${index + 1}: ${isDone ? "изпълнена" : "отбележи като изпълнена"}`}
-                className={`flex size-11 items-center justify-center rounded-full text-body font-bold tabular-nums transition-colors ${
+                className={`flex size-11 items-center justify-center rounded-full text-body font-bold tabular-nums transition-[background-color,color,transform] active:scale-90 ${
                   isDone
                     ? "bg-accent text-accent-foreground"
                     : "bg-surface-muted hover:bg-border-subtle"
                 }`}
               >
-                {isDone ? <Check size={20} strokeWidth={3} /> : index + 1}
+                {isDone ? <Check size={20} strokeWidth={3} className="animate-pop" /> : index + 1}
               </button>
 
               <div className="min-w-0 pt-1.5">
                 {isResume && (
-                  <span className="mb-2 inline-block rounded-full bg-accent-soft px-3 py-1 text-small font-semibold text-accent print:hidden">
+                  <span className="animate-rise mb-2 inline-block rounded-full bg-accent-soft px-3 py-1 text-small font-semibold text-link print:hidden">
                     Продължете оттук
                   </span>
                 )}
@@ -95,7 +95,7 @@ export function RecipeSteps({
         <button
           type="button"
           onClick={done.clear}
-          className="mt-3 inline-flex h-11 items-center gap-2 font-semibold text-accent hover:underline print:hidden"
+          className="mt-3 inline-flex h-11 items-center gap-2 font-semibold text-link hover:underline print:hidden"
         >
           <RotateCcw size={17} />
           Започни отначало

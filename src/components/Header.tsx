@@ -1,8 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { Menu, Search, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import { Suspense, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { LogoMark } from "@/components/Logo";
+import { SearchField } from "@/components/SearchField";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navLinks = [
@@ -10,25 +13,26 @@ const navLinks = [
   { href: "/za-ivo", label: "За Иво" },
 ];
 
-function SearchField({ id, className = "" }: { id: string; className?: string }) {
-  return (
-    <form action="/tarsene" role="search" className={`relative ${className}`}>
-      <label htmlFor={id} className="sr-only">
-        Търсене на рецепта
-      </label>
-      <Search
-        size={18}
-        className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground"
-      />
-      <input
-        id={id}
-        type="search"
-        name="q"
-        placeholder="Търсете рецепта"
-        className="h-11 w-full rounded-full bg-surface-muted pl-10 pr-4 text-body outline-none ring-accent transition placeholder:text-muted-foreground focus:ring-2"
-      />
-    </form>
-  );
+function ActiveDesktopLinks() {
+  return <DesktopLinks pathname={usePathname()} />;
+}
+
+function DesktopLinks({ pathname }: { pathname: string | null }) {
+  return navLinks.map((link) => {
+    const active = pathname?.startsWith(link.href);
+    return (
+      <Link
+        key={link.href}
+        href={link.href}
+        aria-current={active ? "page" : undefined}
+        className={`flex h-11 items-center rounded-full px-4 font-medium transition-colors ${
+          active ? "bg-accent-soft text-link" : "hover:bg-surface-muted"
+        }`}
+      >
+        {link.label}
+      </Link>
+    );
+  });
 }
 
 export function Header() {
@@ -39,23 +43,20 @@ export function Header() {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
-          className="flex h-11 min-w-0 items-center truncate text-body font-bold tracking-tight"
+          className="logo-link flex h-11 min-w-0 items-center gap-2.5"
           onClick={() => setMenuOpen(false)}
         >
-          Кулинарният блог на Иво
+          <LogoMark size={38} />
+          <span className="truncate text-body font-bold tracking-tight">Кулинарният блог на Иво</span>
         </Link>
 
         <nav aria-label="Основна навигация" className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-surface-muted"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <SearchField id="search-desktop" className="ml-2 w-60" />
+          {/* The current path is only known at request time; the links render
+              unhighlighted in the prerendered shell and light up once it streams. */}
+          <Suspense fallback={<DesktopLinks pathname={null} />}>
+            <ActiveDesktopLinks />
+          </Suspense>
+          <SearchField id="search-desktop" className="ml-2 w-64" shortcut />
           <ThemeToggle />
         </nav>
 
@@ -72,7 +73,7 @@ export function Header() {
       </div>
 
       {menuOpen && (
-        <div id="mobile-menu" className="border-t border-border-subtle bg-background md:hidden">
+        <div id="mobile-menu" className="animate-rise border-t border-border-subtle bg-background md:hidden">
           <nav aria-label="Основна навигация" className="flex flex-col px-2 pt-2">
             {navLinks.map((link) => (
               <Link

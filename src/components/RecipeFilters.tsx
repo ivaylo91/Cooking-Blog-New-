@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
-import { inCooksOrder } from "@/lib/categories";
+import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { DIFFICULTIES, TIME_FILTERS } from "@/types/recipe";
 import type { Category, Difficulty, TimeFilter } from "@/types/recipe";
 
@@ -27,21 +27,25 @@ function buildHref(active: ActiveFilters, change: Partial<ActiveFilters>): strin
 const chip =
   "flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 font-medium transition-colors";
 const chipOn = "bg-foreground text-background";
-const chipOff = "bg-surface-muted hover:bg-border-subtle";
+const chipOff = "bg-surface-muted hover:brightness-95 active:scale-[0.97]";
 
 function Chip({
   href,
   selected,
+  tint,
   children,
 }: {
   href: string;
   selected: boolean;
+  /** A category's food colour for the resting state. */
+  tint?: string;
   children: React.ReactNode;
 }) {
   return (
     <Link
       href={href}
       aria-current={selected ? "true" : undefined}
+      style={!selected && tint ? { backgroundColor: tint } : undefined}
       className={`${chip} ${selected ? chipOn : chipOff}`}
     >
       {children}
@@ -92,6 +96,7 @@ export function RecipeFilters({
                 <Chip
                   href={buildHref(active, { category: selected ? undefined : category.slug })}
                   selected={selected}
+                  tint={categoryTint(category.slug)}
                 >
                   {category.name}
                 </Chip>
@@ -113,7 +118,7 @@ export function RecipeFilters({
             )}
             <ChevronDown size={18} className="transition-transform group-open:rotate-180" />
           </summary>
-          <div className="mt-3 flex flex-col gap-4 rounded-2xl bg-surface-muted p-4">
+          <div className="animate-rise mt-3 flex flex-col gap-4 rounded-2xl bg-surface p-4 shadow-card">
             <Group label="Време">
               <Chip href={buildHref(active, { time: undefined })} selected={!active.time}>
                 Всички
@@ -158,7 +163,7 @@ export function RecipeFilters({
           {hasAny && (
             <Link
               href="/recepti"
-              className="inline-flex h-11 items-center gap-1.5 font-semibold text-accent hover:underline"
+              className="inline-flex h-11 items-center gap-1.5 font-semibold text-link hover:underline"
             >
               <X size={17} />
               Изчисти

@@ -50,11 +50,11 @@ export function LikeButton({
       disabled={liked || pending}
       aria-pressed={liked}
       aria-label={liked ? `Харесано, ${likes}` : `Харесай, ${likes}`}
-      className={`flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3.5 font-semibold tabular-nums transition-colors ${
-        liked ? "bg-accent-soft text-accent" : "bg-surface-muted hover:bg-border-subtle"
+      className={`flex h-11 min-w-11 items-center justify-center gap-1.5 rounded-full px-3.5 font-semibold tabular-nums transition-[background-color,color,transform] active:scale-95 ${
+        liked ? "bg-accent-soft text-link" : "bg-surface-muted hover:bg-border-subtle"
       }`}
     >
-      <Heart size={20} className={liked ? "fill-current" : ""} />
+      <Heart size={20} className={liked ? "animate-pop fill-current" : ""} />
       {likes > 0 && likes}
     </button>
   );

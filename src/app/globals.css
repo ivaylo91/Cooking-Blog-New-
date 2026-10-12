@@ -1,33 +1,49 @@
 @import "tailwindcss";
 
 /*
- * Списание: the blog as a modern food-magazine app. White ground, near-black
- * ink, one tomato accent reserved for the primary action and active states.
- * The food photograph carries the colour; the interface stays out of its way.
+ * Списание, warm edition: a modern food-magazine app whose pages run in warm
+ * coloured sections (peach, sage, butter) like a magazine spread. Each recipe
+ * category carries its own food colour. Tomato stays the action colour.
  */
 :root {
   color-scheme: light;
   --background: #ffffff;
   --foreground: #111111;
   --surface: #ffffff;
-  --surface-muted: #f5f5f4;
+  --surface-muted: #f5f3ef;
   --border-subtle: rgba(17, 17, 17, 0.1);
-  --rule: #e7e5e4;
-  --muted-foreground: #5f6368;
-  /* 5.2:1 with white text, and as text on white. */
+  --rule: #e7e3dc;
+  /* 6.7:1 or better on every tinted section below. */
+  --muted-foreground: #4b4f55;
+  /* Buttons: 5.2:1 with white text. */
   --accent: #c2410c;
   --accent-strong: #9a3412;
   --accent-foreground: #ffffff;
-  --accent-soft: #fff1ea;
-  --secondary: #15803d;
-  --secondary-soft: #ecfdf3;
+  --accent-soft: #ffe9df;
+  /* Tomato as text drops to ~4.2:1 on the tints, so links use the deeper tone. */
+  --link: #9a3412;
+  --secondary: #2f7a3f;
+  --secondary-soft: #e6f3e6;
   --destructive: #b91c1c;
   --destructive-strong: #991b1b;
   --destructive-soft: #fef2f2;
   --destructive-border: #fecaca;
+  /* Form fields: the resting border clears 3:1 against white, as controls must. */
+  --field: #ffffff;
+  --field-border: #8f8a83;
+  /* Warm section grounds, a magazine spread's colour blocks. */
+  --peach: #fde6d8;
+  --sage: #e2eedb;
+  --butter: #fdf0c4;
+  --rose: #fbe1e4;
+  --wheat: #f6e7cf;
+  --olive: #e8ecd0;
+  --sky: #dfecf3;
+  --shadow-card: 0 1px 2px rgba(17, 17, 17, 0.06), 0 8px 24px -12px rgba(17, 17, 17, 0.18);
+  --shadow-lift: 0 2px 4px rgba(17, 17, 17, 0.06), 0 18px 36px -14px rgba(17, 17, 17, 0.28);
   /* Kept for the admin, which inherits tokens only. */
   --stamp: #b91c1c;
-  --kraft: #f5f5f4;
+  --kraft: #f5f3ef;
   --brand: #c2410c;
 }
 
@@ -43,15 +59,27 @@
   --color-accent-strong: var(--accent-strong);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-link: var(--link);
   --color-secondary: var(--secondary);
   --color-secondary-soft: var(--secondary-soft);
   --color-destructive: var(--destructive);
   --color-destructive-strong: var(--destructive-strong);
   --color-destructive-soft: var(--destructive-soft);
   --color-destructive-border: var(--destructive-border);
+  --color-field: var(--field);
+  --color-field-border: var(--field-border);
+  --color-peach: var(--peach);
+  --color-sage: var(--sage);
+  --color-butter: var(--butter);
+  --color-rose: var(--rose);
+  --color-wheat: var(--wheat);
+  --color-olive: var(--olive);
+  --color-sky: var(--sky);
   --color-stamp: var(--stamp);
   --color-kraft: var(--kraft);
   --color-brand: var(--brand);
+  --shadow-card: var(--shadow-card);
+  --shadow-lift: var(--shadow-lift);
   --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
   --font-heading: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
@@ -64,30 +92,43 @@
   --text-body--line-height: 1.6;
   --text-small: 0.875rem;
   --text-small--line-height: 1.45;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* The evening kitchen: designed for cooking at night, not an inverted day. */
+/* The evening kitchen: each warm ground becomes a deep version of itself. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --background: #121212;
     --foreground: #f4f1ec;
     --surface: #1c1c1c;
-    --surface-muted: #1f1f1f;
+    --surface-muted: #1f1d1b;
     --border-subtle: rgba(244, 241, 236, 0.12);
-    --rule: #2c2c2c;
-    --muted-foreground: #a3a3a3;
+    --rule: #2c2a27;
+    --muted-foreground: #b3b0aa;
     --accent: #ff7a45;
     --accent-strong: #ff9a6e;
     --accent-foreground: #121212;
-    --accent-soft: rgba(255, 122, 69, 0.14);
-    --secondary: #4ade80;
-    --secondary-soft: rgba(74, 222, 128, 0.12);
+    --accent-soft: rgba(255, 122, 69, 0.16);
+    --link: #ff9a6e;
+    --secondary: #6fd38a;
+    --secondary-soft: rgba(111, 211, 138, 0.14);
     --destructive: #f87171;
     --destructive-strong: #fca5a5;
     --destructive-soft: rgba(248, 113, 113, 0.12);
     --destructive-border: rgba(248, 113, 113, 0.3);
-    --kraft: #1f1f1f;
+    --field: #1c1c1c;
+    --field-border: #77736d;
+    --peach: #2b1d16;
+    --sage: #1b2618;
+    --butter: #2a2412;
+    --rose: #2b1a1d;
+    --wheat: #29211a;
+    --olive: #22251a;
+    --sky: #17222a;
+    --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+    --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 18px 36px -14px rgba(0, 0, 0, 0.8);
+    --kraft: #1f1d1b;
     --brand: #ff7a45;
   }
 }
@@ -97,21 +138,33 @@
   --background: #121212;
   --foreground: #f4f1ec;
   --surface: #1c1c1c;
-  --surface-muted: #1f1f1f;
+  --surface-muted: #1f1d1b;
   --border-subtle: rgba(244, 241, 236, 0.12);
-  --rule: #2c2c2c;
-  --muted-foreground: #a3a3a3;
+  --rule: #2c2a27;
+  --muted-foreground: #b3b0aa;
   --accent: #ff7a45;
   --accent-strong: #ff9a6e;
   --accent-foreground: #121212;
-  --accent-soft: rgba(255, 122, 69, 0.14);
-  --secondary: #4ade80;
-  --secondary-soft: rgba(74, 222, 128, 0.12);
+  --accent-soft: rgba(255, 122, 69, 0.16);
+  --link: #ff9a6e;
+  --secondary: #6fd38a;
+  --secondary-soft: rgba(111, 211, 138, 0.14);
   --destructive: #f87171;
   --destructive-strong: #fca5a5;
   --destructive-soft: rgba(248, 113, 113, 0.12);
   --destructive-border: rgba(248, 113, 113, 0.3);
-  --kraft: #1f1f1f;
+  --field: #1c1c1c;
+  --field-border: #77736d;
+  --peach: #2b1d16;
+  --sage: #1b2618;
+  --butter: #2a2412;
+  --rose: #2b1a1d;
+  --wheat: #29211a;
+  --olive: #22251a;
+  --sky: #17222a;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 18px 36px -14px rgba(0, 0, 0, 0.8);
+  --kraft: #1f1d1b;
   --brand: #ff7a45;
 }
 
@@ -150,10 +203,9 @@ a {
   text-decoration-thickness: 1.5px;
 }
 
-/* Text inputs are excluded on purpose: they carry their own focus treatment
-   (focus:border-accent + ring), and listing them here drew a second outline.
-   Checkboxes have no such treatment, so without this they fall back to the
-   UA ring, which is near-black and invisible on the dark background. */
+/* Text fields carry their own focus treatment (.field), so they are excluded
+   here; listing them drew a second outline. Checkboxes have no such
+   treatment, so they are named explicitly. */
 a:focus-visible,
 button:focus-visible,
 summary:focus-visible,
@@ -163,13 +215,194 @@ input[type="checkbox"]:focus-visible,
   outline-offset: 2px;
 }
 
+/* ---------------------------------------------------------------------------
+   Form fields: one treatment everywhere. A visible resting border (3:1),
+   a darker border on hover, a tomato border plus a soft ring on focus, and
+   red once the browser has judged the value invalid after the user typed.
+   ------------------------------------------------------------------------- */
+.field {
+  width: 100%;
+  border: 1.5px solid var(--field-border);
+  background: var(--field);
+  color: var(--foreground);
+  border-radius: 0.875rem;
+  outline: none;
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
+}
+
+.field::placeholder {
+  color: var(--muted-foreground);
+  opacity: 0.85;
+}
+
+.field:hover {
+  border-color: var(--foreground);
+}
+
+.field:focus,
+.field:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+.field:user-invalid {
+  border-color: var(--destructive);
+  box-shadow: 0 0 0 4px var(--destructive-soft);
+}
+
+.field-pill {
+  border-radius: 999px;
+}
+
+/* ---------------------------------------------------------------------------
+   Motion. One authored moment (the logo's steam drawing itself) plus quiet
+   feedback. Distances live in custom properties so reduced motion can zero
+   them while keeping fades and colour changes that carry meaning.
+   ------------------------------------------------------------------------- */
+:root {
+  --rise: 14px;
+  --slide: 28px;
+  --pop: 0.6;
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--rise));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pop-in {
+  0% {
+    transform: scale(var(--pop));
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.12);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(var(--slide));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes slide-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(calc(var(--slide) * -1));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes steam-draw {
+  from {
+    stroke-dashoffset: 40;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+@keyframes steam-rise {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-2px);
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-rise {
+  animation: rise-in 600ms var(--ease-out-expo) both;
+}
+
+.animate-pop {
+  animation: pop-in 320ms var(--ease-out-expo) both;
+}
+
+.animate-slide-next {
+  animation: slide-from-right 360ms var(--ease-out-expo) both;
+}
+
+.animate-slide-prev {
+  animation: slide-from-left 360ms var(--ease-out-expo) both;
+}
+
+/* The logo's steam: drawn in once on load, then rising again on hover. */
+.logo-steam path {
+  stroke-dasharray: 40;
+  animation: steam-draw 900ms var(--ease-out-expo) both;
+}
+
+.logo-steam path:nth-child(2) {
+  animation-delay: 120ms;
+}
+
+.logo-steam path:nth-child(3) {
+  animation-delay: 240ms;
+}
+
+.logo-link:hover .logo-steam path {
+  animation: steam-rise 1.1s ease-in-out infinite;
+}
+
+.logo-link:hover .logo-steam path:nth-child(2) {
+  animation-delay: 150ms;
+}
+
+.logo-link:hover .logo-steam path:nth-child(3) {
+  animation-delay: 300ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --rise: 0px;
+    --slide: 0px;
+    --pop: 1;
+  }
+
+  /* Decorative steam stays drawn and still. */
+  .logo-steam path,
+  .logo-link:hover .logo-steam path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
 }

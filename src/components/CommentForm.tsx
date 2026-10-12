@@ -1,12 +1,13 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import { Loader2 } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
 
 const initialState: CommentActionState = { status: "idle" };
 
-const field =
-  "w-full rounded-xl bg-surface-muted px-4 text-body outline-none ring-accent transition placeholder:text-muted-foreground focus:ring-2";
+const field = "field px-4 text-body";
+const MAX = 1000;
 
 export function CommentForm({ recipeId }: { recipeId: string }) {
   const [renderedAt] = useState(() => Date.now());
@@ -15,6 +16,13 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
     initialState
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const [length, setLength] = useState(0);
+  // A successful post empties the form, so the counter starts over with it.
+  const [countedFor, setCountedFor] = useState(state);
+  if (countedFor !== state) {
+    setCountedFor(state);
+    if (state.status === "success") setLength(0);
+  }
 
   useEffect(() => {
     if (state.status === "success") {
@@ -61,16 +69,27 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           id="comment-text"
           name="text"
           required
-          maxLength={1000}
+          maxLength={MAX}
           rows={4}
-          className={`${field} py-2`}
+          onChange={(e) => setLength(e.target.value.length)}
+          aria-describedby="comment-count"
+          className={`${field} min-h-32 resize-y py-3`}
         />
+        <span
+          id="comment-count"
+          className={`self-end text-small tabular-nums ${
+            length > MAX * 0.9 ? "text-destructive-strong" : "text-muted-foreground"
+          }`}
+        >
+          {length} / {MAX}
+        </span>
       </div>
       <button
         type="submit"
         disabled={isPending}
-        className="h-14 self-start rounded-full bg-foreground px-7 text-body font-semibold text-background transition-opacity hover:opacity-85 disabled:opacity-60"
+        className="inline-flex h-14 items-center gap-2 self-start rounded-full bg-foreground px-7 text-body font-semibold text-background transition-[opacity,transform] hover:opacity-85 active:scale-[0.97] disabled:opacity-60"
       >
+        {isPending && <Loader2 size={18} className="motion-safe:animate-spin" />}
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 

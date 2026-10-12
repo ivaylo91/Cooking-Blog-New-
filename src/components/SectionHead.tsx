@@ -21,7 +21,7 @@ export function SectionHead({
       {action && (
         <Link
           href={action.href}
-          className="flex h-11 shrink-0 items-center gap-1.5 font-semibold text-accent hover:underline"
+          className="flex h-11 shrink-0 items-center gap-1.5 font-semibold text-link hover:underline"
         >
           {action.label}
           <ArrowRight size={18} />

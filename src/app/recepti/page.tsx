@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Band } from "@/components/Band";
 import { Pagination } from "@/components/Pagination";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeFilters } from "@/components/RecipeFilters";
@@ -87,8 +88,11 @@ export default async function ReceptiPage({
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pt-8 sm:px-6 sm:pt-12">
-      <h1 className="mb-6 text-display font-bold leading-[1.05]">Рецепти</h1>
+    <>
+    <Band tone="peach" as="div" innerClassName="pb-8 pt-8 sm:pb-10 sm:pt-12">
+      <h1 className="animate-rise text-display font-bold leading-[1.05]">Рецепти</h1>
+    </Band>
+    <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
       <RecipeFilters categories={categories} active={active} resultCount={total} />
       {recipes.length === 0 ? (
         <div className="rounded-3xl bg-surface-muted p-6 sm:p-8">
@@ -102,12 +106,13 @@ export default async function ReceptiPage({
           <h2 className="sr-only">Резултати</h2>
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {recipes.map((recipe, index) => (
-              <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} />
+              <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} index={index} />
             ))}
           </div>
           <Pagination page={page} pageCount={pageCount} hrefFor={hrefFor} />
         </>
       )}
     </div>
+    </>
   );
 }

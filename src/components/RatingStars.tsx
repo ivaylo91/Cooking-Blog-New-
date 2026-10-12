@@ -87,12 +87,12 @@ export function RatingStars({
               onBlur={() => setHovered(null)}
               aria-label={`${star} от 5`}
               aria-pressed={myRating === star}
-              className="flex size-11 items-center justify-center disabled:opacity-50"
+              className="flex size-11 items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
             >
               <Star
                 size={26}
                 className={
-                  star <= filledTo ? "fill-accent text-accent" : "text-muted-foreground/60"
+                  star <= filledTo ? "animate-pop fill-accent text-accent" : "text-muted-foreground/60"
                 }
               />
             </button>
