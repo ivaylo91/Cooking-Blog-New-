@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Clock, Star, Users } from "lucide-react";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { categoryTint } from "@/lib/categories";
@@ -31,12 +32,31 @@ export function RecipeCard({
     getPlaceholderVariant(recipe.id) === "salad" ? SaladIllustration : IngredientsIllustration;
   const rating =
     recipe.rating_count > 0 ? (recipe.rating_sum / recipe.rating_count).toFixed(1) : null;
-  const meta = [
-    recipe.category?.name,
-    totalTime > 0 ? `${totalTime} мин` : null,
-    `${recipe.servings} порции`,
-    rating ? `★ ${rating}` : null,
-  ].filter(Boolean);
+  // Category, time, servings and rating sit apart with small icons rather
+  // than a chain of separator dots.
+  const meta = (
+    <>
+      {recipe.category?.name && <span>{recipe.category.name}</span>}
+      {totalTime > 0 && (
+        <span className="inline-flex items-center gap-1">
+          <Clock size={14} aria-hidden="true" />
+          {totalTime} мин
+        </span>
+      )}
+      <span className="inline-flex items-center gap-1">
+        <Users size={14} aria-hidden="true" />
+        {recipe.servings} порции
+      </span>
+      {rating && (
+        <span className="inline-flex items-center gap-1">
+          <Star size={14} aria-hidden="true" className="fill-current" />
+          <span className="sr-only">Оценка </span>
+          {rating}
+        </span>
+      )}
+    </>
+  );
+  const metaRow = "flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted-foreground tabular-nums";
   const isFeature = size === "feature";
   // The card body takes the category's food colour; the stagger is capped at
   // six cards so a long grid never makes the reader wait.
@@ -74,7 +94,7 @@ export function RecipeCard({
         <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
           <h3 className="text-display font-bold group-hover:underline">{recipe.title}</h3>
           <p className="mt-3 text-body text-muted-foreground">{recipe.description}</p>
-          <p className="mt-4 text-small text-muted-foreground tabular-nums">{meta.join(" · ")}</p>
+          <p className={`mt-4 ${metaRow}`}>{meta}</p>
         </div>
       </Link>
     );
@@ -103,7 +123,7 @@ export function RecipeCard({
 
       <div className="flex flex-1 flex-col p-4">
         <h3 className="text-heading font-bold group-hover:underline">{recipe.title}</h3>
-        <p className="mt-1.5 text-small text-muted-foreground tabular-nums">{meta.join(" · ")}</p>
+        <p className={`mt-1.5 ${metaRow}`}>{meta}</p>
       </div>
     </Link>
   );

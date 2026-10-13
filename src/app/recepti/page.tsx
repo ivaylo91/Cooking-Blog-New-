@@ -43,7 +43,7 @@ export async function generateMetadata({
     return { title: "Рецепти", alternates: { canonical: "/recepti" } };
   }
 
-  const description = `Рецепти в категория ${category.name} — Кулинарният блог на Иво.`;
+  const description = `Рецепти в категория ${category.name} в Кулинарния блог на Иво.`;
   return {
     title: category.name,
     description,

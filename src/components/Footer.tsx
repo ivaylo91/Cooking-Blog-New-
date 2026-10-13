@@ -28,7 +28,7 @@ export function Footer() {
         <div>
           <p className="text-heading font-bold tracking-tight">Кулинарният блог на Иво</p>
           <p className="mt-2 max-w-md text-muted-foreground">
-            Домашни рецепти, изпробвани в собствената ми кухня — за всеки, който
+            Домашни рецепти, изпробвани в собствената ми кухня. За всеки, който
             обича да готви за удоволствие.
           </p>
         </div>

@@ -15,7 +15,7 @@ export default function ZaIvoPage() {
       <h1 className="text-display font-bold leading-[1.05]">За Иво</h1>
       <p className="mt-6 max-w-[38ch] text-heading leading-snug">
         Здравейте! Тук споделям домашни рецепти, изпробвани в собствената ми
-        кухня — за всеки, който обича да готви за удоволствие.
+        кухня. За всеки, който обича да готви за удоволствие.
       </p>
       <Link
         href="/recepti"

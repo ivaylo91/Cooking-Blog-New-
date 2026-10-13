@@ -4,21 +4,51 @@ import { useSyncExternalStore } from "react";
 
 type Side = "sastavki" | "prigotvyane";
 
-function subscribe(callback: () => void) {
-  window.addEventListener("scroll", callback, { passive: true });
-  window.addEventListener("resize", callback);
-  return () => {
-    window.removeEventListener("scroll", callback);
-    window.removeEventListener("resize", callback);
-  };
-}
-
 // Below the sticky header and this bar, with room to spare.
 const THRESHOLD = 160;
 
-function getSnapshot(): Side {
+let current: Side = "sastavki";
+
+/**
+ * Watches the top band of the viewport, down to THRESHOLD px. The browser
+ * reports only when the method enters or leaves that band, so nothing runs on
+ * every scroll frame; at each report its top edge says which side is active.
+ */
+function subscribe(callback: () => void) {
   const method = document.getElementById("prigotvyane");
-  return method && method.getBoundingClientRect().top <= THRESHOLD ? "prigotvyane" : "sastavki";
+  if (!method) return () => {};
+  // A new recipe page starts on the ingredients until the observer reports.
+  current = "sastavki";
+  let observer: IntersectionObserver | null = null;
+
+  function observe() {
+    observer?.disconnect();
+    const bottom = Math.max(0, window.innerHeight - THRESHOLD);
+    observer = new IntersectionObserver(
+      ([entry]) => {
+        const next: Side =
+          entry.boundingClientRect.top <= THRESHOLD ? "prigotvyane" : "sastavki";
+        if (next !== current) {
+          current = next;
+          callback();
+        }
+      },
+      { rootMargin: `0px 0px -${bottom}px 0px`, threshold: 0 }
+    );
+    observer.observe(method!);
+  }
+
+  observe();
+  // The band is measured in pixels, so it is rebuilt when the viewport changes.
+  window.addEventListener("resize", observe);
+  return () => {
+    window.removeEventListener("resize", observe);
+    observer?.disconnect();
+  };
+}
+
+function getSnapshot(): Side {
+  return current;
 }
 
 const getServerSnapshot = (): Side => "sastavki";

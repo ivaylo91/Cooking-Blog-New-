@@ -87,11 +87,14 @@ export default async function Home() {
       {trending.length > 0 && (
         <Band tone="plain" innerClassName="pt-14" aria-labelledby="top-head">
           <SectionHead title="Най-високо оценени" id="top-head" />
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {/* A swipeable shelf, so it doesn't read as a second copy of the grid below. */}
+          <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:thin]">
             {trending.map((recipe, index) => (
-              <RecipeCard key={recipe.id} recipe={recipe} index={index} />
+              <li key={recipe.id} className="flex w-[78%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
+                <RecipeCard recipe={recipe} index={index} />
+              </li>
             ))}
-          </div>
+          </ul>
         </Band>
       )}
 

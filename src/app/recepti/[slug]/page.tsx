@@ -184,7 +184,7 @@ export default async function RecipePage({
 
   return (
     <article>
-      <ReadingProgressBar targetId="recipe-body" />
+      <ReadingProgressBar />
       <JsonLd data={jsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
 
@@ -264,6 +264,7 @@ export default async function RecipePage({
         {/* What goes in, then how. */}
         <div
           id="recipe-body"
+          data-reading-target
           className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
           <div className="rounded-3xl bg-sage p-5 sm:p-6 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto print:static print:max-h-none print:bg-transparent print:p-0">

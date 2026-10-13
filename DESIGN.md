@@ -8,7 +8,7 @@ colors:
   tomato-link: "#9a3412"
   on-tomato: "#ffffff"
   ink: "#111111"
-  paper: "#ffffff"
+  paper: "#fffcf8"
   surface: "#ffffff"
   counter-tint: "#f5f3ef"
   slate-grey: "#4b4f55"
@@ -233,7 +233,7 @@ Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. A re
 
 ### Neutral
 - **Ink** (`ink`): all text and headings; the fill of selected chips, the current page number and the Cook Mode ingredients toggle when open.
-- **Paper** (`paper`, `surface`): the page ground, form fields, pop-over menus, white cards that sit on a band (resume banner, empty states, servings stepper buttons).
+- **Paper** (`paper`, #fffcf8) and **Surface** (`surface`, #ffffff): the warm off-white page ground; pure white for form fields, pop-over menus, white cards that sit on a band (resume banner, empty states, servings stepper buttons).
 - **Counter Tint** (`counter-tint`): secondary pills, the segmented control track and skeletons.
 - **Slate Grey** (`slate-grey`): secondary text: descriptions, meta lines, fact labels, placeholders, counts.
 - **Field Border** (`field-border`): the resting 1.5px border of every input and checkbox; 3:1 against white.
@@ -260,7 +260,7 @@ Dark mode (system preference, or `data-theme="dark"` from the toggle) swaps each
 - **Display** (700, `clamp(2.5rem, 1.9rem + 2.6vw, 3.75rem)`, 1.05): page titles, the recipe name, the home feature card's dish name, and the current step's text in Cook Mode (weight 500 there).
 - **Heading** (700, 1.5rem, 1.25): section titles, card titles, fact numerals, panel titles, mobile menu links, Cook Mode ingredient rows.
 - **Body** (400, 1.0625rem / 17px, 1.6): all reading text, buttons, inputs. Method steps cap at 65ch.
-- **Small** (400, 0.875rem, 1.45): meta lines ("Супи · 45 мин · 6 порции"), fact labels, group labels, tags, counters, copyright.
+- **Small** (400, 0.875rem, 1.45): card meta rows, fact labels, group labels, tags, counters, copyright.
 
 h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use tabular figures wherever they line up.
 
@@ -273,7 +273,7 @@ h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use ta
 
 Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), each holding the single centred 72rem column (`max-w-6xl`) with a 16px gutter on phones and 24px from 640px. Header is a 64px sticky white bar with a translucent blur. Card grids are 1 / 2 / 3 columns at <640 / 640 / 1024px, with 24px horizontal and 40px vertical gaps.
 
-**Home.** Peach band: display headline, one line, the resume banner when a dish is in progress, and the feature card. Sage band: category tiles in cook's order, each in its category colour with name, count and arrow. Plain bands: "Най-високо оценени" (when any recipe is rated) and "Последни рецепти". Butter band: newsletter. Wheat footer.
+**Home.** Peach band: display headline, one line, the resume banner when a dish is in progress, and the feature card. Sage band: category tiles in cook's order, each in its category colour with name, count and arrow. Plain bands: "Най-високо оценени" (when any recipe is rated) as a swipeable scroll-snap shelf, then "Последни рецепти" as the grid. Butter band: newsletter. Wheat footer.
 
 **Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 60svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, and the facts row. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a sticky sage panel beside the method. The butter rating panel follows the method, then a butter newsletter band, then comments.
 
@@ -284,6 +284,8 @@ Anchors offset by 7.5rem so they land below the sticky header and tab bar.
 ## Elevation & Depth
 
 Depth comes from colour bands first and soft shadows second.
+
+Shadows are tinted towards the warm palette (rgba(74, 32, 12, ...)) rather than neutral black.
 
 ### Shadow Vocabulary
 - **Card** (`shadow-card`): recipe cards, the feature card, white cards on a band (resume banner, empty states, filter panel, stepper buttons), and primary buttons in Cook Mode.
@@ -305,7 +307,8 @@ Keyframes and utilities live in `globals.css`; all use `--ease-out-expo` and sta
 - **Lift**: recipe cards rise 4px with a deeper shadow on hover; the photo never moves.
 - **Press**: buttons and chips scale to 0.95–0.97 while pressed.
 - **Logo steam**: draws in once on load; rises in a loop while the logo is hovered.
-- **Segmented control**: the indicator slides between halves.
+- **Segmented control**: the indicator slides between halves. The active half is tracked with an IntersectionObserver, never a scroll listener.
+- **Reading progress**: a CSS scroll-driven animation (`view-timeline` on `[data-reading-target]`); hidden in browsers without support.
 
 Reduced motion zeroes every distance, holds scale at 1 and stops the steam; colour transitions remain.
 
@@ -326,7 +329,7 @@ Focus is a 2px tomato outline offset 2px on every link, button, summary and chec
 - **State:** selected chips invert to ink fill with paper text. Category chips scroll sideways in one row on a phone. A tomato count badge appears on the "Време и трудност" disclosure when filters inside it are active. Recipe tags are a non-interactive olive variant.
 
 ### Cards / Containers
-- **Recipe card:** 16px corner, body in the category colour, card shadow; 4:3 photo flush to the top; 16px text pad with a heading-size title and a small grey meta line joined by " · ". Hover lifts the card.
+- **Recipe card:** 16px corner, body in the category colour, card shadow; 4:3 photo flush to the top; 16px text pad with a heading-size title and a small grey meta row: category, then clock + minutes, people + servings and star + rating, spaced 12px apart with 14px icons (no separator dots). Hover lifts the card.
 - **Feature card:** 24px corner, butter body, photo on the left 7/12 from 768px, display-size name on the right.
 - **Category tile:** 16px corner in the category colour, name, recipe count and an arrow.
 - **Panels:** 24px corner, 24px padding: sage ingredients, butter rating; white with a card shadow for empty states.
@@ -385,5 +388,7 @@ The pinned doodle pattern (whisk, herb sprig, steam, citrus, soup bowl, basil an
 - **Don't** set tomato (`#c2410c`) as text on a section tint; it fails contrast.
 - **Don't** fill a section background with tomato.
 - **Don't** place the doodle pattern behind any text.
+- **Don't** use em-dashes in visible copy, or chain more than one ` · ` on a line.
+- **Don't** attach `window` scroll listeners; use IntersectionObserver or CSS scroll-driven animations.
 - **Don't** animate for decoration: no looping motion except the hovered logo steam.
 - **Don't** filter or dim food photographs in dark mode.
