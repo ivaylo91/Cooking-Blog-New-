@@ -192,7 +192,7 @@ export default async function RecipePage({
           edge to edge on a phone, and the header sits on the same band. */}
       <div style={{ backgroundColor: categoryTint(recipe.category?.slug) }}>
       <div className="mx-auto max-w-6xl sm:px-6 sm:pt-6 print:hidden">
-        <div className="animate-rise relative h-[60svh] w-full overflow-hidden bg-surface-muted shadow-card sm:h-auto sm:aspect-[4/3] sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]">
+        <div className="animate-rise relative h-[40svh] w-full overflow-hidden bg-surface-muted shadow-card sm:h-auto sm:aspect-[4/3] sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]">
           {imageUrl ? (
             <Image
               src={imageUrl}
@@ -267,7 +267,7 @@ export default async function RecipePage({
           data-reading-target
           className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
-          <div className="rounded-3xl bg-sage p-5 sm:p-6 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto print:static print:max-h-none print:bg-transparent print:p-0">
+          <div className="rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto print:static print:max-h-none print:border-none print:bg-transparent print:p-0 print:shadow-none">
             <RecipeIngredients
               recipeId={recipe.id}
               slug={recipe.slug}
@@ -305,7 +305,7 @@ export default async function RecipePage({
                 {recipe.tags.map((tag) => (
                   <li
                     key={tag.id}
-                    className="rounded-full bg-olive px-3 py-1 text-small text-muted-foreground"
+                    className="rounded-full border border-border-subtle bg-surface-muted px-3 py-1 text-small text-muted-foreground"
                   >
                     {tag.name}
                   </li>
@@ -314,7 +314,7 @@ export default async function RecipePage({
             )}
 
             {/* Asked after cooking, not before: rating, keeping and passing it on. */}
-            <div className="mt-10 rounded-3xl bg-butter p-5 sm:p-6 print:hidden">
+            <div className="mt-10 rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 print:hidden">
               <h2 className="text-heading font-bold">Как се получи?</h2>
               <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <RatingStars

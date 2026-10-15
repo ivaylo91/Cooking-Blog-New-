@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { Check, RotateCcw } from "lucide-react";
+import { StepTimer } from "@/components/StepTimer";
 import { rememberCooking } from "@/lib/lastCooked";
+import { extractStepDuration } from "@/lib/timer";
 import { useStoredSet } from "@/lib/useStoredSet";
 
 export interface RecipeStepView {
@@ -42,6 +44,7 @@ export function RecipeSteps({
         {steps.map((step, index) => {
           const isDone = done.values.has(step.id);
           const isResume = step.id === resumeId;
+          const timer = extractStepDuration(step.text);
           return (
             <li
               key={step.id}
@@ -74,6 +77,13 @@ export function RecipeSteps({
                 >
                   {step.text}
                 </p>
+
+                {timer && (
+                  <div className="mt-3 print:hidden">
+                    <StepTimer initialSeconds={timer.seconds} label={timer.label} />
+                  </div>
+                )}
+
                 {step.imageUrl && (
                   <div className="relative mt-4 aspect-video w-full max-w-md overflow-hidden rounded-2xl print:hidden">
                     <Image

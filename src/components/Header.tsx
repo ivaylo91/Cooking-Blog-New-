@@ -8,9 +8,20 @@ import { LogoMark } from "@/components/Logo";
 import { SearchField } from "@/components/SearchField";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
+import { categoryTint } from "@/lib/categories";
+
 const navLinks = [
   { href: "/recepti", label: "Рецепти" },
   { href: "/za-ivo", label: "За Иво" },
+];
+
+const quickCategories = [
+  { slug: "osnovni-yastia", name: "Основни" },
+  { slug: "supi", name: "Супи" },
+  { slug: "salati", name: "Салати" },
+  { slug: "testeni", name: "Тестени" },
+  { slug: "postni", name: "Постни" },
+  { slug: "deserti", name: "Десерти" },
 ];
 
 function ActiveDesktopLinks() {
@@ -86,7 +97,23 @@ export function Header() {
               </Link>
             ))}
           </nav>
-          <div className="flex items-center gap-2 px-4 pb-4 pt-2">
+          <div className="border-t border-border-subtle px-4 py-3">
+            <p className="text-small font-semibold text-muted-foreground">Категории</p>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {quickCategories.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/recepti?category=${c.slug}`}
+                  onClick={() => setMenuOpen(false)}
+                  style={{ backgroundColor: categoryTint(c.slug) }}
+                  className="flex h-9 items-center rounded-full px-3.5 text-small font-medium transition-transform active:scale-95"
+                >
+                  {c.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="flex items-center gap-2 border-t border-border-subtle px-4 pb-4 pt-3">
             <SearchField id="search-mobile" className="flex-1" />
             <ThemeToggle />
           </div>

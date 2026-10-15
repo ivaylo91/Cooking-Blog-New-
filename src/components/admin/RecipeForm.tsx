@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { ChevronDown, ClipboardList, ListOrdered, Plus, Sparkles, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, ClipboardList, ListOrdered, Plus, Sparkles, X } from "lucide-react";
 import { createRecipe, updateRecipe } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import type { Category, Difficulty, RecipeWithRelations } from "@/types/recipe";
@@ -127,8 +127,32 @@ export function RecipeForm({
     setIngredients((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
 
+  function moveIngredient(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= ingredients.length) return;
+    setIngredients((rows) => {
+      const next = [...rows];
+      const temp = next[index];
+      next[index] = next[target];
+      next[target] = temp;
+      return next;
+    });
+  }
+
   function updateStep(index: number, patch: Partial<StepRow>) {
     setSteps((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
+  }
+
+  function moveStep(index: number, direction: -1 | 1) {
+    const target = index + direction;
+    if (target < 0 || target >= steps.length) return;
+    setSteps((rows) => {
+      const next = [...rows];
+      const temp = next[index];
+      next[index] = next[target];
+      next[target] = temp;
+      return next;
+    });
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -332,46 +356,74 @@ export function RecipeForm({
           {ingredients.map((row, index) => (
             <div
               key={index}
-              className="grid grid-cols-12 items-center gap-2 rounded-xl border border-border-subtle bg-background/60 p-2"
+              className="flex flex-col gap-2 rounded-xl border border-border-subtle bg-background/60 p-3 md:grid md:grid-cols-12 md:items-center md:gap-2 md:p-2"
             >
-              <input
-                placeholder="Група (по избор)"
-                value={row.group_name}
-                onChange={(e) => updateIngredient(index, { group_name: e.target.value })}
-                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
-              />
-              <input
-                placeholder="Кол-во"
-                value={row.amount}
-                onChange={(e) => updateIngredient(index, { amount: e.target.value })}
-                className={`col-span-1 py-1.5 text-sm ${fieldClass}`}
-              />
-              <input
-                placeholder="Мярка"
-                value={row.unit}
-                onChange={(e) => updateIngredient(index, { unit: e.target.value })}
-                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
-              />
-              <input
-                placeholder="Продукт"
-                value={row.item}
-                onChange={(e) => updateIngredient(index, { item: e.target.value })}
-                className={`col-span-4 py-1.5 text-sm ${fieldClass}`}
-              />
-              <input
-                placeholder="Бележка"
-                value={row.note}
-                onChange={(e) => updateIngredient(index, { note: e.target.value })}
-                className={`col-span-2 py-1.5 text-sm ${fieldClass}`}
-              />
-              <button
-                type="button"
-                onClick={() => setIngredients((rows) => rows.filter((_, i) => i !== index))}
-                className={`col-span-1 ${iconButtonClass}`}
-                aria-label="Премахни продукт"
-              >
-                <X size={14} />
-              </button>
+              <div className="flex md:col-span-2">
+                <input
+                  placeholder="Група (по избор)"
+                  value={row.group_name}
+                  onChange={(e) => updateIngredient(index, { group_name: e.target.value })}
+                  className={`w-full py-1.5 text-sm ${fieldClass}`}
+                />
+              </div>
+              <div className="flex gap-2 md:col-span-3">
+                <input
+                  placeholder="Кол-во"
+                  value={row.amount}
+                  onChange={(e) => updateIngredient(index, { amount: e.target.value })}
+                  className={`w-1/2 py-1.5 text-sm md:w-full ${fieldClass}`}
+                />
+                <input
+                  placeholder="Мярка"
+                  value={row.unit}
+                  onChange={(e) => updateIngredient(index, { unit: e.target.value })}
+                  className={`w-1/2 py-1.5 text-sm md:w-full ${fieldClass}`}
+                />
+              </div>
+              <div className="flex md:col-span-4">
+                <input
+                  placeholder="Продукт *"
+                  value={row.item}
+                  onChange={(e) => updateIngredient(index, { item: e.target.value })}
+                  className={`w-full py-1.5 text-sm ${fieldClass}`}
+                />
+              </div>
+              <div className="flex items-center gap-2 md:col-span-3">
+                <input
+                  placeholder="Бележка (по избор)"
+                  value={row.note}
+                  onChange={(e) => updateIngredient(index, { note: e.target.value })}
+                  className={`flex-1 py-1.5 text-sm ${fieldClass}`}
+                />
+                <div className="flex shrink-0 items-center gap-1">
+                  <button
+                    type="button"
+                    disabled={index === 0}
+                    onClick={() => moveIngredient(index, -1)}
+                    className={`${iconButtonClass} disabled:opacity-30`}
+                    aria-label="Премести продукт нагоре"
+                  >
+                    <ArrowUp size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={index === ingredients.length - 1}
+                    onClick={() => moveIngredient(index, 1)}
+                    className={`${iconButtonClass} disabled:opacity-30`}
+                    aria-label="Премести продукт надолу"
+                  >
+                    <ArrowDown size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIngredients((rows) => rows.filter((_, i) => i !== index))}
+                    className={iconButtonClass}
+                    aria-label="Премахни продукт"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
         </div>
@@ -394,10 +446,43 @@ export function RecipeForm({
         <SectionHeading icon={ListOrdered}>Стъпки</SectionHeading>
         <div className="flex flex-col gap-3">
           {steps.map((step, index) => (
-            <div key={index} className="flex items-start gap-3">
-              <span className="mt-1.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-strong">
-                {index + 1}
-              </span>
+            <div
+              key={index}
+              className="flex flex-col gap-2 rounded-xl border border-border-subtle bg-background/60 p-3 sm:flex-row sm:items-start sm:border-0 sm:bg-transparent sm:p-0"
+            >
+              <div className="flex items-center justify-between gap-2 sm:justify-start">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-strong">
+                  {index + 1}
+                </span>
+                <div className="flex items-center gap-1 sm:hidden">
+                  <button
+                    type="button"
+                    disabled={index === 0}
+                    onClick={() => moveStep(index, -1)}
+                    className={`${iconButtonClass} disabled:opacity-30`}
+                    aria-label="Премести стъпка нагоре"
+                  >
+                    <ArrowUp size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    disabled={index === steps.length - 1}
+                    onClick={() => moveStep(index, 1)}
+                    className={`${iconButtonClass} disabled:opacity-30`}
+                    aria-label="Премести стъпка надолу"
+                  >
+                    <ArrowDown size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSteps((rows) => rows.filter((_, i) => i !== index))}
+                    className={iconButtonClass}
+                    aria-label="Премахни стъпка"
+                  >
+                    <X size={14} />
+                  </button>
+                </div>
+              </div>
               <textarea
                 rows={2}
                 value={step.text}
@@ -410,14 +495,34 @@ export function RecipeForm({
                 onChange={(path) => updateStep(index, { image_path: path })}
                 folder="steps"
               />
-              <button
-                type="button"
-                onClick={() => setSteps((rows) => rows.filter((_, i) => i !== index))}
-                className={`mt-1 ${iconButtonClass}`}
-                aria-label="Премахни стъпка"
-              >
-                <X size={14} />
-              </button>
+              <div className="hidden sm:mt-1 sm:flex sm:items-center sm:gap-1">
+                <button
+                  type="button"
+                  disabled={index === 0}
+                  onClick={() => moveStep(index, -1)}
+                  className={`${iconButtonClass} disabled:opacity-30`}
+                  aria-label="Премести стъпка нагоре"
+                >
+                  <ArrowUp size={14} />
+                </button>
+                <button
+                  type="button"
+                  disabled={index === steps.length - 1}
+                  onClick={() => moveStep(index, 1)}
+                  className={`${iconButtonClass} disabled:opacity-30`}
+                  aria-label="Премести стъпка надолу"
+                >
+                  <ArrowDown size={14} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSteps((rows) => rows.filter((_, i) => i !== index))}
+                  className={iconButtonClass}
+                  aria-label="Премахни стъпка"
+                >
+                  <X size={14} />
+                </button>
+              </div>
             </div>
           ))}
         </div>

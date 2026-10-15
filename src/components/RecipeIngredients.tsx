@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Check, Minus, Plus, RotateCcw } from "lucide-react";
 import { rememberCooking } from "@/lib/lastCooked";
 import { formatQuantity } from "@/lib/quantities";
+import { useStoredServings } from "@/lib/servings";
 import { useStoredSet } from "@/lib/useStoredSet";
 import type { Ingredient } from "@/types/recipe";
 
@@ -37,12 +38,11 @@ export function RecipeIngredients({
   ingredients: Ingredient[];
   baseServings: number;
 }) {
-  const [servings, setServings] = useState(baseServings);
+  const { servings, setServings, multiplier, maxServings } = useStoredServings(
+    recipeId,
+    baseServings
+  );
   const checked = useStoredSet(`checked:${recipeId}`);
-  const multiplier = servings / baseServings;
-  // Past double the written recipe the timings and pan sizes stop holding, so
-  // the stepper stops rather than quietly producing a dish that won't work.
-  const maxServings = baseServings * 2;
   const groups = useMemo(() => groupByName(ingredients), [ingredients]);
 
   function toggle(id: string) {
