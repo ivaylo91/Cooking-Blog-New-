@@ -7,6 +7,7 @@ import { Comments } from "@/components/Comments";
 import { CookMode } from "@/components/CookMode";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { JsonLd } from "@/components/JsonLd";
+import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { RecipeCard } from "@/components/RecipeCard";
@@ -127,6 +128,11 @@ export default async function RecipePage({
           }
         : undefined,
     interactionStatistic: [
+      {
+        "@type": "InteractionCounter",
+        interactionType: "https://schema.org/LikeAction",
+        userInteractionCount: recipe.likes_count,
+      },
       {
         "@type": "InteractionCounter",
         interactionType: "https://schema.org/CommentAction",
@@ -329,6 +335,7 @@ export default async function RecipePage({
                   count={recipe.rating_count}
                 />
                 <div className="flex items-center gap-2">
+                  <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
                   <PrintButton />
                   <ShareButtons title={recipe.title} url={recipeUrl} />
                 </div>

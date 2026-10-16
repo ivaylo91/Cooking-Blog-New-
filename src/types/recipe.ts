@@ -51,6 +51,7 @@ export interface Recipe {
   servings: number;
   image_path: string | null;
   published: boolean;
+  likes_count: number;
   /** Generated column: prep_time_minutes + cook_time_minutes. */
   total_time_minutes: number;
   rating_sum: number;
