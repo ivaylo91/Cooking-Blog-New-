@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Star, Users } from "lucide-react";
+import { Clock, Star } from "lucide-react";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { categoryTint } from "@/lib/categories";
@@ -32,21 +32,25 @@ export function RecipeCard({
     getPlaceholderVariant(recipe.id) === "salad" ? SaladIllustration : IngredientsIllustration;
   const rating =
     recipe.rating_count > 0 ? (recipe.rating_sum / recipe.rating_count).toFixed(1) : null;
-  // Category, time, servings and rating sit apart with small icons rather
-  // than a chain of separator dots.
+  // The category wears its food colour as a small pill, so the card itself
+  // can stay white and let the photo carry the colour. Time and rating are
+  // what a reader scans a grid for; servings wait for the recipe page.
   const meta = (
     <>
-      {recipe.category?.name && <span>{recipe.category.name}</span>}
+      {recipe.category?.name && (
+        <span
+          style={{ backgroundColor: categoryTint(recipe.category.slug) }}
+          className="rounded-full px-2.5 py-0.5 font-medium text-foreground"
+        >
+          {recipe.category.name}
+        </span>
+      )}
       {totalTime > 0 && (
         <span className="inline-flex items-center gap-1">
           <Clock size={14} aria-hidden="true" />
           {totalTime} мин
         </span>
       )}
-      <span className="inline-flex items-center gap-1">
-        <Users size={14} aria-hidden="true" />
-        {recipe.servings} порции
-      </span>
       {rating && (
         <span className="inline-flex items-center gap-1">
           <Star size={14} aria-hidden="true" className="fill-current" />
@@ -58,14 +62,10 @@ export function RecipeCard({
   );
   const metaRow = "flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted-foreground tabular-nums";
   const isFeature = size === "feature";
-  // The card body takes the category's food colour; the stagger is capped at
-  // six cards so a long grid never makes the reader wait.
-  const style = {
-    backgroundColor: categoryTint(recipe.category?.slug),
-    animationDelay: `${Math.min(index, 6) * 60}ms`,
-  };
+  // The stagger is capped at six cards so a long grid never makes the reader wait.
+  const style = { animationDelay: `${Math.min(index, 6) * 60}ms` };
   const lift =
-    "shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
+    "bg-surface shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
 
   if (isFeature) {
     // The lead story, magazine-style: a 7/5 split with the photo bleeding to

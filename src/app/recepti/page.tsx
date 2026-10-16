@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 import { Band } from "@/components/Band";
 import { Pagination } from "@/components/Pagination";
 import { RecipeCard } from "@/components/RecipeCard";
@@ -72,6 +74,8 @@ export default async function ReceptiPage({
     getStockedCategories(),
   ]);
 
+  const activeCategory = categories.find((c) => c.slug === active.category);
+
   // A page number past the end is a dead URL rather than an empty grid.
   if (total > 0 && active.page > pageCount) {
     notFound();
@@ -90,7 +94,19 @@ export default async function ReceptiPage({
   return (
     <>
     <Band tone="peach" as="div" innerClassName="pb-8 pt-8 sm:pb-10 sm:pt-12">
-      <h1 className="animate-rise text-display font-bold leading-[1.05]">Рецепти</h1>
+      {/* A filtered page is titled by its shelf, with the way back above it. */}
+      {activeCategory && (
+        <Link
+          href="/recepti"
+          className="inline-flex h-11 items-center gap-1.5 font-semibold text-link hover:underline"
+        >
+          <ArrowLeft size={18} />
+          Всички рецепти
+        </Link>
+      )}
+      <h1 className="animate-rise text-display font-bold leading-[1.05]">
+        {activeCategory?.name ?? "Рецепти"}
+      </h1>
     </Band>
     <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
       <RecipeFilters categories={categories} active={active} resultCount={total} />

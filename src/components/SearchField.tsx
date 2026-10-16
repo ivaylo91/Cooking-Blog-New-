@@ -13,6 +13,7 @@ export function SearchField({
   defaultValue = "",
   size = "default",
   shortcut = false,
+  autoFocus = false,
 }: {
   id: string;
   className?: string;
@@ -20,6 +21,8 @@ export function SearchField({
   size?: "default" | "large";
   /** Only one field on a page should own the "/" shortcut. */
   shortcut?: boolean;
+  /** For a field revealed on demand, such as the phone header's search. */
+  autoFocus?: boolean;
 }) {
   const [value, setValue] = useState(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -63,6 +66,7 @@ export function SearchField({
         onChange={(e) => setValue(e.target.value)}
         placeholder={large ? "Например: супа, баница, без месо" : "Търсете рецепта"}
         autoComplete="off"
+        autoFocus={autoFocus}
         enterKeyHint="search"
         className={`field field-pill [&::-webkit-search-cancel-button]:hidden ${
           large ? "h-14 pl-13 pr-40 text-body" : "h-11 pl-11 pr-11"

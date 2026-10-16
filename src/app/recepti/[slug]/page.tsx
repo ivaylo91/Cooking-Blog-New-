@@ -2,12 +2,11 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChefHat, Clock, CookingPot, Timer, Users } from "lucide-react";
 import { Comments } from "@/components/Comments";
 import { CookMode } from "@/components/CookMode";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { JsonLd } from "@/components/JsonLd";
-import { LikeButton } from "@/components/LikeButton";
 import { PrintButton } from "@/components/PrintButton";
 import { ReadingProgressBar } from "@/components/ReadingProgressBar";
 import { RecipeCard } from "@/components/RecipeCard";
@@ -24,11 +23,12 @@ import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
-// "Средно" reads as an adverb on its own; as a phrase it needs the feminine form.
+// "Средно" reads as an adverb on its own; under a "Трудност" label it needs
+// the feminine adjective.
 const DIFFICULTY_LABEL: Record<string, string> = {
-  лесно: "Лесна трудност",
-  средно: "Средна трудност",
-  трудно: "Висока трудност",
+  лесно: "Лесна",
+  средно: "Средна",
+  трудно: "Висока",
 };
 
 function isoDuration(minutes: number): string {
@@ -129,11 +129,6 @@ export default async function RecipePage({
     interactionStatistic: [
       {
         "@type": "InteractionCounter",
-        interactionType: "https://schema.org/LikeAction",
-        userInteractionCount: recipe.likes_count,
-      },
-      {
-        "@type": "InteractionCounter",
         interactionType: "https://schema.org/CommentAction",
         userInteractionCount: comments.length,
       },
@@ -165,16 +160,20 @@ export default async function RecipePage({
     ],
   };
 
-  // The facts a cook decides on first: portions and minutes.
-  const facts = [
-    { label: "Порции", value: recipe.servings, unit: "" },
-    recipe.prep_time_minutes > 0
-      ? { label: "Подготовка", value: recipe.prep_time_minutes, unit: "мин" }
+  // The facts a cook decides on first: the whole time, then how it splits,
+  // how many it feeds and how hard it is.
+  type Fact = { label: string; value: string | number; unit?: string; icon: typeof Clock };
+  const facts: Array<Fact | null> = [
+    totalTime > 0 ? { label: "Общо", value: totalTime, unit: "мин", icon: Clock } : null,
+    recipe.prep_time_minutes > 0 && recipe.cook_time_minutes > 0
+      ? { label: "Подготовка", value: recipe.prep_time_minutes, unit: "мин", icon: Timer }
       : null,
-    recipe.cook_time_minutes > 0
-      ? { label: "Готвене", value: recipe.cook_time_minutes, unit: "мин" }
+    recipe.prep_time_minutes > 0 && recipe.cook_time_minutes > 0
+      ? { label: "Готвене", value: recipe.cook_time_minutes, unit: "мин", icon: CookingPot }
       : null,
-  ].filter((fact): fact is { label: string; value: number; unit: string } => fact !== null);
+    { label: "Порции", value: recipe.servings, icon: Users },
+    { label: "Трудност", value: DIFFICULTY_LABEL[recipe.difficulty] ?? recipe.difficulty, icon: ChefHat },
+  ];
 
   const stepViews = recipe.steps.map((step) => ({
     id: step.id,
@@ -229,26 +228,29 @@ export default async function RecipePage({
           </div>
 
           <div className="mt-6 lg:mt-0">
-            <dl className="flex flex-wrap gap-x-10 gap-y-4 tabular-nums">
-              {facts.map((fact) => (
-                <div key={fact.label}>
-                  <dt className="text-small text-muted-foreground">{fact.label}</dt>
-                  <dd className="mt-0.5 text-heading font-bold">
-                    {fact.value}
-                    {fact.unit && (
-                      <span className="ml-1 text-small font-medium text-muted-foreground">
-                        {fact.unit}
-                      </span>
-                    )}
-                  </dd>
-                </div>
-              ))}
+            <dl className="flex flex-wrap gap-x-8 gap-y-4 tabular-nums">
+              {facts.filter((fact) => fact !== null).map((fact) => {
+                const Icon = fact.icon;
+                return (
+                  <div key={fact.label}>
+                    <dt className="flex items-center gap-1.5 text-small text-muted-foreground">
+                      <Icon size={15} aria-hidden="true" />
+                      {fact.label}
+                    </dt>
+                    <dd className="mt-0.5 text-heading font-bold">
+                      {fact.value}
+                      {fact.unit && (
+                        <span className="ml-1 text-small font-medium text-muted-foreground">
+                          {fact.unit}
+                        </span>
+                      )}
+                    </dd>
+                  </div>
+                );
+              })}
             </dl>
-            <p className="mt-3 text-small text-muted-foreground">
-              {DIFFICULTY_LABEL[recipe.difficulty] ?? recipe.difficulty}
-            </p>
             {/* The blog's one claim, set apart in ink rather than buried in grey. */}
-            <p className="mt-1 text-small font-semibold">
+            <p className="mt-4 text-small font-semibold">
               {imageUrl ? "Сготвено и снимано в моята кухня." : "Сготвено в моята кухня."}
             </p>
           </div>
@@ -324,7 +326,6 @@ export default async function RecipePage({
                   count={recipe.rating_count}
                 />
                 <div className="flex items-center gap-2">
-                  <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
                   <PrintButton />
                   <ShareButtons title={recipe.title} url={recipeUrl} />
                 </div>
@@ -333,8 +334,14 @@ export default async function RecipePage({
           </section>
         </div>
 
+        {/* The conversation belongs to the dish, so it follows the recipe
+            directly; the newsletter comes last. */}
+        <div className="print:hidden">
+          <Comments recipeId={recipe.id} comments={comments} />
+        </div>
+
         {relatedRecipes.length > 0 && (
-          <section aria-labelledby="related-head" className="mt-12 print:hidden">
+          <section aria-labelledby="related-head" className="mt-20 print:hidden">
             <SectionHead
               title="Още рецепти"
               id="related-head"
@@ -357,10 +364,6 @@ export default async function RecipePage({
       <Band tone="butter" className="mt-20 print:hidden" innerClassName="py-14">
         <SubscribeForm />
       </Band>
-
-      <div className="mx-auto max-w-6xl px-4 pb-20 sm:px-6 print:hidden">
-        <Comments recipeId={recipe.id} comments={comments} />
-      </div>
     </article>
   );
 }
