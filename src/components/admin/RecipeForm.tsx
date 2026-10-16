@@ -1,10 +1,11 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { ArrowDown, ArrowUp, ChevronDown, ClipboardList, ListOrdered, Plus, Sparkles, X } from "lucide-react";
 import { createRecipe, updateRecipe } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { primaryButton, secondaryButton } from "@/components/admin/styles";
 import type { Category, Difficulty, RecipeWithRelations } from "@/types/recipe";
 
 function slugify(value: string): string {
@@ -23,7 +24,10 @@ function slugify(value: string): string {
     .replace(/^-+|-+$/g, "");
 }
 
+// Rows carry a stable key so reordering moves the inputs (and a step's upload
+// state) with their content instead of reusing them by position.
 interface IngredientRow {
+  key: string;
   group_name: string;
   amount: string;
   unit: string;
@@ -32,22 +36,35 @@ interface IngredientRow {
 }
 
 interface StepRow {
+  key: string;
   text: string;
   image_path: string | null;
 }
 
-const fieldClass =
-  "rounded-lg border border-border-subtle bg-background px-3 py-2 outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft";
-const labelClass = "flex flex-col gap-1.5 text-sm font-medium";
+// The site's shared field treatment (3:1 border, focus ring). Body-size text
+// also keeps iOS from zooming the page whenever a field takes focus.
+const fieldClass = "field px-3 py-2.5 text-body";
+const labelClass = "flex flex-col gap-1.5 font-semibold";
 const iconButtonClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-border-subtle text-muted-foreground transition hover:border-destructive hover:text-destructive";
-const sectionCardClass = "rounded-2xl border border-border-subtle bg-surface p-6";
+  "flex size-10 shrink-0 items-center justify-center rounded-full border border-border-subtle text-muted-foreground transition-colors hover:border-destructive hover:text-destructive disabled:opacity-30 disabled:hover:border-border-subtle disabled:hover:text-muted-foreground";
+const sectionCardClass = "rounded-2xl border border-border-subtle bg-surface p-4 sm:p-6";
+
+const newKey = () => crypto.randomUUID();
+const emptyIngredient = (): IngredientRow => ({
+  key: newKey(),
+  group_name: "",
+  amount: "",
+  unit: "",
+  item: "",
+  note: "",
+});
+const emptyStep = (): StepRow => ({ key: newKey(), text: "", image_path: null });
 
 function SectionHeading({ icon: Icon, children }: { icon: typeof ClipboardList; children: React.ReactNode }) {
   return (
-    <h2 className="mb-5 flex items-center gap-2 font-heading text-lg font-semibold">
-      <span className="flex h-7 w-7 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
-        <Icon size={14} />
+    <h2 className="mb-5 flex items-center gap-2 text-heading font-bold">
+      <span className="flex size-8 items-center justify-center rounded-full bg-accent-soft text-accent-strong">
+        <Icon size={16} />
       </span>
       {children}
     </h2>
@@ -108,20 +125,45 @@ export function RecipeForm({
   );
 
   const [ingredients, setIngredients] = useState<IngredientRow[]>(
-    initialRecipe?.ingredients.map((i) => ({
-      group_name: i.group_name,
-      amount: i.amount != null ? String(i.amount) : "",
-      unit: i.unit,
-      item: i.item,
-      note: i.note,
-    })) ?? [{ group_name: "", amount: "", unit: "", item: "", note: "" }]
+    () =>
+      initialRecipe?.ingredients.map((i) => ({
+        key: i.id,
+        group_name: i.group_name,
+        amount: i.amount != null ? String(i.amount) : "",
+        unit: i.unit,
+        item: i.item,
+        note: i.note,
+      })) ?? [emptyIngredient()]
   );
 
   const [steps, setSteps] = useState<StepRow[]>(
-    initialRecipe?.steps.map((s) => ({ text: s.text, image_path: s.image_path })) ?? [
-      { text: "", image_path: null },
-    ]
+    () =>
+      initialRecipe?.steps.map((s) => ({ key: s.id, text: s.text, image_path: s.image_path })) ?? [
+        emptyStep(),
+      ]
   );
+
+  // Unsaved changes: everything the form holds, compared with how it opened.
+  const snapshot = JSON.stringify([
+    title, slug, description, categoryId, cuisine, difficulty, prepTime, cookTime,
+    servings, imagePath, published, tagsInput, ingredients, steps,
+  ]);
+  const [savedSnapshot] = useState(snapshot);
+  const dirty = snapshot !== savedSnapshot && !isPending;
+
+  useEffect(() => {
+    if (!dirty) return;
+    function onBeforeUnload(event: BeforeUnloadEvent) {
+      event.preventDefault();
+    }
+    window.addEventListener("beforeunload", onBeforeUnload);
+    return () => window.removeEventListener("beforeunload", onBeforeUnload);
+  }, [dirty]);
+
+  function cancel() {
+    if (dirty && !confirm("Имате незапазени промени. Да се откажа ли от тях?")) return;
+    router.push("/admin");
+  }
 
   function updateIngredient(index: number, patch: Partial<IngredientRow>) {
     setIngredients((rows) => rows.map((row, i) => (i === index ? { ...row, ...patch } : row)));
@@ -204,11 +246,6 @@ export function RecipeForm({
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-      {error && (
-        <p className="rounded-lg border border-destructive-border bg-destructive-soft px-3 py-2 text-sm text-destructive-strong">
-          {error}
-        </p>
-      )}
 
       <section className={sectionCardClass}>
         <SectionHeading icon={Sparkles}>Основна информация</SectionHeading>
@@ -235,7 +272,7 @@ export function RecipeForm({
                 setSlug(e.target.value);
                 setSlugTouched(true);
               }}
-              className={`font-mono text-xs ${fieldClass}`}
+              className={`font-mono ${fieldClass}`}
             />
           </label>
 
@@ -323,14 +360,15 @@ export function RecipeForm({
           </label>
 
           <div className="sm:col-span-2">
-            <span className="mb-1.5 block text-sm font-medium">Снимка</span>
+            <span className="mb-1.5 block font-semibold">Снимка</span>
             <ImageUpload path={imagePath} onChange={setImagePath} folder="recipes" />
           </div>
 
-          <label className="flex cursor-pointer items-center gap-3 text-sm font-medium sm:col-span-2">
+          <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold sm:col-span-2">
+            {/* The real checkbox is visually hidden, so the track shows its focus. */}
             <span
-              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
-                published ? "bg-accent" : "bg-border-subtle"
+              className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-accent ${
+                published ? "bg-accent" : "bg-field-border"
               }`}
             >
               <input
@@ -355,52 +393,58 @@ export function RecipeForm({
         <div className="flex flex-col gap-2">
           {ingredients.map((row, index) => (
             <div
-              key={index}
+              key={row.key}
               className="flex flex-col gap-2 rounded-xl border border-border-subtle bg-background/60 p-3 md:grid md:grid-cols-12 md:items-center md:gap-2 md:p-2"
             >
               <div className="flex md:col-span-2">
                 <input
                   placeholder="Група (по избор)"
+                  aria-label={`Продукт ${index + 1}: група`}
                   value={row.group_name}
                   onChange={(e) => updateIngredient(index, { group_name: e.target.value })}
-                  className={`w-full py-1.5 text-sm ${fieldClass}`}
+                  className={fieldClass}
                 />
               </div>
-              <div className="flex gap-2 md:col-span-3">
+              <div className="grid grid-cols-2 gap-2 md:col-span-3">
                 <input
                   placeholder="Кол-во"
+                  aria-label={`Продукт ${index + 1}: количество`}
+                  inputMode="decimal"
                   value={row.amount}
                   onChange={(e) => updateIngredient(index, { amount: e.target.value })}
-                  className={`w-1/2 py-1.5 text-sm md:w-full ${fieldClass}`}
+                  className={fieldClass}
                 />
                 <input
                   placeholder="Мярка"
+                  aria-label={`Продукт ${index + 1}: мярка`}
                   value={row.unit}
                   onChange={(e) => updateIngredient(index, { unit: e.target.value })}
-                  className={`w-1/2 py-1.5 text-sm md:w-full ${fieldClass}`}
+                  className={fieldClass}
                 />
               </div>
               <div className="flex md:col-span-4">
                 <input
                   placeholder="Продукт *"
+                  aria-label={`Продукт ${index + 1}: име`}
                   value={row.item}
                   onChange={(e) => updateIngredient(index, { item: e.target.value })}
-                  className={`w-full py-1.5 text-sm ${fieldClass}`}
+                  className={fieldClass}
                 />
               </div>
               <div className="flex items-center gap-2 md:col-span-3">
                 <input
                   placeholder="Бележка (по избор)"
+                  aria-label={`Продукт ${index + 1}: бележка`}
                   value={row.note}
                   onChange={(e) => updateIngredient(index, { note: e.target.value })}
-                  className={`flex-1 py-1.5 text-sm ${fieldClass}`}
+                  className={`min-w-0 flex-1 ${fieldClass}`}
                 />
                 <div className="flex shrink-0 items-center gap-1">
                   <button
                     type="button"
                     disabled={index === 0}
                     onClick={() => moveIngredient(index, -1)}
-                    className={`${iconButtonClass} disabled:opacity-30`}
+                    className={iconButtonClass}
                     aria-label="Премести продукт нагоре"
                   >
                     <ArrowUp size={14} />
@@ -409,7 +453,7 @@ export function RecipeForm({
                     type="button"
                     disabled={index === ingredients.length - 1}
                     onClick={() => moveIngredient(index, 1)}
-                    className={`${iconButtonClass} disabled:opacity-30`}
+                    className={iconButtonClass}
                     aria-label="Премести продукт надолу"
                   >
                     <ArrowDown size={14} />
@@ -430,12 +474,9 @@ export function RecipeForm({
         <button
           type="button"
           onClick={() =>
-            setIngredients((rows) => [
-              ...rows,
-              { group_name: "", amount: "", unit: "", item: "", note: "" },
-            ])
+            setIngredients((rows) => [...rows, emptyIngredient()])
           }
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border-subtle py-2.5 text-sm font-medium text-accent transition hover:border-accent hover:bg-accent-soft"
+          className="mt-3 flex h-12 w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-field-border font-semibold text-link transition-colors hover:border-accent hover:bg-accent-soft"
         >
           <Plus size={15} />
           Добави продукт
@@ -447,11 +488,11 @@ export function RecipeForm({
         <div className="flex flex-col gap-3">
           {steps.map((step, index) => (
             <div
-              key={index}
+              key={step.key}
               className="flex flex-col gap-2 rounded-xl border border-border-subtle bg-background/60 p-3 sm:flex-row sm:items-start sm:border-0 sm:bg-transparent sm:p-0"
             >
               <div className="flex items-center justify-between gap-2 sm:justify-start">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent-soft text-xs font-semibold text-accent-strong">
+                <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-accent-soft font-bold text-accent-strong tabular-nums">
                   {index + 1}
                 </span>
                 <div className="flex items-center gap-1 sm:hidden">
@@ -459,7 +500,7 @@ export function RecipeForm({
                     type="button"
                     disabled={index === 0}
                     onClick={() => moveStep(index, -1)}
-                    className={`${iconButtonClass} disabled:opacity-30`}
+                    className={iconButtonClass}
                     aria-label="Премести стъпка нагоре"
                   >
                     <ArrowUp size={14} />
@@ -468,7 +509,7 @@ export function RecipeForm({
                     type="button"
                     disabled={index === steps.length - 1}
                     onClick={() => moveStep(index, 1)}
-                    className={`${iconButtonClass} disabled:opacity-30`}
+                    className={iconButtonClass}
                     aria-label="Премести стъпка надолу"
                   >
                     <ArrowDown size={14} />
@@ -484,10 +525,11 @@ export function RecipeForm({
                 </div>
               </div>
               <textarea
-                rows={2}
+                rows={3}
+                aria-label={`Стъпка ${index + 1}`}
                 value={step.text}
                 onChange={(e) => updateStep(index, { text: e.target.value })}
-                className={`flex-1 py-2 text-sm ${fieldClass}`}
+                className={`min-w-0 flex-1 resize-y ${fieldClass}`}
               />
               <ImageUpload
                 size="compact"
@@ -500,7 +542,7 @@ export function RecipeForm({
                   type="button"
                   disabled={index === 0}
                   onClick={() => moveStep(index, -1)}
-                  className={`${iconButtonClass} disabled:opacity-30`}
+                  className={iconButtonClass}
                   aria-label="Премести стъпка нагоре"
                 >
                   <ArrowUp size={14} />
@@ -509,7 +551,7 @@ export function RecipeForm({
                   type="button"
                   disabled={index === steps.length - 1}
                   onClick={() => moveStep(index, 1)}
-                  className={`${iconButtonClass} disabled:opacity-30`}
+                  className={iconButtonClass}
                   aria-label="Премести стъпка надолу"
                 >
                   <ArrowDown size={14} />
@@ -528,29 +570,30 @@ export function RecipeForm({
         </div>
         <button
           type="button"
-          onClick={() => setSteps((rows) => [...rows, { text: "", image_path: null }])}
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-border-subtle py-2.5 text-sm font-medium text-accent transition hover:border-accent hover:bg-accent-soft"
+          onClick={() => setSteps((rows) => [...rows, emptyStep()])}
+          className="mt-3 flex h-12 w-full items-center justify-center gap-1.5 rounded-xl border border-dashed border-field-border font-semibold text-link transition-colors hover:border-accent hover:bg-accent-soft"
         >
           <Plus size={15} />
           Добави стъпка
         </button>
       </section>
 
-      <div className="flex gap-3">
-        <button
-          type="submit"
-          disabled={isPending}
-          className="rounded-full bg-accent px-5 py-2 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong disabled:opacity-50"
-        >
-          {isPending ? "Запазване..." : "Запази"}
+      {/* Save stays in reach on a long recipe, and a failed save reports
+          right beside the button that was pressed. */}
+      <div className="sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center gap-3 border-t border-border-subtle bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6">
+        <button type="submit" disabled={isPending} className={primaryButton}>
+          {isPending ? "Запазване…" : "Запази"}
         </button>
-        <button
-          type="button"
-          onClick={() => router.push("/admin")}
-          className="rounded-full border border-border-subtle px-5 py-2 text-sm transition hover:border-accent hover:text-accent"
-        >
+        <button type="button" onClick={cancel} className={secondaryButton}>
           Отказ
         </button>
+        <p aria-live="polite" className="min-w-0 flex-1 text-small font-medium">
+          {error ? (
+            <span className="text-destructive-strong">{error}</span>
+          ) : (
+            dirty && <span className="text-muted-foreground">Незапазени промени</span>
+          )}
+        </p>
       </div>
     </form>
   );

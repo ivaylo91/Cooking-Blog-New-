@@ -22,7 +22,7 @@ export function WelcomeToast() {
   return (
     <div className="fixed right-4 top-20 z-50 flex items-center gap-2 rounded-full border border-border-subtle bg-surface px-4 py-2.5 shadow-lg">
       <CheckCircle2 size={18} className="text-secondary" />
-      <span className="text-sm font-medium">Влязохте успешно</span>
+      <span role="status" className="text-small font-medium">Влязохте успешно</span>
       <button
         type="button"
         onClick={() => setDismissed(true)}

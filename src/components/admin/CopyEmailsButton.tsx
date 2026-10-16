@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { secondaryButton } from "@/components/admin/styles";
 
 /**
  * The sandbox blocks script-driven downloads, so the list is copied to the
@@ -24,7 +25,7 @@ export function CopyEmailsButton({ emails }: { emails: string[] }) {
     <button
       type="button"
       onClick={copy}
-      className="inline-flex items-center gap-2 rounded-full border border-border-subtle px-4 py-2 text-sm font-medium transition hover:border-accent hover:text-accent"
+      className={secondaryButton}
     >
       {copied ? <Check size={15} className="text-secondary" /> : <Copy size={15} />}
       {copied ? "Копирано" : "Копирай имейлите"}

@@ -1,4 +1,7 @@
+import Link from "next/link";
 import { deleteComment } from "@/app/admin/actions";
+import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
+import { pageTitle } from "@/components/admin/styles";
 import { createClient } from "@/lib/supabase/server";
 
 interface CommentRow {
@@ -22,7 +25,12 @@ export default async function AdminCommentsPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-heading text-2xl font-semibold">Коментари</h1>
+      <h1 className={`mb-6 ${pageTitle}`}>
+        Коментари{" "}
+        <span className="font-sans text-body font-medium text-muted-foreground tabular-nums">
+          ({comments.length})
+        </span>
+      </h1>
       {comments.length === 0 ? (
         <p className="text-muted-foreground">Все още няма коментари.</p>
       ) : (
@@ -33,22 +41,34 @@ export default async function AdminCommentsPage() {
               className="rounded-2xl border border-border-subtle bg-surface p-4"
             >
               <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-semibold">{comment.author_name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {comment.recipe?.title ?? "изтрита рецепта"} ·{" "}
-                    {new Date(comment.created_at).toLocaleDateString("bg-BG")}
+                <div className="min-w-0">
+                  <p className="font-semibold">{comment.author_name}</p>
+                  <p className="text-small text-muted-foreground">
+                    {comment.recipe ? (
+                      <Link
+                        href={`/recepti/${comment.recipe.slug}#comments-head`}
+                        target="_blank"
+                        className="font-medium text-link hover:underline"
+                      >
+                        {comment.recipe.title}
+                      </Link>
+                    ) : (
+                      "изтрита рецепта"
+                    )}{" "}
+                    · {new Date(comment.created_at).toLocaleDateString("bg-BG")}
                   </p>
                 </div>
                 {comment.recipe && (
-                  <form action={deleteComment.bind(null, comment.id)}>
-                    <button type="submit" className="text-xs text-destructive hover:underline">
+                  <form action={deleteComment.bind(null, comment.id)} className="shrink-0">
+                    <ConfirmSubmitButton
+                      message={`Изтриване на коментара от ${comment.author_name}?`}
+                    >
                       Изтрий
-                    </button>
+                    </ConfirmSubmitButton>
                   </form>
                 )}
               </div>
-              <p className="mt-2 text-sm">{comment.text}</p>
+              <p className="mt-2 whitespace-pre-line">{comment.text}</p>
             </li>
           ))}
         </ul>

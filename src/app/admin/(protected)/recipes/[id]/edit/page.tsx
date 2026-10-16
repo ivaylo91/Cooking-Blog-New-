@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { RecipeForm } from "@/components/admin/RecipeForm";
+import { pageTitle } from "@/components/admin/styles";
 import { getCategories, getRecipeById } from "@/lib/recipes";
 
 export default async function EditRecipePage({
@@ -14,7 +15,7 @@ export default async function EditRecipePage({
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-semibold">Редактиране на рецепта</h1>
+      <h1 className={`mb-6 ${pageTitle}`}>Редактиране на рецепта</h1>
       <RecipeForm categories={categories} initialRecipe={recipe} />
     </div>
   );

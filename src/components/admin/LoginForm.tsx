@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { CheckCircle2, Lock, Mail } from "lucide-react";
 import { login } from "@/app/admin/actions";
+import { primaryButton } from "@/components/admin/styles";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const fieldClass =
-  "w-full rounded-lg border-2 border-border-subtle bg-background py-2.5 pl-10 pr-10 font-normal outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft";
+const fieldClass = "field h-12 pl-10 pr-10 text-body font-normal";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -16,7 +16,7 @@ export function LoginForm() {
 
   return (
     <form action={login} className="mt-6 flex flex-col gap-4">
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
+      <label className="flex flex-col gap-1.5 font-semibold">
         Имейл
         <div className="relative">
           <Mail
@@ -41,7 +41,7 @@ export function LoginForm() {
         </div>
       </label>
 
-      <label className="flex flex-col gap-1.5 text-sm font-medium">
+      <label className="flex flex-col gap-1.5 font-semibold">
         Парола
         <div className="relative">
           <Lock
@@ -68,7 +68,7 @@ export function LoginForm() {
 
       <button
         type="submit"
-        className="mt-2 rounded-full bg-accent px-4 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong"
+        className={`mt-2 w-full ${primaryButton}`}
       >
         Вход
       </button>

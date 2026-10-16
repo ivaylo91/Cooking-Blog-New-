@@ -1,63 +1,30 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { ChefHat, Home, LogOut, Mail, MessageSquare, Settings } from "lucide-react";
+import { ExternalLink, LogOut } from "lucide-react";
 import { logout } from "@/app/admin/actions";
+import { AdminNav } from "@/components/admin/AdminNav";
 import { WelcomeToast } from "@/components/admin/WelcomeToast";
+
+const quietLink =
+  "flex h-11 items-center gap-2 rounded-full px-3 font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="mx-auto max-w-5xl px-6 py-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <Suspense fallback={null}>
         <WelcomeToast />
       </Suspense>
-      <div className="mb-8 flex items-center justify-between border-b border-border-subtle pb-4">
-        <Link href="/admin" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-accent-foreground">
-            <ChefHat size={16} strokeWidth={2.25} />
-          </span>
-          <span className="font-heading text-lg font-semibold">Администрация</span>
-        </Link>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/"
-            title="Към сайта"
-            aria-label="Към сайта"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
-          >
-            <Home size={16} />
-          </Link>
-          <Link
-            href="/admin/comments"
-            title="Коментари"
-            aria-label="Коментари"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
-          >
-            <MessageSquare size={16} />
-          </Link>
-          <Link
-            href="/admin/subscribers"
-            title="Абонати"
-            aria-label="Абонати"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
-          >
-            <Mail size={16} />
-          </Link>
-          <Link
-            href="/admin/settings"
-            title="Настройки"
-            aria-label="Настройки"
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
-          >
-            <Settings size={16} />
+      <div className="mb-8 flex flex-col gap-3 border-b border-border-subtle pb-4 md:flex-row md:items-center md:justify-between">
+        <AdminNav />
+        <div className="flex items-center gap-1">
+          <Link href="/" className={quietLink}>
+            <ExternalLink size={17} aria-hidden="true" />
+            Към сайта
           </Link>
           <form action={logout}>
-            <button
-              type="submit"
-              title="Изход"
-              aria-label="Изход"
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle transition hover:border-accent hover:text-accent"
-            >
-              <LogOut size={16} />
+            <button type="submit" className={quietLink}>
+              <LogOut size={17} aria-hidden="true" />
+              Изход
             </button>
           </form>
         </div>

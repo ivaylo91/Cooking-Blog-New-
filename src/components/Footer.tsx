@@ -3,7 +3,7 @@ import { cacheLife } from "next/cache";
 import { Rss } from "lucide-react";
 import { CookingBackground } from "@/components/CookingBackground";
 import { inCooksOrder } from "@/lib/categories";
-import { getStockedCategories } from "@/lib/recipes";
+import { getNavCategories } from "@/lib/recipes";
 
 // Cached so reading the clock doesn't block the footer, and the page above
 // it, from being prerendered into the static shell.
@@ -20,7 +20,7 @@ const links = [
 
 export async function Footer() {
   // Cached, like the header's read, so the footer stays in the static shell.
-  const categories = inCooksOrder(await getStockedCategories());
+  const categories = inCooksOrder(await getNavCategories());
 
   return (
     <footer className="bg-wheat">

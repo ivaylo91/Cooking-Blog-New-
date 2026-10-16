@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { inCooksOrder } from "@/lib/categories";
-import { getStockedCategories } from "@/lib/recipes";
+import { getNavCategories } from "@/lib/recipes";
 
 /**
  * The header with the phone menu's category shortcuts read from the shelves
@@ -8,6 +8,6 @@ import { getStockedCategories } from "@/lib/recipes";
  * prerendered shell.
  */
 export async function SiteHeader() {
-  const categories = await getStockedCategories();
+  const categories = await getNavCategories();
   return <Header categories={inCooksOrder(categories)} />;
 }

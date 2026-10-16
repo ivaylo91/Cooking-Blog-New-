@@ -51,11 +51,11 @@ export function ImageUpload({
           type="button"
           onClick={() => onChange(null)}
           className={`absolute flex items-center justify-center rounded-full bg-background/90 text-foreground shadow transition hover:bg-destructive-soft hover:text-destructive ${
-            compact ? "right-1 top-1 h-5 w-5" : "right-2 top-2 h-8 w-8"
+            compact ? "right-0.5 top-0.5 size-7" : "right-2 top-2 size-10"
           }`}
           aria-label="Премахни снимката"
         >
-          <X size={compact ? 11 : 15} />
+          <X size={compact ? 14 : 17} />
         </button>
       </div>
     );
@@ -78,7 +78,7 @@ export function ImageUpload({
         className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed text-center transition ${boxSize} ${
           dragActive
             ? "border-accent bg-accent-soft"
-            : "border-border-subtle hover:border-accent hover:bg-accent-soft/40"
+            : "border-field-border hover:border-accent hover:bg-accent-soft/40"
         }`}
       >
         {uploading ? (
@@ -86,13 +86,15 @@ export function ImageUpload({
         ) : (
           <ImageUp size={compact ? 15 : 22} className="text-muted-foreground" />
         )}
-        {!compact && (
+        {compact ? (
+          <span className="sr-only">{uploading ? "Качване…" : "Качи снимка"}</span>
+        ) : (
           <>
-            <span className="px-4 text-sm font-medium">
-              {uploading ? "Качване..." : "Качи снимка"}
+            <span className="px-4 font-semibold">
+              {uploading ? "Качване…" : "Качи снимка"}
             </span>
             {!uploading && (
-              <span className="text-xs text-muted-foreground">или пуснете файл тук</span>
+              <span className="text-small text-muted-foreground">или пуснете файл тук</span>
             )}
           </>
         )}
@@ -107,7 +109,11 @@ export function ImageUpload({
           className="sr-only"
         />
       </label>
-      {error && <p className="mt-1 max-w-16 text-[10px] text-destructive">{error}</p>}
+      {error && (
+        <p role="alert" className={`mt-1 text-small text-destructive-strong ${compact ? "w-40" : ""}`}>
+          {error}
+        </p>
+      )}
     </div>
   );
 }

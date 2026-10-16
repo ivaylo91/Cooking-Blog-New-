@@ -1,5 +1,6 @@
-import { Mail } from "lucide-react";
 import { deleteSubscriber } from "@/app/admin/actions";
+import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
+import { pageTitle } from "@/components/admin/styles";
 import { createClient } from "@/lib/supabase/server";
 import { CopyEmailsButton } from "@/components/admin/CopyEmailsButton";
 
@@ -30,10 +31,9 @@ export default async function SubscribersPage() {
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="flex items-center gap-2 font-heading text-2xl font-semibold">
-          <Mail size={20} className="text-accent" />
-          Абонати
-          <span className="text-base font-normal text-muted-foreground">
+        <h1 className={pageTitle}>
+          Абонати{" "}
+          <span className="font-sans text-body font-medium text-muted-foreground tabular-nums">
             ({subscribers.length})
           </span>
         </h1>
@@ -43,9 +43,9 @@ export default async function SubscribersPage() {
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-border-subtle bg-surface">
-        <table className="w-full text-left text-sm">
+        <table className="w-full text-left">
           <thead className="border-b border-border-subtle text-muted-foreground">
-            <tr>
+            <tr className="text-small">
               <th className="py-3 pl-4 pr-4">Имейл</th>
               <th className="py-3 pr-4">Записан на</th>
               <th className="py-3 pr-4" />
@@ -60,12 +60,9 @@ export default async function SubscribersPage() {
                 </td>
                 <td className="py-3 pr-4 text-right">
                   <form action={deleteSubscriber.bind(null, subscriber.id)}>
-                    <button
-                      type="submit"
-                      className="text-xs font-medium text-destructive hover:text-destructive-strong hover:underline"
-                    >
+                    <ConfirmSubmitButton message={`Да се отпише ли ${subscriber.email}?`}>
                       Изтрий
-                    </button>
+                    </ConfirmSubmitButton>
                   </form>
                 </td>
               </tr>

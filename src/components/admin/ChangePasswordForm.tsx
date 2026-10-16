@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { KeyRound, Lock, ShieldCheck } from "lucide-react";
 import { changePassword, type PasswordActionState } from "@/app/admin/actions";
+import { primaryButton } from "@/components/admin/styles";
 
 const initialState: PasswordActionState = { status: "idle" };
 
@@ -15,8 +16,7 @@ const MESSAGES: Record<PasswordActionState["status"], string> = {
   error: "Паролата не беше сменена. Опитайте отново.",
 };
 
-const fieldClass =
-  "w-full rounded-lg border-2 border-border-subtle bg-background py-2.5 pl-10 pr-3 text-sm outline-none transition focus:border-accent focus:ring-2 focus:ring-accent-soft";
+const fieldClass = "field h-12 pl-10 pr-3 text-body";
 
 function Field({
   name,
@@ -28,7 +28,7 @@ function Field({
   autoComplete: string;
 }) {
   return (
-    <label className="flex flex-col gap-1.5 text-sm font-medium">
+    <label className="flex flex-col gap-1.5 font-semibold">
       {label}
       <div className="relative">
         <Lock
@@ -62,11 +62,11 @@ export function ChangePasswordForm() {
 
   return (
     <div className="max-w-md rounded-2xl border border-border-subtle bg-surface p-6 sm:p-8">
-      <h2 className="flex items-center gap-2 font-heading text-lg font-semibold">
+      <h2 className="flex items-center gap-2 text-heading font-bold">
         <KeyRound size={18} className="text-accent" />
         Смяна на паролата
       </h2>
-      <p className="mt-2 text-sm text-muted-foreground">
+      <p className="mt-2 text-muted-foreground">
         Изберете парола, която знаете само вие — поне 12 знака.
       </p>
 
@@ -78,7 +78,7 @@ export function ChangePasswordForm() {
         <button
           type="submit"
           disabled={pending}
-          className="mt-1 inline-flex items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-strong disabled:opacity-60"
+          className={`mt-1 ${primaryButton}`}
         >
           <ShieldCheck size={15} />
           {pending ? "Записване…" : "Смени паролата"}
@@ -87,7 +87,7 @@ export function ChangePasswordForm() {
 
       <p
         aria-live="polite"
-        className={`mt-3 min-h-5 text-sm ${isError ? "text-destructive-strong" : "text-secondary"}`}
+        className={`mt-3 min-h-6 font-medium ${isError ? "text-destructive-strong" : "text-secondary"}`}
       >
         {state.message ?? MESSAGES[state.status]}
       </p>

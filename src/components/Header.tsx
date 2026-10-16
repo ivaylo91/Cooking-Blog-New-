@@ -141,22 +141,24 @@ export function Header({ categories }: { categories: Category[] }) {
               </Link>
             ))}
           </nav>
-          <div className="border-t border-border-subtle px-4 py-3">
-            <p className="text-small font-semibold text-muted-foreground">Категории</p>
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {categories.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/recepti?category=${c.slug}`}
-                  onClick={close}
-                  style={{ backgroundColor: categoryTint(c.slug) }}
-                  className="flex h-11 items-center rounded-full px-4 text-small font-medium transition-transform active:scale-95"
-                >
-                  {c.name}
-                </Link>
-              ))}
+          {categories.length > 0 && (
+            <div className="border-t border-border-subtle px-4 py-3">
+              <p className="text-small font-semibold text-muted-foreground">Категории</p>
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {categories.map((c) => (
+                  <Link
+                    key={c.id}
+                    href={`/recepti?category=${c.slug}`}
+                    onClick={close}
+                    style={{ backgroundColor: categoryTint(c.slug) }}
+                    className="flex h-11 items-center rounded-full px-4 text-small font-medium transition-transform active:scale-95"
+                  >
+                    {c.name}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center justify-between border-t border-border-subtle px-4 pb-4 pt-3">
             <span className="font-medium">Тема</span>
             <ThemeToggle />
