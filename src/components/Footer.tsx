@@ -59,23 +59,27 @@ export async function Footer() {
           </nav>
         )}
 
-        <nav aria-label="Долна навигация" className="-ml-4 flex flex-wrap gap-1 md:ml-0 md:flex-col">
-          {links.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="flex h-11 items-center rounded-full px-4 font-medium transition-colors hover:bg-surface"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <a
-            href="/rss.xml"
-            className="flex h-11 items-center gap-2 rounded-full px-4 font-medium transition-colors hover:bg-surface"
-          >
-            <Rss size={17} />
-            RSS
-          </a>
+        {/* Labelled and styled like the category column beside it, so the two
+            line up as a pair. */}
+        <nav aria-labelledby="footer-blog">
+          <p id="footer-blog" className="text-small font-semibold text-muted-foreground">
+            Блогът
+          </p>
+          <ul className="mt-1 grid grid-cols-2 gap-x-6 md:grid-cols-1">
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link href={link.href} className="flex h-11 items-center font-medium hover:underline">
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            <li>
+              <a href="/rss.xml" className="flex h-11 items-center gap-2 font-medium hover:underline">
+                <Rss size={17} aria-hidden="true" />
+                RSS
+              </a>
+            </li>
+          </ul>
         </nav>
       </div>
 

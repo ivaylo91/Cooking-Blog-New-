@@ -7,6 +7,7 @@ import { ResumeCooking } from "@/components/ResumeCooking";
 import { SectionHead } from "@/components/SectionHead";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
+import { recipeCount } from "@/lib/format";
 import { getImageUrl } from "@/lib/images";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 
@@ -65,7 +66,9 @@ export default async function Home() {
           id="shelf-head"
           action={{ href: "/recepti", label: "Всички рецепти" }}
         />
-        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+        {/* On wide screens the shelves share one row whatever their number,
+            so a seventh never sits alone on a second line. */}
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-[repeat(auto-fit,minmax(8.5rem,1fr))]">
           {inCooksOrder(categories).map((category, index) => (
             <li key={category.id}>
               <Link
@@ -99,7 +102,7 @@ export default async function Home() {
                 <span>
                   <span className="block font-heading text-heading font-bold leading-tight">{category.name}</span>
                   <span className="text-small text-muted-foreground tabular-nums">
-                    {counts.get(category.id) ?? 0} рецепти
+                    {recipeCount(counts.get(category.id) ?? 0)}
                   </span>
                 </span>
               </Link>
@@ -114,7 +117,9 @@ export default async function Home() {
           {/* A swipeable shelf, so it doesn't read as a second copy of the grid below. */}
           <ul className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:thin]">
             {trending.map((recipe, index) => (
-              <li key={recipe.id} className="flex w-[78%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
+              // A grid cell, not a flex row: the card fills the slot's width
+              // instead of shrinking to the length of its title.
+              <li key={recipe.id} className="grid w-[78%] shrink-0 snap-start sm:w-[45%] lg:w-[31%]">
                 <RecipeCard recipe={recipe} index={index} />
               </li>
             ))}

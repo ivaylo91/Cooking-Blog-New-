@@ -4,16 +4,13 @@ import { Band } from "@/components/Band";
 import { RecipeCard } from "@/components/RecipeCard";
 import { SearchField } from "@/components/SearchField";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
+import { recipeCount } from "@/lib/format";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import type { Category } from "@/types/recipe";
 
 export const metadata: Metadata = {
   title: "Търсене",
 };
-
-function recipeCount(n: number) {
-  return n === 1 ? "1 рецепта" : `${n} рецепти`;
-}
 
 /** The shelves as chips: a way in when there is nothing, or nothing found, to show. */
 function CategoryChips({ categories }: { categories: Category[] }) {

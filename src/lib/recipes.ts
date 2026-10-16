@@ -287,10 +287,6 @@ export async function getRecipeComments(recipeId: string): Promise<Comment[]> {
 }
 
 /**
- * Categories that hold at least one published recipe. An empty category is a
- * dead end for a reader, so filters and suggestions offer only these.
- */
-/**
  * For the header and footer, which every page renders, admin included: a
  * failed read leaves them without category shortcuts instead of taking the
  * whole site down with it.
@@ -304,6 +300,10 @@ export async function getNavCategories(): Promise<Category[]> {
   }
 }
 
+/**
+ * Categories that hold at least one published recipe. An empty category is a
+ * dead end for a reader, so filters and suggestions offer only these.
+ */
 export async function getStockedCategories(): Promise<Category[]> {
   const [categories, recipes] = await Promise.all([getCategories(), getRecipes()]);
   const stocked = new Set(recipes.map((recipe) => recipe.category_id));

@@ -229,7 +229,9 @@ export default async function RecipePage({
           </div>
 
           <div className="mt-6 lg:mt-0">
-            <dl className="flex flex-wrap gap-x-8 gap-y-4 tabular-nums">
+            {/* A grid, so a fourth or fifth fact starts a new aligned row
+                rather than one value dangling on its own line. */}
+            <dl className="grid grid-cols-3 gap-x-6 gap-y-4 tabular-nums sm:grid-cols-5 lg:grid-cols-3">
               {facts.filter((fact) => fact !== null).map((fact) => {
                 const Icon = fact.icon;
                 return (

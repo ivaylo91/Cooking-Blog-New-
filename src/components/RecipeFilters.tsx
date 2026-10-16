@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
+import { recipeCount } from "@/lib/format";
 import { DIFFICULTIES, TIME_FILTERS } from "@/types/recipe";
 import type { Category, Difficulty, TimeFilter } from "@/types/recipe";
 
@@ -60,10 +61,6 @@ function Group({ label, children }: { label: string; children: React.ReactNode }
       <div className="flex flex-wrap gap-2">{children}</div>
     </nav>
   );
-}
-
-function recipeCount(n: number) {
-  return n === 1 ? "1 рецепта" : `${n} рецепти`;
 }
 
 export function RecipeFilters({
