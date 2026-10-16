@@ -201,7 +201,8 @@ export default async function RecipePage({
               // an oversized image for a container capped at 72rem.
               sizes="(min-width: 1152px) 1104px, 100vw"
               className="object-cover"
-              priority
+              // The one LCP image on the page: Next 16's replacement for `priority`.
+              preload
             />
           ) : getPlaceholderVariant(recipe.id) === "salad" ? (
             <SaladIllustration />

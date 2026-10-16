@@ -14,7 +14,9 @@ import type { RecipeListItem } from "@/lib/recipes";
 export function RecipeCard({
   recipe,
   // Set on the cards above the fold. Those carry the page's LCP, and lazy
-  // loading delays the request until layout, which pushes LCP out.
+  // loading delays the request until layout, which pushes LCP out. Several
+  // cards may be the LCP depending on width, so this loads them eagerly at
+  // high priority rather than preloading one (Next 16 deprecated `priority`).
   priority = false,
   size = "default",
   index = 0,
@@ -89,7 +91,8 @@ export function RecipeCard({
               fill
               sizes="(min-width: 768px) 60vw, 100vw"
               className="object-cover"
-              priority={priority}
+              loading={priority ? "eager" : undefined}
+              fetchPriority={priority ? "high" : undefined}
             />
           ) : (
             <Placeholder />
@@ -118,7 +121,8 @@ export function RecipeCard({
             fill
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover"
-            priority={priority}
+            loading={priority ? "eager" : undefined}
+            fetchPriority={priority ? "high" : undefined}
           />
         ) : (
           <Placeholder />

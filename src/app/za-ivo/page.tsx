@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CheckCircle2, Flame, HeartHandshake, Sparkles, Utensils } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
+import ivoPhoto from "./ivo.jpg";
 
 export const metadata: Metadata = {
   title: "За Иво",
@@ -40,22 +42,43 @@ export default function ZaIvoPage() {
   return (
     <div className="bg-peach">
       <div className="animate-rise mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 sm:pb-24 sm:pt-12">
-        <div className="flex flex-col items-start gap-4">
-          <div className="flex items-center gap-3">
-            <LogoMark size={46} />
-            <span className="text-small font-bold uppercase tracking-wider text-muted-foreground">
-              Кулинарният блог на Иво
-            </span>
+        {/* The person behind the recipes, beside the promise: a face is the
+            strongest proof that "tried in my kitchen" is meant literally. */}
+        <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_17rem] lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-12">
+          <div className="flex flex-col items-start gap-4">
+            <div className="flex items-center gap-3">
+              <LogoMark size={46} />
+              <span className="text-small font-bold uppercase tracking-wider text-muted-foreground">
+                Кулинарният блог на Иво
+              </span>
+            </div>
+
+            <h1 className="text-display font-bold leading-[1.05]">
+              Домашни рецепти за удоволствие от готвенето
+            </h1>
+
+            <p className="mt-2 max-w-2xl text-heading leading-snug text-foreground/90">
+              Здравейте! Този блог събира моята лична колекция от изпитани домашни ястия,
+              десерти, супи и тестени изкушения.
+            </p>
           </div>
 
-          <h1 className="text-display font-bold leading-[1.05]">
-            Домашни рецепти за удоволствие от готвенето
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-heading leading-snug text-foreground/90">
-            Здравейте! Този блог събира моята лична колекция от изпитани домашни ястия,
-            десерти, супи и тестени изкушения.
-          </p>
+          <figure className="w-60 sm:w-72 md:w-full">
+            <div className="relative aspect-square overflow-hidden rounded-3xl shadow-lift ring-4 ring-surface md:rotate-2">
+              <Image
+                src={ivoPhoto}
+                alt="Иво в кухнята си"
+                fill
+                loading="eager"
+                placeholder="blur"
+                sizes="(min-width: 1024px) 20rem, (min-width: 768px) 17rem, (min-width: 640px) 18rem, 15rem"
+                className="object-cover"
+              />
+            </div>
+            <figcaption className="mt-4 text-small text-muted-foreground">
+              Иво, в собствената си кухня
+            </figcaption>
+          </figure>
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
