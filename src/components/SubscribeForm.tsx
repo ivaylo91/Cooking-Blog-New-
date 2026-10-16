@@ -61,7 +61,7 @@ export function SubscribeForm() {
             required
             autoComplete="email"
             placeholder="вашият@имейл.бг"
-            className="field field-pill h-14 flex-1 px-5 text-body"
+            className="field field-pill h-14 min-w-0 px-5 text-body sm:flex-1"
           />
           <button
             type="submit"
