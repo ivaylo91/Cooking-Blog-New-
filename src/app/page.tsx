@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Band } from "@/components/Band";
@@ -6,6 +7,7 @@ import { ResumeCooking } from "@/components/ResumeCooking";
 import { SectionHead } from "@/components/SectionHead";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
+import { getImageUrl } from "@/lib/images";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 
 export default async function Home() {
@@ -19,9 +21,15 @@ export default async function Home() {
   const trending = topRated.filter((r) => r.rating_count > 0);
   const [lead, ...latest] = recipes;
 
+  // Per shelf: how many recipes, and the newest photo to show on its tile.
+  // The list arrives newest first, so the first image seen is the latest.
   const counts = new Map<string, number>();
+  const covers = new Map<string, string>();
   for (const recipe of allRecipes) {
-    if (recipe.category_id) counts.set(recipe.category_id, (counts.get(recipe.category_id) ?? 0) + 1);
+    if (!recipe.category_id) continue;
+    counts.set(recipe.category_id, (counts.get(recipe.category_id) ?? 0) + 1);
+    const url = getImageUrl(recipe.image_path);
+    if (url && !covers.has(recipe.category_id)) covers.set(recipe.category_id, url);
   }
 
   return (
@@ -66,12 +74,28 @@ export default async function Home() {
                   backgroundColor: categoryTint(category.slug),
                   animationDelay: `${index * 50}ms`,
                 }}
-                className="animate-rise group flex h-28 flex-col justify-between rounded-2xl p-4 shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift"
+                className="animate-rise group flex h-full min-h-36 flex-col justify-between gap-3 rounded-2xl p-4 shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift"
               >
-                <ArrowRight
-                  size={20}
-                  className="self-end text-muted-foreground transition-transform duration-300 group-hover:translate-x-1"
-                />
+                <span className="flex items-start justify-between">
+                  {/* A taste of the shelf: its newest dish, when it has a photo. */}
+                  {covers.has(category.id) ? (
+                    <span className="relative size-14 overflow-hidden rounded-full shadow-card ring-2 ring-surface">
+                      <Image
+                        src={covers.get(category.id)!}
+                        alt=""
+                        fill
+                        sizes="56px"
+                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                      />
+                    </span>
+                  ) : (
+                    <span />
+                  )}
+                  <ArrowRight
+                    size={20}
+                    className="text-muted-foreground transition-transform duration-300 group-hover:translate-x-1"
+                  />
+                </span>
                 <span>
                   <span className="block font-heading text-heading font-bold leading-tight">{category.name}</span>
                   <span className="text-small text-muted-foreground tabular-nums">

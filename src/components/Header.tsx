@@ -75,7 +75,11 @@ export function Header({ categories }: { categories: Category[] }) {
           onClick={close}
         >
           <LogoMark size={38} />
-          <span className="truncate text-body font-bold tracking-tight">Кулинарният блог на Иво</span>
+          {/* With search and menu beside it, a phone has room for the name only
+              on two lines; it breaks before "на Иво" rather than cutting off. */}
+          <span className="text-small font-bold leading-tight tracking-tight sm:truncate sm:text-body">
+            Кулинарният блог <span className="whitespace-nowrap">на Иво</span>
+          </span>
         </Link>
 
         <nav aria-label="Основна навигация" className="hidden items-center gap-1 md:flex">

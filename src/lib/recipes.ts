@@ -48,7 +48,7 @@ export interface RecipeQuery {
   categorySlug?: string;
   search?: string;
   limit?: number;
-  sortBy?: "recent" | "likes" | "rating";
+  sortBy?: "recent" | "rating";
   time?: TimeFilter;
   difficulty?: Difficulty;
 }
@@ -90,12 +90,7 @@ function recipeSelect(options: RecipeQuery): string {
 }
 
 function applyRecipeFilters<Q>(query: Q, options: RecipeQuery): Q {
-  const orderColumn =
-    options.sortBy === "likes"
-      ? "likes_count"
-      : options.sortBy === "rating"
-        ? "rating_sum"
-        : "created_at";
+  const orderColumn = options.sortBy === "rating" ? "rating_sum" : "created_at";
 
   let q = (query as FilterableQuery)
     .eq("published", true)
