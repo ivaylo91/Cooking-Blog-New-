@@ -18,6 +18,7 @@ export function RecipeCard({
   priority = false,
   size = "default",
   index = 0,
+  animate = true,
 }: {
   recipe: RecipeListItem;
   priority?: boolean;
@@ -25,6 +26,8 @@ export function RecipeCard({
   size?: "default" | "feature";
   /** Position in its grid, for the entrance stagger (capped so long lists don't wait). */
   index?: number;
+  /** Off for grids that re-render on every filter or page change. */
+  animate?: boolean;
 }) {
   const imageUrl = getImageUrl(recipe.image_path);
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
@@ -63,7 +66,8 @@ export function RecipeCard({
   const metaRow = "flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted-foreground tabular-nums";
   const isFeature = size === "feature";
   // The stagger is capped at six cards so a long grid never makes the reader wait.
-  const style = { animationDelay: `${Math.min(index, 6) * 60}ms` };
+  const style = animate ? { animationDelay: `${Math.min(index, 6) * 60}ms` } : undefined;
+  const enter = animate ? "animate-rise" : "";
   const lift =
     "bg-surface shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
 
@@ -75,7 +79,7 @@ export function RecipeCard({
       <Link
         href={`/recepti/${recipe.slug}`}
         style={style}
-        className={`animate-rise group grid overflow-hidden rounded-3xl md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] ${lift}`}
+        className={`${enter} group grid overflow-hidden rounded-3xl md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] ${lift}`}
       >
         <div className="relative aspect-[4/3] w-full md:aspect-auto md:min-h-[26rem]">
           {imageUrl ? (
@@ -104,7 +108,7 @@ export function RecipeCard({
     <Link
       href={`/recepti/${recipe.slug}`}
       style={style}
-      className={`animate-rise group flex flex-col overflow-hidden rounded-2xl ${lift}`}
+      className={`${enter} group flex flex-col overflow-hidden rounded-2xl ${lift}`}
     >
       <div className="relative aspect-[4/3] w-full">
         {imageUrl ? (

@@ -73,7 +73,7 @@ export default async function Home() {
                   className="self-end text-muted-foreground transition-transform duration-300 group-hover:translate-x-1"
                 />
                 <span>
-                  <span className="block text-heading font-bold leading-tight">{category.name}</span>
+                  <span className="block font-heading text-heading font-bold leading-tight">{category.name}</span>
                   <span className="text-small text-muted-foreground tabular-nums">
                     {counts.get(category.id) ?? 0} рецепти
                   </span>

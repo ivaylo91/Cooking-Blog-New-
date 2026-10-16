@@ -2,26 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Menu, Search, X } from "lucide-react";
 import { LogoMark } from "@/components/Logo";
 import { SearchField } from "@/components/SearchField";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
 import { categoryTint } from "@/lib/categories";
+import type { Category } from "@/types/recipe";
 
 const navLinks = [
   { href: "/recepti", label: "Рецепти" },
   { href: "/za-ivo", label: "За Иво" },
-];
-
-const quickCategories = [
-  { slug: "osnovni-yastia", name: "Основни" },
-  { slug: "supi", name: "Супи" },
-  { slug: "salati", name: "Салати" },
-  { slug: "testeni", name: "Тестени" },
-  { slug: "postni", name: "Постни" },
-  { slug: "deserti", name: "Десерти" },
 ];
 
 function ActiveDesktopLinks() {
@@ -49,8 +41,9 @@ function DesktopLinks({ pathname }: { pathname: string | null }) {
 /** On a phone the header opens one panel at a time: the menu or the search. */
 type Panel = "menu" | "search" | null;
 
-export function Header() {
+export function Header({ categories }: { categories: Category[] }) {
   const [panel, setPanel] = useState<Panel>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const menuOpen = panel === "menu";
   const searchOpen = panel === "search";
   const close = () => setPanel(null);
@@ -61,13 +54,21 @@ export function Header() {
     function onKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") setPanel(null);
     }
+    // A tap on the page below closes the panel, as on any app's menu.
+    function onPointerDown(event: PointerEvent) {
+      if (!headerRef.current?.contains(event.target as Node)) setPanel(null);
+    }
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
   }, [panel]);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border-subtle bg-background/90 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
+    <header ref={headerRef} className="sticky top-0 z-40 border-b border-border-subtle bg-background/90 backdrop-blur-md">
+      <div className="mx-auto flex h-(--header-h) max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
           className="logo-link flex h-11 min-w-0 items-center gap-2.5"
@@ -139,13 +140,13 @@ export function Header() {
           <div className="border-t border-border-subtle px-4 py-3">
             <p className="text-small font-semibold text-muted-foreground">Категории</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
-              {quickCategories.map((c) => (
+              {categories.map((c) => (
                 <Link
-                  key={c.slug}
+                  key={c.id}
                   href={`/recepti?category=${c.slug}`}
                   onClick={close}
                   style={{ backgroundColor: categoryTint(c.slug) }}
-                  className="flex h-9 items-center rounded-full px-3.5 text-small font-medium transition-transform active:scale-95"
+                  className="flex h-11 items-center rounded-full px-4 text-small font-medium transition-transform active:scale-95"
                 >
                   {c.name}
                 </Link>

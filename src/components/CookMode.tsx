@@ -331,7 +331,7 @@ export function CookMode({
               >
                 <div className="flex items-center justify-between border-b border-border-subtle pb-4">
                   <div>
-                    <p className="text-heading font-bold">
+                    <p className="font-heading text-heading font-bold">
                       Съставки
                       <span className="ml-2 text-body font-medium text-muted-foreground">
                         за {servings} {servings === 1 ? "порция" : "порции"}
@@ -346,7 +346,7 @@ export function CookMode({
                   <button
                     type="button"
                     onClick={() => setShowIngredients(false)}
-                    className="rounded-full bg-surface-muted px-4 py-2 text-small font-semibold hover:bg-border-subtle"
+                    className="flex h-11 shrink-0 items-center rounded-full bg-surface-muted px-4 text-small font-semibold hover:bg-border-subtle"
                   >
                     Към стъпката
                   </button>
@@ -357,47 +357,53 @@ export function CookMode({
                     const used = usedNow.has(ingredient.id);
                     const isChecked = checked.values.has(ingredient.id);
                     return (
-                      <li
-                        key={ingredient.id}
-                        onClick={() => checked.toggle(ingredient.id)}
-                        className={`flex cursor-pointer items-center justify-between gap-4 rounded-xl px-3 py-3 text-body transition-colors hover:bg-surface-muted ${
-                          used ? "bg-accent-soft/70 font-medium" : ""
-                        }`}
-                      >
-                        <div className="flex items-center gap-3 min-w-0">
-                          <span
-                            className={`flex size-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${
-                              isChecked
-                                ? "border-accent bg-accent text-accent-foreground"
-                                : "border-field-border bg-field"
-                            }`}
-                          >
-                            {isChecked && (
-                              <Check size={16} strokeWidth={3} className="animate-pop" />
-                            )}
+                      <li key={ingredient.id}>
+                        {/* A real button, so the row ticks off from the
+                            keyboard and announces its state, not just on tap. */}
+                        <button
+                          type="button"
+                          onClick={() => checked.toggle(ingredient.id)}
+                          aria-pressed={isChecked}
+                          className={`flex min-h-14 w-full items-center justify-between gap-4 rounded-xl px-3 py-2 text-left text-body transition-colors hover:bg-surface-muted ${
+                            used ? "bg-accent-soft/70 font-medium" : ""
+                          }`}
+                        >
+                          <span className="flex min-w-0 items-center gap-3">
+                            <span
+                              className={`flex size-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors ${
+                                isChecked
+                                  ? "border-accent bg-accent text-accent-foreground"
+                                  : "border-field-border bg-field"
+                              }`}
+                            >
+                              {isChecked && (
+                                <Check size={16} strokeWidth={3} className="animate-pop" />
+                              )}
+                            </span>
+                            <span
+                              className={`leading-snug ${
+                                isChecked ? "text-muted-foreground line-through" : ""
+                              }`}
+                            >
+                              {used && <span className="sr-only">За тази стъпка: </span>}
+                              {ingredient.item}
+                              {ingredient.note && (
+                                <span className="font-normal text-muted-foreground">
+                                  {" "}
+                                  ({ingredient.note})
+                                </span>
+                              )}
+                            </span>
                           </span>
+
                           <span
-                            className={`truncate leading-snug ${
+                            className={`shrink-0 text-right font-semibold tabular-nums ${
                               isChecked ? "text-muted-foreground line-through" : ""
                             }`}
                           >
-                            {ingredient.item}
-                            {ingredient.note && (
-                              <span className="font-normal text-muted-foreground">
-                                {" "}
-                                ({ingredient.note})
-                              </span>
-                            )}
+                            {formatQuantity(ingredient.amount, ingredient.unit, multiplier)}
                           </span>
-                        </div>
-
-                        <span
-                          className={`shrink-0 text-right font-semibold tabular-nums ${
-                            isChecked ? "text-muted-foreground line-through" : ""
-                          }`}
-                        >
-                          {formatQuantity(ingredient.amount, ingredient.unit, multiplier)}
-                        </span>
+                        </button>
                       </li>
                     );
                   })}

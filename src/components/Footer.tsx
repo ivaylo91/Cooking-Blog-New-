@@ -26,7 +26,7 @@ export function Footer() {
 
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-end md:justify-between">
         <div>
-          <p className="text-heading font-bold tracking-tight">Кулинарният блог на Иво</p>
+          <p className="font-heading text-heading font-bold">Кулинарният блог на Иво</p>
           <p className="mt-2 max-w-md text-muted-foreground">
             Домашни рецепти, изпробвани в собствената ми кухня. За всеки, който
             обича да готви за удоволствие.

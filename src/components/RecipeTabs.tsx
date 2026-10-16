@@ -68,8 +68,8 @@ export function RecipeTabs() {
   return (
     <nav
       aria-label="Части на рецептата"
-      // Sits directly under the 64px header and its 1px border.
-      className="sticky top-[65px] z-30 -mx-4 bg-background/90 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 md:hidden print:hidden"
+      // Sits directly under the header and its 1px border.
+      className="sticky top-[calc(var(--header-h)+1px)] z-30 -mx-4 bg-background/90 px-4 py-2 backdrop-blur-md sm:-mx-6 sm:px-6 md:hidden print:hidden"
     >
       <div className="relative grid grid-cols-2 rounded-full bg-surface-muted p-1">
         {/* The indicator slides rather than jumping, so the switch reads as one control. */}

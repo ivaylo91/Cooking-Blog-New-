@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import { Onest } from "next/font/google";
+import { Lora, Onest } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { Header } from "@/components/Header";
+import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 
@@ -12,9 +12,16 @@ const siteName = "Кулинарният блог на Иво";
 const siteDescription = "Домашни рецепти за хобиисти и ентусиасти на готвенето.";
 
 // Onest is a contemporary grotesk drawn for Cyrillic first, so Bulgarian text
-// sets as naturally as Latin. One family, weights do the ranking.
+// sets as naturally as Latin. It carries everything a cook reads and taps.
 const onest = Onest({
   variable: "--font-onest",
+  subsets: ["latin", "cyrillic"],
+});
+
+// Lora, a warm book serif with full Cyrillic, sets the headlines only, so the
+// pages read like a food magazine while the working text stays a clean sans.
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin", "cyrillic"],
 });
 
@@ -60,7 +67,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="bg"
-      className={`${onest.variable} h-full antialiased`}
+      className={`${onest.variable} ${lora.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <head>
@@ -79,7 +86,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Прескочи към съдържанието
         </a>
-        <Header />
+        <SiteHeader />
         <main id="main-content" tabIndex={-1} className="flex-1 outline-none">
           {children}
         </main>

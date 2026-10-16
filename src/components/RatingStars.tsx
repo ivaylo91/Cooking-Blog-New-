@@ -89,11 +89,14 @@ export function RatingStars({
               aria-pressed={myRating === star}
               className="flex size-11 items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
             >
+              {/* Keyed by the vote, so the pop plays once when it lands
+                  rather than every time the pointer passes over a star. */}
               <Star
+                key={picked != null && star <= picked ? `voted-${picked}` : "idle"}
                 size={26}
-                className={
-                  star <= filledTo ? "animate-pop fill-accent text-accent" : "text-muted-foreground/60"
-                }
+                className={`${
+                  star <= filledTo ? "fill-accent text-accent" : "text-muted-foreground/60"
+                } ${picked != null && star <= picked ? "animate-pop" : ""}`}
               />
             </button>
           ))}

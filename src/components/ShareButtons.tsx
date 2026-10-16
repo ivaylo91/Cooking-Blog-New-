@@ -2,8 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Check, ChevronDown, Link2, Share2 } from "lucide-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFacebookF, faViber, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
+import { FacebookIcon, ViberIcon, WhatsAppIcon } from "@/components/BrandIcons";
 
 function noopSubscribe() {
   return () => {};
@@ -102,10 +101,10 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
             rel="noopener noreferrer"
             className={item}
           >
-            <FontAwesomeIcon icon={faFacebookF} className="w-[18px]" /> Facebook
+            <FacebookIcon className="size-[18px]" /> Facebook
           </a>
           <a href={`viber://forward?text=${encodedText}%20${encodedUrl}`} className={item}>
-            <FontAwesomeIcon icon={faViber} className="w-[18px]" /> Viber
+            <ViberIcon className="size-[18px]" /> Viber
           </a>
           <a
             href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
@@ -113,7 +112,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
             rel="noopener noreferrer"
             className={item}
           >
-            <FontAwesomeIcon icon={faWhatsapp} className="w-[18px]" /> WhatsApp
+            <WhatsAppIcon className="size-[18px]" /> WhatsApp
           </a>
           <button type="button" onClick={handleCopy} className={item} aria-live="polite">
             {copied ? <Check size={18} /> : <Link2 size={18} />}

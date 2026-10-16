@@ -64,7 +64,7 @@ export default function ZaIvoPage() {
             return (
               <div
                 key={item.title}
-                className="rounded-3xl border border-border-subtle bg-surface p-6 shadow-card transition-all hover:-translate-y-0.5 hover:shadow-lift"
+                className="rounded-3xl border border-border-subtle bg-surface p-6 shadow-card"
               >
                 <div className="flex size-11 items-center justify-center rounded-2xl bg-accent-soft text-accent">
                   <Icon size={22} />

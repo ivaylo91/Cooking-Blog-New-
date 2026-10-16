@@ -108,11 +108,11 @@ export default async function ReceptiPage({
         {activeCategory?.name ?? "Рецепти"}
       </h1>
     </Band>
-    <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6">
+    <div className="mx-auto max-w-6xl px-4 pb-16 pt-6 sm:px-6">
       <RecipeFilters categories={categories} active={active} resultCount={total} />
       {recipes.length === 0 ? (
         <div className="rounded-3xl bg-surface-muted p-6 sm:p-8">
-          <p className="text-heading font-bold">Нищо не отговаря на тези филтри</p>
+          <p className="font-heading text-heading font-bold">Нищо не отговаря на тези филтри</p>
           <p className="mt-2 text-muted-foreground">
             Махнете някой от филтрите или вижте всички рецепти.
           </p>
@@ -122,7 +122,7 @@ export default async function ReceptiPage({
           <h2 className="sr-only">Резултати</h2>
           <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {recipes.map((recipe, index) => (
-              <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} index={index} />
+              <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} animate={false} />
             ))}
           </div>
           <Pagination page={page} pageCount={pageCount} hrefFor={hrefFor} />

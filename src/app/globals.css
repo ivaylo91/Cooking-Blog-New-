@@ -83,7 +83,7 @@
   --shadow-card: var(--shadow-card);
   --shadow-lift: var(--shadow-lift);
   --font-sans: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
-  --font-heading: var(--font-onest), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-lora), ui-serif, Georgia, serif;
   --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   /* The whole type scale: four sizes. Rank comes from weight and colour. */
   --text-display: clamp(2.5rem, 1.9rem + 2.6vw, 3.75rem);
@@ -183,6 +183,13 @@ h2,
 h3 {
   letter-spacing: -0.02em;
   text-wrap: balance;
+}
+
+/* Headlines in the serif. Only headings at the two headline sizes: small
+   label-like headings (an ingredient group, a card's meta) stay in the sans. */
+:is(h1, h2, h3):is(.text-display, .text-heading) {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
 }
 
 /* Browser surfaces carry the design too, not UA defaults. */
@@ -439,9 +446,15 @@ input[type="checkbox"]:focus-visible,
   }
 }
 
+/* The sticky header's height; the recipe tab bar and anchor offsets hang
+   off it, so changing the header never leaves them misaligned. */
+:root {
+  --header-h: 4rem;
+}
+
 /* Sticky header + tab bar: anchors must land below both. */
 [id] {
-  scroll-margin-top: 7.5rem;
+  scroll-margin-top: calc(var(--header-h) + 3.5rem);
 }
 
 @media print {
