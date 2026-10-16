@@ -17,7 +17,7 @@ export default async function Home() {
     getStockedCategories(),
     getRecipes({ limit: 3, sortBy: "rating" }),
   ]);
-  // Rated, not liked: liking never caught on, so a likes section stayed empty.
+  // Only recipes someone has rated: an unrated shelf would be an empty promise.
   const trending = topRated.filter((r) => r.rating_count > 0);
   const [lead, ...latest] = recipes;
 

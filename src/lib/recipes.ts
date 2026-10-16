@@ -26,7 +26,7 @@ export interface RecipeListItem extends Recipe {
 const RECIPE_COLUMNS =
   "id, slug, title, description, category_id, cuisine, difficulty, " +
   "prep_time_minutes, cook_time_minutes, servings, image_path, published, " +
-  "likes_count, rating_sum, rating_count, total_time_minutes, created_at, updated_at";
+  "rating_sum, rating_count, total_time_minutes, created_at, updated_at";
 const RECIPE_SELECT = `${RECIPE_COLUMNS}, category:categories(*)`;
 
 /** Cache tags, invalidated from the admin server actions after a write. */

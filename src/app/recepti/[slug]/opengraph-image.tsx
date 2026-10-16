@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
+import { LogoMark } from "@/components/Logo";
 import { getImageUrl } from "@/lib/images";
+import { OG_COLORS, ogFonts } from "@/lib/og";
 import { getRecipeBySlug, getRecipes } from "@/lib/recipes";
 
 export const size = { width: 1200, height: 630 };
@@ -25,7 +27,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           height: "100%",
           display: "flex",
           position: "relative",
-          background: imageUrl ? "#111111" : "#f5f5f4",
+          background: imageUrl ? OG_COLORS.ink : OG_COLORS.peach,
         }}
       >
         {imageUrl && (
@@ -59,37 +61,13 @@ export default async function Image({ params }: { params: Promise<{ slug: string
             gap: 16,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 56,
-              height: 56,
-              borderRadius: 999,
-              background: "#c2410c",
-            }}
-          >
-            <svg
-              width="28"
-              height="28"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#ffffff"
-              strokeWidth="2.25"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z" />
-              <line x1="6" y1="17" x2="18" y2="17" />
-            </svg>
-          </div>
+          <LogoMark size={56} />
           <div
             style={{
               display: "flex",
               fontSize: 28,
               fontWeight: 600,
-              color: imageUrl ? "#ffffff" : "#111111",
+              color: imageUrl ? "#ffffff" : OG_COLORS.ink,
             }}
           >
             Кулинарният блог на Иво
@@ -112,7 +90,7 @@ export default async function Image({ params }: { params: Promise<{ slug: string
               style={{
                 display: "flex",
                 alignSelf: "flex-start",
-                background: "#c2410c",
+                background: OG_COLORS.tomato,
                 color: "#ffffff",
                 padding: "10px 22px",
                 borderRadius: 999,
@@ -127,10 +105,11 @@ export default async function Image({ params }: { params: Promise<{ slug: string
           <div
             style={{
               display: "flex",
-              fontSize: 66,
+              fontFamily: "Lora",
+              fontSize: 68,
               fontWeight: 700,
               lineHeight: 1.1,
-              color: imageUrl ? "#ffffff" : "#111111",
+              color: imageUrl ? "#ffffff" : OG_COLORS.ink,
               maxWidth: 1000,
             }}
           >
@@ -139,6 +118,6 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         </div>
       </div>
     ),
-    { ...size }
+    { ...size, fonts: await ogFonts() }
   );
 }

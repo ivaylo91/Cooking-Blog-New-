@@ -187,9 +187,14 @@ h3 {
 
 /* Headlines in the serif. Only headings at the two headline sizes: small
    label-like headings (an ingredient group, a card's meta) stay in the sans. */
-:is(h1, h2, h3):is(.text-display, .text-heading) {
+:is(h1, h2, h3):is(.text-display, .text-heading),
+.font-heading {
   font-family: var(--font-heading);
   letter-spacing: -0.01em;
+  /* lang="bg" makes Lora switch to its Bulgarian letterforms (т like m, д
+     like g); Onest has none, so headings and body would disagree. Keep the
+     standard shapes everywhere. */
+  font-feature-settings: "locl" 0;
 }
 
 /* Browser surfaces carry the design too, not UA defaults. */

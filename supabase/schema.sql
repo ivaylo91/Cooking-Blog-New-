@@ -37,7 +37,6 @@ create table if not exists recipes (
   servings int not null default 4,
   image_path text,
   published boolean not null default false,
-  likes_count int not null default 0,
   author_id uuid references auth.users (id) on delete set null,
   search_vector tsvector generated always as (
     to_tsvector('simple', coalesce(title, '') || ' ' || coalesce(description, ''))
@@ -260,29 +259,6 @@ create policy "authenticated update comments" on comments
   with check ((select auth.role()) = 'authenticated');
 create policy "authenticated delete comments" on comments
   for delete using ((select auth.role()) = 'authenticated');
-
--- ---------------------------------------------------------------------------
--- Likes — anonymous, one increment per browser (enforced client-side via
--- localStorage; this function only prevents direct table tampering).
--- ---------------------------------------------------------------------------
-create or replace function increment_recipe_likes(p_recipe_id uuid)
-returns int
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  new_count int;
-begin
-  update recipes
-  set likes_count = likes_count + 1
-  where id = p_recipe_id and published = true
-  returning likes_count into new_count;
-  return new_count;
-end;
-$$;
-
-grant execute on function increment_recipe_likes(uuid) to anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- Total cook time, generated so it can be filtered and indexed directly.
