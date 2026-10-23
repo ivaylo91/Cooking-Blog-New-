@@ -43,9 +43,9 @@ Every recipe is tested in Иво's own kitchen and photographed there, by him. T
 
 ## Evidence on Hand
 
-- 24 published recipes with ingredients and steps, 23 of them with real photos taken by Иво (Supabase Storage bucket `recipe-images`). Леща яхния has no photo yet.
-- One real reader comment. No ratings and no likes yet.
-- No photo of Иво, no biography, and no story of where the recipes come from. These must not be invented; the About page waits on the user to supply them.
+- 27 published recipes with ingredients and steps, with real photos taken by Иво (Supabase Storage bucket `recipe-images`).
+- Very few comments, ratings or likes yet.
+- A real portrait of Иво (`src/app/za-ivo/ivo.jpg`), shown on the About page and as the byline avatar on every recipe. The About page's claims (cooked and photographed himself, amounts weighed while cooking, ordinary oven and pan, built for phones) were confirmed by the owner on 2026-10-23. No biography or story of where the recipes come from beyond that; do not invent one.
 - No testimonials, press, or traffic figures exist, and none may be fabricated.
 
 ## Product Principles

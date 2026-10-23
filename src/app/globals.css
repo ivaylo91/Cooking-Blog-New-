@@ -462,9 +462,5 @@ input[type="checkbox"]:focus-visible,
   scroll-margin-top: calc(var(--header-h) + 3.5rem);
 }
 
-@media print {
-  header,
-  footer {
-    display: none !important;
-  }
-}
+/* Print hides only the site's own chrome (marked print:hidden on the header
+   and footer); the recipe's header with its name and facts must print. */

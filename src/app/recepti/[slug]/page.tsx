@@ -18,10 +18,13 @@ import { RecipeTabs } from "@/components/RecipeTabs";
 import { SectionHead } from "@/components/SectionHead";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { ShareButtons } from "@/components/ShareButtons";
+import { StickyIfFits } from "@/components/StickyIfFits";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { Band } from "@/components/Band";
 import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
+import { keepShortWords } from "@/lib/typography";
+import ivoPhoto from "@/app/za-ivo/ivo.jpg";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
 // "Средно" reads as an adverb on its own; under a "Трудност" label it needs
@@ -34,6 +37,23 @@ const DIFFICULTY_LABEL: Record<string, string> = {
 
 function isoDuration(minutes: number): string {
   return `PT${minutes}M`;
+}
+
+const dateFormat = new Intl.DateTimeFormat("bg-BG", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "Europe/Sofia",
+});
+
+/** "16 октомври 2026", without the trailing " г." the locale adds. */
+function formatDate(iso: string): string {
+  return dateFormat.format(new Date(iso)).replace(/\s?г\.$/, "");
+}
+
+/** The calendar day in Sofia, so an edit later the same day isn't an "update". */
+function sofiaDay(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-CA", { timeZone: "Europe/Sofia" });
 }
 
 // Prerender every published recipe at build time so visits are served from the
@@ -97,8 +117,9 @@ export default async function RecipePage({
     name: recipe.title,
     description: recipe.description,
     image: imageUrl ? [imageUrl] : undefined,
-    author: { "@type": "Person", name: "Иво" },
+    author: { "@type": "Person", name: "Иво", url: `${siteUrl}/za-ivo` },
     datePublished: recipe.created_at,
+    dateModified: recipe.updated_at,
     prepTime: isoDuration(recipe.prep_time_minutes),
     cookTime: isoDuration(recipe.cook_time_minutes),
     totalTime: isoDuration(totalTime),
@@ -183,7 +204,7 @@ export default async function RecipePage({
 
   const stepViews = recipe.steps.map((step) => ({
     id: step.id,
-    text: step.text,
+    text: keepShortWords(step.text),
     imageUrl: getImageUrl(step.image_path),
   }));
 
@@ -231,7 +252,41 @@ export default async function RecipePage({
               </Link>
             )}
             <h1 className="text-display font-bold">{recipe.title}</h1>
-            <p className="mt-3 max-w-2xl text-body text-muted-foreground">{recipe.description}</p>
+            <p className="mt-3 max-w-2xl text-body text-muted-foreground">
+              {keepShortWords(recipe.description)}
+            </p>
+
+            {/* Who cooked it and when: the blog's one claim, with its owner. */}
+            {/* One link for the whole byline, so it is a full-size target. */}
+            <Link href="/za-ivo" className="group mt-5 flex w-fit items-center gap-3 rounded-2xl">
+              <Image
+                src={ivoPhoto}
+                alt=""
+                width={44}
+                height={44}
+                className="size-11 shrink-0 rounded-full object-cover ring-2 ring-surface print:hidden"
+              />
+              <span className="text-small leading-snug">
+                <span className="block">
+                  <span className="font-semibold text-foreground group-hover:underline">Иво</span>
+                  <span className="text-muted-foreground">
+                    {imageUrl ? ", сготвено и снимано в моята кухня" : ", сготвено в моята кухня"}
+                  </span>
+                </span>
+                <span className="block text-muted-foreground">
+                  Публикувано <time dateTime={recipe.created_at}>{formatDate(recipe.created_at)}</time>
+                  {sofiaDay(recipe.updated_at) !== sofiaDay(recipe.created_at) && (
+                    <>
+                      , обновено{" "}
+                      <time dateTime={recipe.updated_at}>{formatDate(recipe.updated_at)}</time>
+                    </>
+                  )}
+                </span>
+              </span>
+            </Link>
+            <p className="mt-3 hidden text-small print:block">
+              Кулинарният блог на Иво, {recipeUrl}
+            </p>
           </div>
 
           <div className="mt-6 lg:mt-0">
@@ -258,19 +313,19 @@ export default async function RecipePage({
                 );
               })}
             </dl>
-            {/* The blog's one claim, set apart in ink rather than buried in grey. */}
-            <p className="mt-4 text-small font-semibold">
-              {imageUrl ? "Сготвено и снимано в моята кухня." : "Сготвено в моята кухня."}
-            </p>
+            {/* Keeping and passing it on belong where the cook decides to make it. */}
+            <div className="mt-5 flex items-center gap-2 print:hidden">
+              <PrintButton />
+              <ShareButtons title={recipe.title} url={recipeUrl} />
+            </div>
           </div>
         </header>
       </div>
       </div>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
-        <div className="mt-4">
+        <div className="pt-4">
           <RecipeTabs />
-        </div>
 
         {/* What goes in, then how. */}
         <div
@@ -278,7 +333,10 @@ export default async function RecipePage({
           data-reading-target
           className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
-          <div className="rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 md:sticky md:top-24 md:max-h-[calc(100vh-7rem)] md:self-start md:overflow-y-auto print:static print:max-h-none print:border-none print:bg-transparent print:p-0 print:shadow-none">
+          <StickyIfFits
+            className="self-start rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 print:static print:border-none print:bg-transparent print:p-0 print:shadow-none"
+            stickyClassName="md:sticky md:top-24"
+          >
             <RecipeIngredients
               recipeId={recipe.id}
               slug={recipe.slug}
@@ -286,7 +344,7 @@ export default async function RecipePage({
               ingredients={recipe.ingredients}
               baseServings={recipe.servings}
             />
-          </div>
+          </StickyIfFits>
 
           <section id="prigotvyane" aria-labelledby="prigotvyane-head">
             <h2 id="prigotvyane-head" className="sr-only text-heading font-bold md:not-sr-only">
@@ -312,16 +370,9 @@ export default async function RecipePage({
             </div>
 
             {recipe.tags.length > 0 && (
-              <ul className="mt-6 flex flex-wrap gap-2 print:hidden" aria-label="Етикети">
-                {recipe.tags.map((tag) => (
-                  <li
-                    key={tag.id}
-                    className="rounded-full border border-border-subtle bg-surface-muted px-3 py-1 text-small text-muted-foreground"
-                  >
-                    {tag.name}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-6 text-small text-muted-foreground print:hidden">
+                Етикети: {recipe.tags.map((tag) => tag.name).join(", ")}
+              </p>
             )}
 
             {/* Asked after cooking, not before: rating, keeping and passing it on. */}
@@ -334,14 +385,11 @@ export default async function RecipePage({
                   average={ratingAverage}
                   count={recipe.rating_count}
                 />
-                <div className="flex items-center gap-2">
-                  <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
-                  <PrintButton />
-                  <ShareButtons title={recipe.title} url={recipeUrl} />
-                </div>
+                <LikeButton recipeId={recipe.id} initialLikes={recipe.likes_count} />
               </div>
             </div>
           </section>
+        </div>
         </div>
 
         {/* The conversation belongs to the dish, so it follows the recipe

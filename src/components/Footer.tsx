@@ -23,7 +23,7 @@ export async function Footer() {
   const categories = inCooksOrder(await getNavCategories());
 
   return (
-    <footer className="bg-wheat">
+    <footer className="bg-wheat print:hidden">
       {/* The doodle band sits in its own strip so no text ever lands on it. */}
       <div className="relative h-20 text-muted-foreground">
         <CookingBackground className="absolute inset-0" opacity={0.45} scale={0.4} />

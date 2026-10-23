@@ -4,6 +4,7 @@ import { Clock, Star } from "lucide-react";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
 import { categoryTint } from "@/lib/categories";
+import { keepShortWords } from "@/lib/typography";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import type { RecipeListItem } from "@/lib/recipes";
 
@@ -100,7 +101,7 @@ export function RecipeCard({
         </div>
         <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">
           <h3 className="text-display font-bold group-hover:underline">{recipe.title}</h3>
-          <p className="mt-3 text-body text-muted-foreground">{recipe.description}</p>
+          <p className="mt-3 text-body text-muted-foreground">{keepShortWords(recipe.description)}</p>
           <p className={`mt-4 ${metaRow}`}>{meta}</p>
         </div>
       </Link>

@@ -96,6 +96,15 @@ export default async function TarseneStranica({
               <RecipeCard key={recipe.id} recipe={recipe} priority={index < 3} animate={false} />
             ))}
           </div>
+          {/* A short list leaves the page empty below; offer the shelves. */}
+          {recipes.length < 3 && categories.length > 0 && (
+            <section aria-labelledby="more-head" className="mt-14">
+              <h2 id="more-head" className="text-heading font-bold">
+                Разгледайте и по категория
+              </h2>
+              <CategoryChips categories={categories} />
+            </section>
+          )}
         </>
       )}
     </div>

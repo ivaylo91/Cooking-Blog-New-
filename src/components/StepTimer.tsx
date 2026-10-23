@@ -78,7 +78,7 @@ export function StepTimer({
         onClick={start}
         title={`Стартирай таймер: ${label}`}
         aria-label={`Стартирай таймер: ${label}`}
-        className={`inline-flex h-9 items-center gap-1.5 rounded-full border border-border-subtle bg-surface px-3 text-small font-semibold text-foreground shadow-sm transition-[transform,background-color,border-color] hover:border-accent hover:text-link active:scale-95 ${className}`}
+        className={`inline-flex h-11 items-center gap-1.5 rounded-full border border-border-subtle bg-surface px-4 text-small font-semibold text-foreground shadow-card transition-[transform,background-color,border-color] hover:border-accent hover:text-link active:scale-95 ${className}`}
       >
         <TimerIcon size={15} className="text-accent" />
         <span>Таймер: {label}</span>
@@ -90,7 +90,7 @@ export function StepTimer({
     <div
       role="timer"
       aria-live="polite"
-      className={`animate-pop inline-flex items-center gap-2 rounded-full border px-3.5 py-1 text-small shadow-card transition-colors ${
+      className={`animate-pop inline-flex items-center gap-1 rounded-full border py-0 pl-3.5 pr-0.5 text-small shadow-card transition-colors ${
         finished
           ? "border-secondary bg-secondary-soft text-secondary"
           : "border-accent bg-accent-soft text-foreground"
@@ -101,7 +101,7 @@ export function StepTimer({
         className={finished ? "text-secondary" : running ? "animate-pulse text-accent" : "text-muted-foreground"}
       />
 
-      <span className="font-bold tabular-nums">
+      <span className="ml-1 font-bold tabular-nums">
         {finished ? "Времето изтече!" : formatTimeRemaining(remaining)}
       </span>
 
@@ -111,18 +111,18 @@ export function StepTimer({
             type="button"
             onClick={reset}
             aria-label="Рестартирай таймера"
-            className="flex size-7 items-center justify-center rounded-full bg-surface transition-colors hover:bg-background"
+            className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-surface"
           >
-            <RotateCcw size={13} />
+            <RotateCcw size={16} />
           </button>
         ) : (
           <button
             type="button"
             onClick={togglePlay}
             aria-label={running ? "Пауза" : "Продължи"}
-            className="flex size-7 items-center justify-center rounded-full bg-surface transition-colors hover:bg-background"
+            className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-surface"
           >
-            {running ? <Pause size={13} /> : <Play size={13} className="translate-x-0.5" />}
+            {running ? <Pause size={16} /> : <Play size={16} className="translate-x-0.5" />}
           </button>
         )}
 
@@ -130,9 +130,9 @@ export function StepTimer({
           type="button"
           onClick={close}
           aria-label="Затвори таймера"
-          className="flex size-7 items-center justify-center rounded-full bg-surface transition-colors hover:bg-background"
+          className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-surface"
         >
-          {finished ? <Check size={13} /> : <X size={13} />}
+          {finished ? <Check size={16} /> : <X size={16} />}
         </button>
       </div>
     </div>

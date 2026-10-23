@@ -10,6 +10,7 @@ import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { recipeCount } from "@/lib/format";
 import { getImageUrl } from "@/lib/images";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
+import { keepShortWords } from "@/lib/typography";
 
 export default async function Home() {
   const [recipes, allRecipes, categories, topRated] = await Promise.all([
@@ -38,14 +39,15 @@ export default async function Home() {
       {/* Peach opening spread: the promise, then the newest dish. */}
       <Band tone="peach" innerClassName="pb-12 pt-10 sm:pb-16 sm:pt-14">
         <h1 className="animate-rise max-w-3xl text-display font-bold">
-          Домашни рецепти, изпробвани в моята кухня
+          {keepShortWords("Домашни рецепти, изпробвани в моята кухня")}
         </h1>
         <p
           className="animate-rise mt-3 max-w-2xl text-body text-muted-foreground"
           style={{ animationDelay: "80ms" }}
         >
-          Кулинарният блог на Иво: проверени, подробни и лесни за следване рецепти
-          за всеки, който обича да готви.
+          {keepShortWords(
+            "Всяка рецепта тук съм сготвил сам в моята кухня, с точни мерки и стъпки, които се следват лесно от телефона."
+          )}
         </p>
         <ResumeCooking />
 
@@ -88,7 +90,7 @@ export default async function Home() {
                         alt=""
                         fill
                         sizes="56px"
-                        className="object-cover transition-transform duration-300 group-hover:scale-110"
+                        className="object-cover"
                       />
                     </span>
                   ) : (
