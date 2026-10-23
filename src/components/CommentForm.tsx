@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Send } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
 
 const initialState: CommentActionState = { status: "idle" };
@@ -87,9 +87,13 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-14 items-center gap-2 self-start rounded-full bg-foreground px-7 text-body font-semibold text-background transition-[opacity,transform] hover:opacity-85 active:scale-[0.97] disabled:opacity-60"
+        className="inline-flex h-14 items-center gap-2 self-start rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
       >
-        {isPending && <Loader2 size={18} className="motion-safe:animate-spin" />}
+        {isPending ? (
+          <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />
+        ) : (
+          <Send size={20} aria-hidden="true" />
+        )}
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 
