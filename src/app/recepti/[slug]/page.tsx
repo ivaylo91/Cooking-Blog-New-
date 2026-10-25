@@ -70,20 +70,29 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const recipe = await getRecipeBySlug(slug);
-  if (!recipe) return {};
+  if (!recipe) return { title: "Рецептата не е намерена", robots: { index: false } };
+  const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
+  // The snippet a searcher reads: what it is, then how long and for how many.
+  const description = [
+    recipe.description.trim(),
+    totalTime > 0 ? `Готово за ${totalTime} мин, ${recipe.servings} порции.` : `${recipe.servings} порции.`,
+  ].join(" ");
   return {
-    title: recipe.title,
-    description: recipe.description,
+    // People search "мусака рецепта"; the tab and result read naturally too.
+    title: `${recipe.title}: домашна рецепта`,
+    description,
     alternates: { canonical: `/recepti/${recipe.slug}` },
     openGraph: {
       type: "article",
       title: recipe.title,
-      description: recipe.description,
+      description,
+      publishedTime: recipe.created_at,
+      modifiedTime: recipe.updated_at,
     },
     twitter: {
       card: "summary_large_image",
       title: recipe.title,
-      description: recipe.description,
+      description,
     },
   };
 }
@@ -114,6 +123,10 @@ export default async function RecipePage({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Recipe",
+    "@id": `${recipeUrl}#recipe`,
+    url: recipeUrl,
+    mainEntityOfPage: recipeUrl,
+    inLanguage: "bg",
     name: recipe.title,
     description: recipe.description,
     image: imageUrl ? [imageUrl] : undefined,

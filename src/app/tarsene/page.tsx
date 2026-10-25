@@ -10,6 +10,9 @@ import type { Category } from "@/types/recipe";
 
 export const metadata: Metadata = {
   title: "Търсене",
+  // Result pages are thin and endless; keep them out of the index but let
+  // crawlers follow the recipe links on them.
+  robots: { index: false, follow: true },
 };
 
 /** The shelves as chips: a way in when there is nothing, or nothing found, to show. */

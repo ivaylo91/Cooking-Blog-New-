@@ -34,26 +34,29 @@ export async function generateMetadata({
 }: {
   searchParams: Promise<ReceptiSearchParams>;
 }): Promise<Metadata> {
-  const { category: categorySlug } = await searchParams;
-  if (!categorySlug) {
-    return { title: "Рецепти", alternates: { canonical: "/recepti" } };
-  }
-
+  const params = await searchParams;
+  const { page } = parseFilters(params);
   const categories = await getCategories();
-  const category = categories.find((c) => c.slug === categorySlug);
+  const category = categories.find((c) => c.slug === params.category);
+
+  // Each page of a shelf is its own canonical URL, so search engines keep
+  // following the pages; time and difficulty filters fold back into the shelf.
+  const query = new URLSearchParams();
+  if (category) query.set("category", category.slug);
+  if (page > 1) query.set("page", String(page));
+  const canonical = query.size > 0 ? `/recepti?${query}` : "/recepti";
+  const pageSuffix = page > 1 ? `, страница ${page}` : "";
+
   if (!category) {
-    return { title: "Рецепти", alternates: { canonical: "/recepti" } };
+    const title = `Всички рецепти${pageSuffix}`;
+    const description =
+      "Всички домашни рецепти от Кулинарния блог на Иво: основни ястия, супи, салати, тестени, десерти и консерви, с филтри по време и трудност.";
+    return { title, description, alternates: { canonical }, openGraph: { title, description } };
   }
 
-  const description = `Рецепти в категория ${category.name} в Кулинарния блог на Иво.`;
-  return {
-    title: category.name,
-    description,
-    // Filtered and paged variants point back at the category page so they are
-    // not indexed as separate near-duplicate pages.
-    alternates: { canonical: `/recepti?category=${category.slug}` },
-    openGraph: { title: category.name, description },
-  };
+  const title = `${category.name}: рецепти${pageSuffix}`;
+  const description = `${category.name}: домашни рецепти, сготвени в кухнята на Иво, с точни мерки, ясни стъпки и снимки.`;
+  return { title, description, alternates: { canonical }, openGraph: { title, description } };
 }
 
 export default async function ReceptiPage({

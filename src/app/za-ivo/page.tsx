@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { JsonLd } from "@/components/JsonLd";
 import { keepShortWords } from "@/lib/typography";
 import ivoPhoto from "./ivo.jpg";
 
@@ -20,9 +21,28 @@ const howICook = [
   "Сайтът е мислен за готвене от телефона. Режимът „Готви стъпка по стъпка“ показва по една стъпка с едър шрифт, таймерите са вградени в стъпките, а екранът не угасва, докато ръцете ви са заети.",
 ];
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
+// The author behind every recipe's byline, so search engines can tie the
+// recipes to one real person.
+const profileJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  url: `${siteUrl}/za-ivo`,
+  inLanguage: "bg",
+  mainEntity: {
+    "@type": "Person",
+    name: "Иво",
+    url: `${siteUrl}/za-ivo`,
+    image: `${siteUrl}${ivoPhoto.src}`,
+    description: "Автор на Кулинарния блог на Иво: домашни рецепти, сготвени и снимани в собствената му кухня.",
+  },
+};
+
 export default function ZaIvoPage() {
   return (
     <>
+      <JsonLd data={profileJsonLd} />
       {/* The person behind the recipes, upright and large: a face is the
           strongest proof that "tried in my kitchen" is meant literally. */}
       <div className="bg-peach">

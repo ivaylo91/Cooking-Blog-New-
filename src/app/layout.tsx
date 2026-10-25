@@ -9,7 +9,8 @@ import { JsonLd } from "@/components/JsonLd";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 const siteName = "Кулинарният блог на Иво";
-const siteDescription = "Домашни рецепти за хобиисти и ентусиасти на готвенето.";
+const siteDescription =
+  "Домашни български рецепти, сготвени в кухнята на Иво: основни ястия, супи, салати, тестени и десерти с точни мерки и ясни стъпки.";
 
 // Onest is a contemporary grotesk drawn for Cyrillic first, so Bulgarian text
 // sets as naturally as Latin. It carries everything a cook reads and taps.
@@ -32,8 +33,9 @@ export const metadata: Metadata = {
     template: `%s | ${siteName}`,
   },
   description: siteDescription,
+  // No canonical here: each indexable page sets its own. An inherited "/"
+  // would tell search engines that every page without one is the home page.
   alternates: {
-    canonical: "/",
     types: { "application/rss+xml": "/rss.xml" },
   },
   openGraph: {
@@ -56,6 +58,9 @@ const websiteJsonLd = {
   "@type": "WebSite",
   name: siteName,
   url: siteUrl,
+  inLanguage: "bg",
+  description: siteDescription,
+  publisher: { "@type": "Person", name: "Иво", url: `${siteUrl}/za-ivo` },
   potentialAction: {
     "@type": "SearchAction",
     target: `${siteUrl}/tarsene?q={search_term_string}`,

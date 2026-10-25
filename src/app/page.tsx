@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -11,6 +12,11 @@ import { recipeCount } from "@/lib/format";
 import { getImageUrl } from "@/lib/images";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import { keepShortWords } from "@/lib/typography";
+
+export const metadata: Metadata = {
+  title: { absolute: "Кулинарният блог на Иво: домашни рецепти, изпробвани в моята кухня" },
+  alternates: { canonical: "/" },
+};
 
 export default async function Home() {
   const [recipes, allRecipes, categories, topRated] = await Promise.all([
