@@ -1,23 +1,23 @@
 @import "tailwindcss";
 
 /*
- * A quiet food magazine: cream paper, generous photography, restrained
- * category accents and a deep paprika footer. Tomato marks the action.
+ * A welcoming home kitchen: apricot, butter and herb green, colourful recipe
+ * cards and illustrated cooking backgrounds around solid reading surfaces.
  */
 :root {
   color-scheme: light;
   /* Warm cream ground: the page itself feels like a kitchen, not a document. */
-  --background: #fcfaf6;
+  --background: #fff5e5;
   --foreground: #2a1710;
-  --surface: #fffefa;
-  --surface-muted: #f3eee5;
-  --border-subtle: rgba(90, 45, 20, 0.14);
+  --surface: #fffdf6;
+  --surface-muted: #f5e6ce;
+  --border-subtle: rgba(90, 45, 20, 0.22);
   --rule: #efdcc6;
   /* A warm brown, 6.9:1 or better on every tinted section below. */
   --muted-foreground: #5a4234;
   /* Buttons: 5.2:1 with white text. */
-  --accent: #c2410c;
-  --accent-strong: #9a3412;
+  --accent: #b9381b;
+  --accent-strong: #922a13;
   --accent-foreground: #ffffff;
   --accent-soft: #ffdfcc;
   /* Tomato as text drops to ~4.2:1 on the tints, so links use the deeper tone. */
@@ -30,24 +30,29 @@
   --destructive-border: #fecaca;
   /* Form fields: the resting border clears 3:1 against white, as controls must. */
   --field: #ffffff;
-  --field-border: #8a7768;
+  --field-border: #82614b;
   /* Lighter than typed text so an example never reads as an answer; 5.5:1. */
   --placeholder: #7a6555;
-  /* Soft category accents; photographs supply most of the colour. */
-  --peach: #f7e9dd;
-  --sage: #e8eee1;
-  --butter: #f5eed8;
-  --rose: #f3e5e7;
-  --wheat: #efe5d5;
-  --olive: #e9ecd9;
-  --sky: #e3edf1;
+  /* Food colours give the shelves a friendly, recognisable identity. */
+  --peach: #ffd7b0;
+  --sage: #d9e9bd;
+  --butter: #ffe49b;
+  --rose: #ffd5d0;
+  --wheat: #f4d6a4;
+  --olive: #e4e9ad;
+  --sky: #d7e9ee;
+  --garden: #284f36;
+  --on-garden: #fff7e8;
+  --on-garden-muted: #deebc9;
+  --doodle-herb: #477b42;
+  --doodle-gold: #ac681b;
   /* Shadows tinted towards the warm palette instead of neutral black. */
   /* The one deep colour: paprika, anchoring the foot of every page. */
   --ember: #7a2410;
   --on-ember: #fff1e3;
   --on-ember-muted: #ffd8bf;
-  --shadow-card: 0 2px 8px -4px rgba(74, 32, 12, 0.12);
-  --shadow-lift: 0 10px 24px -12px rgba(74, 32, 12, 0.2);
+  --shadow-card: 0 2px 3px rgba(74, 32, 12, 0.05), 0 10px 28px -16px rgba(74, 32, 12, 0.28);
+  --shadow-lift: 0 4px 6px rgba(74, 32, 12, 0.06), 0 16px 32px -14px rgba(74, 32, 12, 0.3);
   /* Kept for the admin, which inherits tokens only. */
   --stamp: #b91c1c;
   --kraft: #f5f3ef;
@@ -85,6 +90,9 @@
   --color-ember: var(--ember);
   --color-on-ember: var(--on-ember);
   --color-on-ember-muted: var(--on-ember-muted);
+  --color-garden: var(--garden);
+  --color-on-garden: var(--on-garden);
+  --color-on-garden-muted: var(--on-garden-muted);
   --color-stamp: var(--stamp);
   --color-kraft: var(--kraft);
   --color-brand: var(--brand);
@@ -135,8 +143,9 @@
     --destructive-border: rgba(248, 113, 113, 0.3);
     --field: #241914;
     --field-border: #8a7a6e;
-  --placeholder: #a8978a;
     --placeholder: #a8978a;
+    --doodle-herb: #a4c787;
+    --doodle-gold: #f2bd65;
     --peach: #3d2417;
     --sage: #223320;
     --butter: #3b3014;
@@ -174,6 +183,9 @@
   --destructive-border: rgba(248, 113, 113, 0.3);
   --field: #241914;
   --field-border: #8a7a6e;
+  --placeholder: #a8978a;
+  --doodle-herb: #a4c787;
+  --doodle-gold: #f2bd65;
   --peach: #3d2417;
   --sage: #223320;
   --butter: #3b3014;
@@ -203,8 +215,7 @@ h3 {
   text-wrap: balance;
 }
 
-/* Headlines in the serif. Only headings at the two headline sizes: small
-   label-like headings (an ingredient group, a card's meta) stay in the sans. */
+/* Serif titles give the blog warmth; small ingredient labels stay in the sans. */
 :is(h1, h2, h3):is(.text-display, .text-feature, .text-section, .text-heading, .text-card),
 .font-heading {
   font-family: var(--font-heading);
@@ -488,4 +499,9 @@ textarea::placeholder {
 /* Tomato vanishes on paprika, so the footer's focus ring uses its light ink. */
 footer :focus-visible {
   outline-color: var(--on-ember);
+}
+
+/* The author's green panel needs the same clear keyboard focus contrast. */
+.bg-garden :focus-visible {
+  outline-color: var(--on-garden);
 }

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Band } from "@/components/Band";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { RecipeCard } from "@/components/RecipeCard";
 import { ResumeCooking } from "@/components/ResumeCooking";
 import { SectionHead } from "@/components/SectionHead";
@@ -29,13 +30,13 @@ export default async function Home() {
 
   return (
     <div>
-      <Band tone="plain" innerClassName="pb-8 pt-8 sm:pb-10 sm:pt-10">
-        <div className="grid gap-3 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
-          <h1 className="animate-rise max-w-xl text-section font-bold">
-            {keepShortWords("Домашни рецепти от моята кухня")}
+      <Band tone="peach" pattern innerClassName="py-8 sm:py-12">
+        <div className="grid gap-4 rounded-3xl bg-peach p-5 sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
+          <h1 className="animate-rise max-w-xl text-display font-bold">
+            {keepShortWords("Добре дошли в моята кухня")}
           </h1>
           <p className="animate-rise max-w-xl text-body text-muted-foreground">
-            {keepShortWords("Сготвени лично, с точни мерки и ясни стъпки. За всеки ден и за удоволствието от добрата храна.")}
+            {keepShortWords("Аз съм Иво. Тук споделям домашни рецепти, които съм сготвил лично, с точни мерки и ясни стъпки. Нека приготвим нещо вкусно заедно!")}
           </p>
         </div>
         <ResumeCooking />
@@ -48,27 +49,28 @@ export default async function Home() {
       </Band>
 
       {categories.length > 0 && (
-        <Band tone="plain" aria-labelledby="shelf-head">
-          <div className="border-y border-border-subtle py-6">
-            <h2 id="shelf-head" className="mb-3 text-body font-semibold">Разгледайте по категория</h2>
-            <ul className="flex flex-wrap gap-2">
-              {inCooksOrder(categories).map((category) => (
-                <li key={category.id}>
-                  <Link
-                    href={`/recepti?category=${category.slug}`}
-                    className="inline-flex min-h-11 items-center gap-2.5 rounded-full border border-border-subtle bg-surface px-4 py-2 text-small font-medium transition-colors hover:border-field-border hover:bg-surface-muted"
-                  >
-                    <span
-                      aria-hidden="true"
-                      style={{ backgroundColor: categoryTint(category.slug) }}
-                      className="size-3 rounded-full ring-1 ring-border-subtle"
-                    />
-                    {category.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
+        <Band tone="plain" innerClassName="pt-10 sm:pt-12" aria-labelledby="shelf-head">
+          <SectionHead
+            title="Какво ви се хапва?"
+            id="shelf-head"
+            action={{ href: "/recepti", label: "Всички рецепти" }}
+          />
+          <ul className="flex flex-wrap gap-3">
+            {inCooksOrder(categories).map((category) => (
+              <li key={category.id} className="min-w-0 flex-[1_1_9rem] lg:flex-[1_1_0]">
+                <Link
+                  href={`/recepti?category=${category.slug}`}
+                  style={{ backgroundColor: categoryTint(category.slug) }}
+                  className="group flex h-full min-h-20 items-center gap-3 rounded-2xl border border-border-subtle p-3 text-small font-semibold shadow-card transition-[transform,box-shadow] hover:shadow-lift motion-safe:hover:-translate-y-0.5 sm:min-h-32 sm:flex-col sm:justify-center sm:p-4 sm:text-center"
+                >
+                  <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-link">
+                    <CategoryIcon slug={category.slug} size={24} />
+                  </span>
+                  {category.name}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Band>
       )}
 
@@ -92,7 +94,7 @@ export default async function Home() {
       )}
 
       {trending.length > 0 && (
-        <Band tone="plain" className="border-t border-border-subtle" innerClassName="py-12 sm:py-16" aria-labelledby="top-head">
+        <Band tone="sage" className="border-y border-border-subtle" innerClassName="py-12 sm:py-16" aria-labelledby="top-head">
           <SectionHead title="Най-високо оценени" id="top-head" />
           <ul className="-mx-4 flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-px-4 px-4 pb-4 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:thin]">
             {trending.map((recipe, index) => (
@@ -104,9 +106,9 @@ export default async function Home() {
         </Band>
       )}
 
-      <Band tone="plain" className="bg-surface-muted" innerClassName="py-12 sm:py-16" aria-labelledby="about-head">
+      <Band tone="plain" className="bg-garden text-on-garden" innerClassName="py-12 sm:py-16" aria-labelledby="about-head">
         <div className="grid gap-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center sm:gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14">
-          <div className="relative aspect-square w-36 overflow-hidden rounded-2xl sm:w-full">
+          <div className="relative aspect-square w-36 overflow-hidden rounded-3xl ring-4 ring-on-garden sm:w-full">
             <Image
               src={ivoPhoto}
               alt="Иво в кухнята си"
@@ -118,10 +120,10 @@ export default async function Home() {
           </div>
           <div>
             <h2 id="about-head" className="text-section font-bold">Здравейте, аз съм Иво</h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground">
+            <p className="mt-4 max-w-2xl text-on-garden-muted">
               {keepShortWords("Готвя у дома и тук събирам рецептите си. Всяко ястие е приготвено лично, с продукти от близкия пазар и точни мерки, за да можете да го сготвите и във вашата кухня.")}
             </p>
-            <Link href="/za-ivo" className="mt-4 inline-flex min-h-11 items-center gap-2 font-semibold text-link hover:underline">
+            <Link href="/za-ivo" className="mt-5 inline-flex min-h-12 items-center gap-2 rounded-full bg-on-garden px-5 py-2 font-semibold text-garden hover:underline">
               Повече за мен
               <ArrowRight size={18} aria-hidden="true" />
             </Link>
@@ -129,8 +131,10 @@ export default async function Home() {
         </div>
       </Band>
 
-      <Band tone="plain" innerClassName="py-12 sm:py-16">
-        <SubscribeForm />
+      <Band tone="sage" pattern innerClassName="py-12 sm:py-16">
+        <div className="rounded-3xl border border-border-subtle bg-butter p-6 shadow-card sm:p-10">
+          <SubscribeForm />
+        </div>
       </Band>
     </div>
   );

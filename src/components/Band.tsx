@@ -1,3 +1,5 @@
+import { CookingBackground } from "@/components/CookingBackground";
+
 // Literal class names, so Tailwind can see and generate every one.
 const TONES = {
   peach: "bg-peach",
@@ -19,6 +21,7 @@ export function Band({
   children,
   className = "",
   innerClassName = "",
+  pattern = false,
   as: Tag = "section",
   ...rest
 }: {
@@ -26,11 +29,14 @@ export function Band({
   children: React.ReactNode;
   className?: string;
   innerClassName?: string;
+  /** Decorative cooking artwork. Put text inside solid panels when enabled. */
+  pattern?: boolean;
   as?: "section" | "div" | "header";
 } & React.HTMLAttributes<HTMLElement>) {
   return (
-    <Tag className={`${TONES[tone]} ${className}`} {...rest}>
-      <div className={`mx-auto max-w-6xl px-4 sm:px-6 ${innerClassName}`}>{children}</div>
+    <Tag className={`${TONES[tone]} ${pattern ? "relative isolate overflow-hidden" : ""} ${className}`} {...rest}>
+      {pattern && <CookingBackground className="absolute inset-0 text-link" opacity={0.32} scale={0.85} colorful />}
+      <div className={`${pattern ? "relative" : ""} mx-auto max-w-6xl px-4 sm:px-6 ${innerClassName}`}>{children}</div>
     </Tag>
   );
 }
