@@ -66,6 +66,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           name="author_name"
           required
           maxLength={60}
+          placeholder="Например: Мария"
           autoComplete="name"
           autoCapitalize="words"
           enterKeyHint="next"
@@ -88,6 +89,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           name="text"
           required
           maxLength={MAX}
+          placeholder="Например: стана чудесно, сложих малко повече чесън."
           rows={4}
           onChange={(e) => setLength(e.target.value.length)}
           aria-describedby="comment-count"

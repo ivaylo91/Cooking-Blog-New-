@@ -33,6 +33,8 @@
   /* Form fields: the resting border clears 3:1 against white, as controls must. */
   --field: #ffffff;
   --field-border: #8a7768;
+  /* Lighter than typed text so an example never reads as an answer; 5.5:1. */
+  --placeholder: #7a6555;
   /* Warm section grounds, a magazine spread's colour blocks. */
   --peach: #ffd8bf;
   --sage: #d3ebc3;
@@ -129,6 +131,8 @@
     --destructive-border: rgba(248, 113, 113, 0.3);
     --field: #241914;
     --field-border: #8a7a6e;
+  --placeholder: #a8978a;
+    --placeholder: #a8978a;
     --peach: #3d2417;
     --sage: #223320;
     --butter: #3b3014;
@@ -257,9 +261,11 @@ input[type="checkbox"]:focus-visible,
     background-color 150ms ease;
 }
 
-.field::placeholder {
-  color: var(--muted-foreground);
-  opacity: 0.85;
+/* All inputs, admin included: browsers default to a lighter, failing grey. */
+input::placeholder,
+textarea::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
 }
 
 .field:hover {

@@ -1,5 +1,6 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
 import { dangerButton } from "@/components/admin/styles";
 
 /**
@@ -21,6 +22,7 @@ export function ConfirmSubmitButton({
       }}
       className={dangerButton}
     >
+      <Trash2 size={15} aria-hidden="true" />
       {children}
     </button>
   );

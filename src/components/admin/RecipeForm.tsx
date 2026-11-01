@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
-import { ArrowDown, ArrowUp, ChevronDown, ClipboardList, ListOrdered, Plus, Sparkles, X } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronDown, ClipboardList, ListOrdered, Plus, Save, Sparkles, X } from "lucide-react";
 import { createRecipe, updateRecipe } from "@/app/admin/actions";
 import { ImageUpload } from "@/components/admin/ImageUpload";
 import { primaryButton, secondaryButton } from "@/components/admin/styles";
@@ -254,6 +254,7 @@ export function RecipeForm({
             Заглавие
             <input
               required
+              placeholder="Например: Боб чорба"
               value={title}
               onChange={(e) => {
                 setTitle(e.target.value);
@@ -267,6 +268,7 @@ export function RecipeForm({
             Slug (URL)
             <input
               required
+              placeholder="boba-chorba"
               value={slug}
               onChange={(e) => {
                 setSlug(e.target.value);
@@ -280,6 +282,7 @@ export function RecipeForm({
             Описание
             <textarea
               rows={3}
+              placeholder="Едно-две изречения за ястието"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               className={fieldClass}
@@ -289,7 +292,7 @@ export function RecipeForm({
           <label className={labelClass}>
             Категория
             <Select value={categoryId ?? ""} onChange={setCategoryId}>
-              <option value="">—</option>
+              <option value="">Изберете категория</option>
               {categories.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
@@ -301,6 +304,7 @@ export function RecipeForm({
           <label className={labelClass}>
             Кухня
             <input
+              placeholder="Например: Българска"
               value={cuisine}
               onChange={(e) => setCuisine(e.target.value)}
               className={fieldClass}
@@ -321,6 +325,7 @@ export function RecipeForm({
             <input
               type="number"
               min={1}
+              placeholder="4"
               value={servings}
               onChange={(e) => setServings(e.target.value)}
               className={fieldClass}
@@ -332,6 +337,7 @@ export function RecipeForm({
             <input
               type="number"
               min={0}
+              placeholder="20"
               value={prepTime}
               onChange={(e) => setPrepTime(e.target.value)}
               className={fieldClass}
@@ -343,6 +349,7 @@ export function RecipeForm({
             <input
               type="number"
               min={0}
+              placeholder="40"
               value={cookTime}
               onChange={(e) => setCookTime(e.target.value)}
               className={fieldClass}
@@ -527,6 +534,7 @@ export function RecipeForm({
               <textarea
                 rows={3}
                 aria-label={`Стъпка ${index + 1}`}
+                placeholder="Какво се прави в тази стъпка?"
                 value={step.text}
                 onChange={(e) => updateStep(index, { text: e.target.value })}
                 className={`min-w-0 flex-1 resize-y ${fieldClass}`}
@@ -582,9 +590,11 @@ export function RecipeForm({
           right beside the button that was pressed. */}
       <div className="sticky bottom-0 z-10 -mx-4 flex flex-wrap items-center gap-3 border-t border-border-subtle bg-background/90 px-4 py-3 backdrop-blur-md sm:-mx-6 sm:px-6">
         <button type="submit" disabled={isPending} className={primaryButton}>
+          <Save size={18} aria-hidden="true" />
           {isPending ? "Запазване…" : "Запази"}
         </button>
         <button type="button" onClick={cancel} className={secondaryButton}>
+          <X size={18} aria-hidden="true" />
           Отказ
         </button>
         <p aria-live="polite" className="min-w-0 flex-1 text-small font-medium">

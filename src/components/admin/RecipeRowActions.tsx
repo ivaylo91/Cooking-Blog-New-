@@ -1,5 +1,6 @@
 "use client";
 
+import { Eye, EyeOff, Trash2 } from "lucide-react";
 import { useTransition } from "react";
 import { deleteRecipe, togglePublish } from "@/app/admin/actions";
 import { dangerButton } from "@/components/admin/styles";
@@ -21,10 +22,7 @@ export function PublishToggle({ id, published }: { id: string; published: boolea
           : "bg-surface-muted text-muted-foreground hover:bg-border-subtle"
       }`}
     >
-      <span
-        aria-hidden="true"
-        className={`size-2 rounded-full ${published ? "bg-secondary" : "bg-muted-foreground"}`}
-      />
+      {published ? <Eye size={15} aria-hidden="true" /> : <EyeOff size={15} aria-hidden="true" />}
       {published ? "Публикувана" : "Чернова"}
     </button>
   );
@@ -44,6 +42,7 @@ export function DeleteRecipeButton({ id, title }: { id: string; title: string })
       }}
       className={dangerButton}
     >
+      <Trash2 size={15} aria-hidden="true" />
       Изтрий
     </button>
   );

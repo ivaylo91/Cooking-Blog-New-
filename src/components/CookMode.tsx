@@ -346,8 +346,9 @@ export function CookMode({
                   <button
                     type="button"
                     onClick={() => setShowIngredients(false)}
-                    className="flex h-11 shrink-0 items-center rounded-full bg-surface-muted px-4 text-small font-semibold hover:bg-border-subtle"
+                    className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface-muted px-4 text-small font-semibold hover:bg-border-subtle"
                   >
+                    <ArrowLeft size={17} aria-hidden="true" />
                     Към стъпката
                   </button>
                 </div>
@@ -435,7 +436,7 @@ export function CookMode({
             </button>
             {isLast ? (
               <button ref={nextRef} type="button" onClick={close} className={primary}>
-                Готово
+                <Check size={22} aria-hidden="true" /> Готово
               </button>
             ) : (
               <button ref={nextRef} type="button" onClick={() => goTo(index + 1)} className={primary}>

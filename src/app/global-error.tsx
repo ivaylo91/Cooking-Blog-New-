@@ -1,5 +1,6 @@
 "use client";
 
+import { RotateCw } from "lucide-react";
 import "./globals.css";
 
 /**
@@ -26,8 +27,9 @@ export default function GlobalError({
           <button
             type="button"
             onClick={reset}
-            className="mt-6 h-14 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong"
+            className="mt-6 inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors hover:bg-accent-strong"
           >
+            <RotateCw size={20} aria-hidden="true" />
             Опитай отново
           </button>
           {error.digest && (

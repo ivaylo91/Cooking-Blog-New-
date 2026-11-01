@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { CookingPot, ListChecks } from "lucide-react";
 
 type Side = "sastavki" | "prigotvyane";
 
@@ -53,9 +54,9 @@ function getSnapshot(): Side {
 
 const getServerSnapshot = (): Side => "sastavki";
 
-const sides: Array<{ id: Side; label: string }> = [
-  { id: "sastavki", label: "Съставки" },
-  { id: "prigotvyane", label: "Приготвяне" },
+const sides: Array<{ id: Side; label: string; icon: typeof ListChecks }> = [
+  { id: "sastavki", label: "Съставки", icon: ListChecks },
+  { id: "prigotvyane", label: "Приготвяне", icon: CookingPot },
 ];
 
 /**
@@ -85,10 +86,11 @@ export function RecipeTabs() {
               key={side.id}
               href={`#${side.id}`}
               aria-current={isActive ? "location" : undefined}
-              className={`relative flex h-11 items-center justify-center rounded-full font-semibold transition-colors ${
+              className={`relative flex h-11 items-center justify-center gap-2 rounded-full font-semibold transition-colors ${
                 isActive ? "" : "text-muted-foreground"
               }`}
             >
+              <side.icon size={18} aria-hidden="true" />
               {side.label}
             </a>
           );

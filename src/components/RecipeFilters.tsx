@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ChevronDown, X } from "lucide-react";
+import { ChefHat, ChevronDown, Clock, LayoutGrid, SlidersHorizontal, X } from "lucide-react";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { recipeCount } from "@/lib/format";
 import { DIFFICULTIES, TIME_FILTERS } from "@/types/recipe";
@@ -26,7 +27,7 @@ function buildHref(active: ActiveFilters, change: Partial<ActiveFilters>): strin
 }
 
 const chip =
-  "flex h-11 shrink-0 items-center whitespace-nowrap rounded-full px-4 font-medium transition-colors";
+  "flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 font-medium transition-colors";
 const chipOn = "bg-foreground text-background";
 const chipOff = "bg-surface-muted hover:brightness-95 active:scale-[0.97]";
 
@@ -83,6 +84,7 @@ export function RecipeFilters({
         <ul className="flex gap-2">
           <li>
             <Chip href={buildHref(active, { category: undefined })} selected={!active.category}>
+              <LayoutGrid size={18} aria-hidden="true" />
               Всички
             </Chip>
           </li>
@@ -95,6 +97,7 @@ export function RecipeFilters({
                   selected={selected}
                   tint={categoryTint(category.slug)}
                 >
+                  <CategoryIcon slug={category.slug} />
                   {category.name}
                 </Chip>
               </li>
@@ -107,6 +110,7 @@ export function RecipeFilters({
         {/* Time and difficulty wait behind one control until they are wanted. */}
         <details open={secondaryCount > 0} className="group w-full sm:w-auto">
           <summary className="flex h-11 w-fit cursor-pointer list-none items-center gap-2 rounded-full border border-border-subtle px-4 font-medium transition-colors hover:bg-surface-muted [&::-webkit-details-marker]:hidden">
+            <SlidersHorizontal size={18} aria-hidden="true" />
             Време и трудност
             {secondaryCount > 0 && (
               <span className="inline-flex size-6 items-center justify-center rounded-full bg-accent text-small font-semibold text-accent-foreground tabular-nums">
@@ -118,6 +122,7 @@ export function RecipeFilters({
           <div className="animate-rise mt-3 flex flex-col gap-4 rounded-2xl bg-surface p-4 shadow-card">
             <Group label="Време">
               <Chip href={buildHref(active, { time: undefined })} selected={!active.time}>
+                <Clock size={18} aria-hidden="true" />
                 Всички
               </Chip>
               {(Object.keys(TIME_FILTERS) as TimeFilter[]).map((key) => (
@@ -126,6 +131,7 @@ export function RecipeFilters({
                   href={buildHref(active, { time: active.time === key ? undefined : key })}
                   selected={active.time === key}
                 >
+                  <Clock size={18} aria-hidden="true" />
                   {TIME_FILTERS[key].label}
                 </Chip>
               ))}
@@ -135,6 +141,7 @@ export function RecipeFilters({
                 href={buildHref(active, { difficulty: undefined })}
                 selected={!active.difficulty}
               >
+                <ChefHat size={18} aria-hidden="true" />
                 Всички
               </Chip>
               {DIFFICULTIES.map((level) => (
@@ -145,6 +152,7 @@ export function RecipeFilters({
                   })}
                   selected={active.difficulty === level}
                 >
+                  <ChefHat size={18} aria-hidden="true" />
                   <span className="capitalize">{level}</span>
                 </Chip>
               ))}

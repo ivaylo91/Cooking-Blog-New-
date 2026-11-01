@@ -330,6 +330,12 @@ Reduced motion zeroes every distance, holds scale at 1 and stops the steam; colo
 - **Icon:** 44px circles (print, theme toggle, menu, servings stepper).
 Focus is a 2px tomato outline offset 2px on every link, button, summary and checkbox.
 
+### Icons
+lucide-react, one per control, at 15-22px in the control's text colour, and `aria-hidden` beside a text label. Leading for actions (Запиши ме, Търси, Запази, Изтрий); trailing only for direction (Напред, Всички рецепти) and disclosure chevrons. Each category has its own sign from `CategoryIcon`. On a phone the large search button is icon-only with a screen-reader label, so the query keeps its width. Page numbers and step numbers carry no icon: the number is the content.
+
+### Placeholders
+Every text field has one, as a short example or hint in `--placeholder` (5.5:1). A placeholder never replaces the visible label, and anything needed to complete the field stays outside it, because it disappears on typing.
+
 ### Chips
 - **Style:** 44px pill, ink 500-weight text, 16–20px side padding, no border. Category chips wear their category colour at rest; "Всички" and time/difficulty chips use the counter tint.
 - **State:** selected chips invert to ink fill with paper text. Category chips scroll sideways in one row on a phone. A tomato count badge appears on the "Време и трудност" disclosure when filters inside it are active. Recipe tags are plain text ("Етикети: …"), never pill-shaped, since they are not interactive.

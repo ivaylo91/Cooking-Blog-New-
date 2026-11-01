@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Band } from "@/components/Band";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { RecipeCard } from "@/components/RecipeCard";
 import { SearchField } from "@/components/SearchField";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
@@ -24,8 +25,9 @@ function CategoryChips({ categories }: { categories: Category[] }) {
           <Link
             href={`/recepti?category=${category.slug}`}
             style={{ backgroundColor: categoryTint(category.slug) }}
-            className="flex h-11 items-center rounded-full px-5 font-medium transition-[filter,transform] hover:brightness-95 active:scale-[0.97]"
+            className="flex h-11 items-center gap-2 rounded-full px-5 font-medium transition-[filter,transform] hover:brightness-95 active:scale-[0.97]"
           >
+            <CategoryIcon slug={category.slug} />
             {category.name}
           </Link>
         </li>

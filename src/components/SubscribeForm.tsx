@@ -1,7 +1,7 @@
 "use client";
 
 import { startTransition, useActionState, useEffect, useRef } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { subscribe, type SubscribeActionState } from "@/app/recepti/actions";
 
 const initialState: SubscribeActionState = { status: "idle" };
@@ -73,6 +73,7 @@ export function SubscribeForm() {
               name="email"
               required
               maxLength={254}
+              placeholder="ime@example.com"
               autoComplete="email"
               autoCapitalize="none"
               spellCheck={false}
@@ -86,7 +87,11 @@ export function SubscribeForm() {
               disabled={pending}
               className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
             >
-              {pending && <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />}
+              {pending ? (
+                <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />
+              ) : (
+                <Mail size={20} aria-hidden="true" />
+              )}
               {pending ? "Записване…" : "Запиши ме"}
             </button>
           </div>

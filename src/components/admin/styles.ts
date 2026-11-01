@@ -4,7 +4,7 @@
 
 /** Every delete control in the admin. */
 export const dangerButton =
-  "inline-flex h-10 items-center rounded-full px-3 text-small font-semibold text-destructive-strong transition-colors hover:bg-destructive-soft disabled:opacity-50";
+  "inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-small font-semibold text-destructive-strong transition-colors hover:bg-destructive-soft disabled:opacity-50";
 
 /** Primary action: the tomato pill. */
 export const primaryButton =

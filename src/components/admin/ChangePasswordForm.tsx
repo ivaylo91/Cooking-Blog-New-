@@ -22,10 +22,12 @@ function Field({
   name,
   label,
   autoComplete,
+  placeholder,
 }: {
   name: string;
   label: string;
   autoComplete: string;
+  placeholder: string;
 }) {
   return (
     <label className="flex flex-col gap-1.5 font-semibold">
@@ -41,6 +43,7 @@ function Field({
           required
           minLength={name === "current_password" ? undefined : 12}
           autoComplete={autoComplete}
+          placeholder={placeholder}
           className={fieldClass}
         />
       </div>
@@ -71,9 +74,9 @@ export function ChangePasswordForm() {
       </p>
 
       <form ref={formRef} action={formAction} className="mt-5 flex flex-col gap-4">
-        <Field name="current_password" label="Текуща парола" autoComplete="current-password" />
-        <Field name="new_password" label="Нова парола" autoComplete="new-password" />
-        <Field name="confirm_password" label="Повтори новата парола" autoComplete="new-password" />
+        <Field name="current_password" label="Текуща парола" autoComplete="current-password" placeholder="Паролата, с която влизате" />
+        <Field name="new_password" label="Нова парола" autoComplete="new-password" placeholder="Поне 12 знака" />
+        <Field name="confirm_password" label="Повтори новата парола" autoComplete="new-password" placeholder="Същата парола още веднъж" />
 
         <button
           type="submit"

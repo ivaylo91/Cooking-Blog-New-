@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CheckCircle2, Lock, Mail } from "lucide-react";
+import { CheckCircle2, Lock, LogIn, Mail } from "lucide-react";
 import { login } from "@/app/admin/actions";
 import { primaryButton } from "@/components/admin/styles";
 
@@ -28,6 +28,7 @@ export function LoginForm() {
             name="email"
             required
             autoComplete="email"
+            placeholder="ime@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={fieldClass}
@@ -53,6 +54,7 @@ export function LoginForm() {
             name="password"
             required
             autoComplete="current-password"
+            placeholder="Вашата парола"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className={fieldClass}
@@ -70,6 +72,7 @@ export function LoginForm() {
         type="submit"
         className={`mt-2 w-full ${primaryButton}`}
       >
+        <LogIn size={18} aria-hidden="true" />
         Вход
       </button>
     </form>

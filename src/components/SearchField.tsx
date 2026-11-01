@@ -69,7 +69,7 @@ export function SearchField({
         autoFocus={autoFocus}
         enterKeyHint="search"
         className={`field field-pill [&::-webkit-search-cancel-button]:hidden ${
-          large ? "h-14 pl-13 pr-40 text-body" : "h-11 pl-11 pr-11"
+          large ? "h-14 pl-13 pr-[6.5rem] text-body sm:pr-44" : "h-11 pl-11 pr-11"
         }`}
       />
       {value && (
@@ -81,7 +81,7 @@ export function SearchField({
           }}
           aria-label="Изчисти търсенето"
           className={`animate-pop absolute top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground ${
-            large ? "right-[6.5rem]" : "right-0"
+            large ? "right-[3.25rem] sm:right-[7.5rem]" : "right-0"
           }`}
         >
           <X size={17} />
@@ -90,9 +90,10 @@ export function SearchField({
       {large ? (
         <button
           type="submit"
-          className="absolute right-1.5 top-1/2 h-11 -translate-y-1/2 rounded-full bg-accent px-6 font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
+          className="absolute right-1.5 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center gap-2 rounded-full bg-accent font-semibold sm:w-auto sm:px-5 text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
         >
-          Търси
+          <Search size={18} aria-hidden="true" />
+          <span className="sr-only sm:not-sr-only">Търси</span>
         </button>
       ) : (
         shortcut &&

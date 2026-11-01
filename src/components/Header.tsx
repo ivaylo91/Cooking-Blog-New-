@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
-import { Menu, Search, X } from "lucide-react";
+import { Menu, Search, UserRound, UtensilsCrossed, X } from "lucide-react";
+import { CategoryIcon } from "@/components/CategoryIcon";
 import { LogoMark } from "@/components/Logo";
 import { SearchField } from "@/components/SearchField";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -12,8 +13,8 @@ import { categoryTint } from "@/lib/categories";
 import type { Category } from "@/types/recipe";
 
 const navLinks = [
-  { href: "/recepti", label: "Рецепти" },
-  { href: "/za-ivo", label: "За Иво" },
+  { href: "/recepti", label: "Рецепти", icon: UtensilsCrossed },
+  { href: "/za-ivo", label: "За Иво", icon: UserRound },
 ];
 
 function ActiveDesktopLinks() {
@@ -28,10 +29,11 @@ function DesktopLinks({ pathname }: { pathname: string | null }) {
         key={link.href}
         href={link.href}
         aria-current={active ? "page" : undefined}
-        className={`flex h-11 items-center rounded-full px-4 font-medium transition-colors ${
+        className={`flex h-11 items-center gap-2 whitespace-nowrap rounded-full px-3 font-medium transition-colors lg:px-4 ${
           active ? "bg-accent-soft text-link" : "hover:bg-surface-muted"
         }`}
       >
+        <link.icon size={18} aria-hidden="true" />
         {link.label}
       </Link>
     );
@@ -88,7 +90,7 @@ export function Header({ categories }: { categories: Category[] }) {
           <Suspense fallback={<DesktopLinks pathname={null} />}>
             <ActiveDesktopLinks />
           </Suspense>
-          <SearchField id="search-desktop" className="ml-2 w-64" shortcut />
+          <SearchField id="search-desktop" className="ml-2 w-40 lg:w-64" shortcut />
           <ThemeToggle />
         </nav>
 
@@ -135,8 +137,9 @@ export function Header({ categories }: { categories: Category[] }) {
                 key={link.href}
                 href={link.href}
                 onClick={close}
-                className="flex h-14 items-center rounded-xl px-3 text-heading font-semibold"
+                className="flex h-14 items-center gap-3 rounded-xl px-3 text-heading font-semibold"
               >
+                <link.icon size={22} aria-hidden="true" />
                 {link.label}
               </Link>
             ))}
@@ -151,8 +154,9 @@ export function Header({ categories }: { categories: Category[] }) {
                     href={`/recepti?category=${c.slug}`}
                     onClick={close}
                     style={{ backgroundColor: categoryTint(c.slug) }}
-                    className="flex h-11 items-center rounded-full px-4 text-small font-medium transition-transform active:scale-95"
+                    className="flex h-11 items-center gap-1.5 rounded-full px-4 text-small font-medium transition-transform active:scale-95"
                   >
+                    <CategoryIcon slug={c.slug} size={16} />
                     {c.name}
                   </Link>
                 ))}

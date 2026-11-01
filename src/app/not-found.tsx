@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Home } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -21,8 +21,9 @@ export default function NotFound() {
         </Link>
         <Link
           href="/"
-          className="inline-flex h-14 items-center rounded-full bg-surface px-7 text-body font-semibold shadow-card transition-[transform] active:scale-[0.97]"
+          className="inline-flex h-14 items-center gap-2 rounded-full bg-surface px-7 text-body font-semibold shadow-card transition-[transform] active:scale-[0.97]"
         >
+          <Home size={20} aria-hidden="true" />
           Начало
         </Link>
       </div>
