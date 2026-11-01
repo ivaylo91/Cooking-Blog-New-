@@ -68,7 +68,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
   const encodedText = encodeURIComponent(title);
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className="sm:relative">
       <button
         ref={toggleRef}
         type="button"
@@ -88,7 +88,10 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
       {open && (
         <div
           id="share-menu"
-          className="animate-rise absolute right-0 top-full z-20 mt-2 w-64 rounded-2xl border border-border-subtle bg-background p-1.5 shadow-lift"
+          // On a phone it spans the action row, anchored to the row itself, so
+          // it can't run off screen wherever the button sits. Above the sticky
+          // tab bar (z-30), below the site header (z-40).
+          className="animate-rise absolute inset-x-0 top-full z-[35] mt-2 rounded-2xl border border-border-subtle bg-surface p-1.5 shadow-lift sm:inset-x-auto sm:left-0 sm:w-64"
         >
           {canNativeShare && (
             <button type="button" onClick={handleNativeShare} className={item}>

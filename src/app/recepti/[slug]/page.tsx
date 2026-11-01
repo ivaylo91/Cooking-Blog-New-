@@ -327,7 +327,7 @@ export default async function RecipePage({
               })}
             </dl>
             {/* Keeping and passing it on belong where the cook decides to make it. */}
-            <div className="mt-5 flex items-center gap-2 print:hidden">
+            <div className="relative mt-5 flex items-center gap-2 print:hidden">
               <PrintButton />
               <ShareButtons title={recipe.title} url={recipeUrl} />
             </div>
