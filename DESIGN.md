@@ -1,6 +1,6 @@
 ---
 name: Кулинарният блог на Иво
-description: Bulgarian home recipes as a warm, colourful food-magazine app. Coloured spreads, a steaming-pot logo, the photograph leads and a Lora serif names the dish.
+description: Bulgarian home recipes as a calm food magazine. Cream paper, generous photography, subtle category accents and Lora recipe titles.
 colors:
   tomato: "#c2410c"
   tomato-deep: "#9a3412"
@@ -8,18 +8,18 @@ colors:
   tomato-link: "#8f2f0a"
   on-tomato: "#ffffff"
   ink: "#2a1710"
-  paper: "#fff6ec"
-  surface: "#fffdfa"
-  counter-tint: "#fbeedd"
+  paper: "#fcfaf6"
+  surface: "#fffefa"
+  counter-tint: "#f3eee5"
   slate-grey: "#5a4234"
   field-border: "#8a7768"
-  peach: "#ffd8bf"
-  sage: "#d3ebc3"
-  butter: "#ffe69a"
-  rose: "#ffd3da"
-  wheat: "#f8deb4"
-  olive: "#e0e8ad"
-  sky: "#c9e6f5"
+  peach: "#f7e9dd"
+  sage: "#e8eee1"
+  butter: "#f5eed8"
+  rose: "#f3e5e7"
+  wheat: "#efe5d5"
+  olive: "#e9ecd9"
+  sky: "#e3edf1"
   ember: "#7a2410"
   on-ember: "#fff1e3"
   on-ember-muted: "#ffd8bf"
@@ -61,6 +61,21 @@ typography:
     fontWeight: 700
     lineHeight: 1.05
     letterSpacing: "-0.02em"
+  feature:
+    fontFamily: "Lora, ui-serif, Georgia, serif"
+    fontSize: "clamp(2rem, 1.4rem + 2vw, 3rem)"
+    fontWeight: 700
+    lineHeight: 1.15
+  section:
+    fontFamily: "Lora, ui-serif, Georgia, serif"
+    fontSize: "clamp(1.75rem, 1.5rem + 0.7vw, 2.125rem)"
+    fontWeight: 700
+    lineHeight: 1.2
+  card:
+    fontFamily: "Lora, ui-serif, Georgia, serif"
+    fontSize: "1.375rem"
+    fontWeight: 700
+    lineHeight: 1.3
   heading:
     fontFamily: "Lora, ui-serif, Georgia, serif"
     fontSize: "1.5rem"
@@ -89,7 +104,7 @@ rounded:
 spacing:
   gutter-mobile: "16px"
   gutter: "24px"
-  card-pad: "16px"
+  card-pad: "20px"
   panel-pad: "24px"
   panel-pad-wide: "40px"
   grid-gap-x: "24px"
@@ -155,14 +170,14 @@ components:
     padding: "0 16px"
     height: "48px"
   card-recipe:
-    backgroundColor: "{colors.peach}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     rounded: "{rounded.frame}"
-    padding: "16px"
+    padding: "20px"
   card-feature:
     backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.panel}"
+    rounded: "{rounded.frame}"
     padding: "40px"
   panel:
     backgroundColor: "{colors.counter-tint}"
@@ -191,9 +206,9 @@ components:
 
 ## Overview
 
-**Creative North Star: "Списание, warm edition: a food magazine you cook from"**
+**Creative North Star: "A quiet food magazine you cook from"**
 
-The blog reads like a contemporary food-magazine app on a phone, laid out in warm colour blocks the way a printed spread is. Pages run in full-width bands of peach, sage and butter on a warm cream ground, ending in a deep paprika footer. Each recipe category has its own food colour, carried by its cards, chips and recipe header. The food photograph still leads every surface. Lora, a contemporary text serif with full Cyrillic, names each dish in bold, sentence case, with tight display leading; Onest, drawn Cyrillic-first, sets everything you read and tap.
+The blog reads like a contemporary food magazine on warm cream paper, ending in a deep paprika footer. Food photographs carry most of the colour. Cards have neutral surfaces and fine borders; category colours appear in small labels, navigation dots and softly tinted recipe headers. The homepage uses a compact introduction, one featured dish, compact category links, latest recipes, highest-rated recipes, an author introduction and a quiet newsletter. Lora names each dish in bold sentence case; Onest sets reading text and controls.
 
 The brand mark is a drawn cooking pot with three wisps of steam in a tomato badge, beside "Кулинарният блог на Иво". The steam draws in once on load and rises in a loop while the logo is hovered.
 
@@ -202,10 +217,10 @@ Density is low and tap-first. The reader is a home cook at the counter, often at
 The world replaced the "Бакалия" grocery-label system, which was rejected as retro packaging. Retro, vintage-packaging and pastiche treatments are out. The only illustrative devices are the logo and the pinned doodle pattern, printed as a fine line band in the footer.
 
 **Key Characteristics:**
-- Warm full-width colour bands; one food colour per category.
+- Cream backgrounds with soft category accents and restrained shadows.
 - Steaming-pot logo in a tomato badge, also the favicon.
-- Photo first, 4:3 on every card, in 16px rounded frames on a card body in its category's food colour, with the category on a light pill.
-- Lora for display and headings, Onest for body and controls; exactly four type sizes; rank from weight and colour.
+- Photo first, 4:3 on grid cards, in 16px rounded frames on a neutral body; category colour stays inside a small label.
+- Lora for display and headings, Onest for body and controls; distinct page, feature, section and card title sizes.
 - Every recipe carries a byline: Иво's photo, name and real published/updated dates.
 - Tomato for the primary action and for progress or selected state; deep tomato for text links.
 - Bordered white form fields with a visible hover and a soft tomato focus halo.
@@ -214,7 +229,7 @@ The world replaced the "Бакалия" grocery-label system, which was rejected
 
 ## Colors
 
-Warm section colours set the mood; tomato is the one action colour; ink and grey carry text.
+Cream paper and soft section tints set the mood; tomato is the action colour; ink and warm grey carry text.
 
 ### Primary
 - **Tomato** (`tomato`): the filled primary action ("Готви стъпка по стъпка", "Запиши ме", "Търси", "Към рецептите"), the logo badge, finished-step circles, checked ingredient boxes, Cook Mode progress segments, filled rating stars, the reading-progress bar, the focus ring and field focus border, text selection and the caret. 5.2:1 with white text.
@@ -223,23 +238,23 @@ Warm section colours set the mood; tomato is the one action colour; ink and grey
 - **Tomato Wash** (`tomato-wash`): soft active backgrounds: the active nav pill, the "Продължете оттук" marker, the field focus halo, a liked heart and the ingredients used by the current Cook Mode step.
 
 ### Section and category colours
-- **Peach** (`peach`): page-title bands (home hero, recipes index, search, about, 404, error); the main-dishes category.
-- **Sage** (`sage`): the home categories band and the recipe ingredients panel; the salads category.
-- **Butter** (`butter`): the newsletter band and the "Как се получи?" panel; the soups category.
+- **Peach** (`peach`): soft page-title bands (recipes index, search, about, 404, error); the main-dishes category. The home hero uses cream paper.
+- **Sage** (`sage`): the recipe ingredients panel and salads category accents.
+- **Butter** (`butter`): the recipe newsletter and "Как се получи?" panel; the soups category. The homepage newsletter uses cream paper.
 - **Wheat** (`wheat`): the pastry category.
 - **Ember** (`ember`, with `on-ember`, `on-ember-muted`): the one deep colour, paprika, owning the footer. Focus rings there use `on-ember`, because tomato vanishes on it.
 - **Olive** (`olive`): the lenten category.
 - **Rose** (`rose`): the desserts category.
 - **Sky** (`sky`): the preserves category.
 
-Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. A recipe card's body, its category chip at rest and its recipe page header all wear that colour. The home feature card stays on `surface` so it stands out from the peach band, and category tiles carry a light ring so a tile matching its band still reads. Muted text (`slate-grey`, a warm brown #5a4234) clears 6.9:1 on every tint; links clear 6:1.
+Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. Card category labels and recipe page headers use those soft tints. All recipe cards use `surface`, a fine border and a subtle shadow. Home category links are neutral pills with a small tinted dot; the category name conveys the meaning without relying on colour.
 
 ### Secondary
 - **Herb Green** (`herb-green`, wash `herb-wash`): success messages only (rating saved, comment published, subscribed).
 
 ### Neutral
 - **Ink** (`ink`): all text and headings; the fill of selected chips, the current page number and the Cook Mode ingredients toggle when open.
-- **Paper** (`paper`, #fffcf8) and **Surface** (`surface`, #ffffff): the warm off-white page ground; pure white for form fields, pop-over menus, white cards that sit on a band (resume banner, empty states, servings stepper buttons).
+- **Paper** (`paper`, #fcfaf6) and **Surface** (`surface`, #fffefa): the warm off-white page ground and lighter cards. Form fields use their separate white field token.
 - **Counter Tint** (`counter-tint`): secondary pills, the segmented control track and skeletons.
 - **Slate Grey** (`slate-grey`): secondary text: descriptions, meta lines, fact labels, placeholders, counts.
 - **Field Border** (`field-border`): the resting 1.5px border of every input and checkbox; 3:1 against white.
@@ -263,15 +278,18 @@ Dark mode (system preference, or `data-theme="dark"` from the toggle) swaps each
 **Character:** One contemporary grotesk, Cyrillic-first, so Bulgarian sets as naturally as Latin. Weights do the ranking: 700 for names and headings, 600 for buttons, quantities and labels, 500 for links and chips, 400 for reading.
 
 ### Hierarchy
-- **Display** (700, `clamp(2.5rem, 1.9rem + 2.6vw, 3.75rem)`, 1.05): page titles, the recipe name, the home feature card's dish name, and the current step's text in Cook Mode (weight 500 there).
-- **Heading** (700, 1.5rem, 1.25): section titles, card titles, fact numerals, panel titles, mobile menu links, Cook Mode ingredient rows.
+- **Display** (700, `clamp(2.5rem, 1.9rem + 2.6vw, 3.75rem)`, 1.05): page titles, recipe names and current Cook Mode step text (weight 500 there).
+- **Feature** (700, 32–48px, 1.15): the homepage lead dish, larger than the introduction.
+- **Section** (700, 28–34px, 1.2): section headings, homepage introduction and newsletter headings.
+- **Card** (700, 22px, 1.3): grid recipe titles.
+- **Heading** (700, 24px, 1.25): panel titles, fact numerals, mobile menu links and Cook Mode ingredient rows.
 - **Body** (400, 1.0625rem / 17px, 1.6): all reading text, buttons, inputs. Method steps cap at 65ch.
 - **Small** (400, 0.875rem, 1.45): card meta rows, fact labels, group labels, tags, counters, copyright.
 
 h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use tabular figures wherever they line up.
 
 ### Named Rules
-**The Four Sizes Rule.** There are exactly four sizes, as the tokens `--text-display`, `--text-heading`, `--text-body`, `--text-small`. A new level of emphasis is made with weight or colour, never a fifth size.
+**The Type Hierarchy Rule.** Use the named display, feature, section, heading, card, body and small tokens. Section headings must read more prominently than card titles. The homepage introduction remains smaller than the featured dish title.
 
 **The Sentence Case Rule.** Every label, button and heading is sentence case. No uppercase, no letter-spaced caps.
 
@@ -279,7 +297,7 @@ h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use ta
 
 Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), each holding the single centred 72rem column (`max-w-6xl`) with a 16px gutter on phones and 24px from 640px. Header is a 64px sticky white bar with a translucent blur. Card grids are 1 / 2 / 3 columns at <640 / 640 / 1024px, with 24px horizontal and 40px vertical gaps.
 
-**Home.** Peach band: display headline, one line, the resume banner when a dish is in progress, and the feature card. Sage band: category tiles in cook's order, each in its category colour with name, count and arrow. Plain bands: "Най-високо оценени" (when any recipe is rated) as a swipeable scroll-snap shelf, then "Последни рецепти" as the grid. Butter band: newsletter. Wheat footer.
+**Home.** Cream opening: compact introduction, resume banner when cooking is in progress, and a 7/5 photo-and-text feature with a clear "Виж рецептата" action. Compact category links in cook's order sit between fine rules. "Последни рецепти" comes next in a grid, followed by a swipeable "Най-високо оценени" shelf when ratings exist. A muted neutral band introduces Ivo with his real portrait and a link to About. A cream newsletter precedes the paprika footer. Main sections use 48px vertical padding on phones and 64px from 640px. Recipe grids use 24px horizontal and 40px vertical gaps, matching the index. Do not render an empty latest grid when the sole recipe is already featured.
 
 **Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 40svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, the byline (44px portrait linking to /za-ivo, "Иво, сготвено и снимано в моята кухня", published and, when later, updated dates in `<time>`), then the facts (total, prep, cook, servings, difficulty) with print and share directly under them. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a sage panel beside the method that sticks only when the whole list fits the viewport (`StickyIfFits`), so a long list is never clipped. Tags follow the method as one line of plain text; the butter "Как се получи?" panel holds the rating and the like button; then comments, related recipes and the butter newsletter band. Print shows the recipe header and a line with the blog name and recipe URL; the site header and footer are hidden.
 
@@ -289,7 +307,7 @@ Anchors offset by 7.5rem so they land below the sticky header and tab bar.
 
 ## Elevation & Depth
 
-Depth comes from colour bands first and soft shadows second.
+Depth comes from fine borders, neutral surfaces and restrained warm shadows.
 
 Shadows are tinted towards the warm palette (rgba(74, 32, 12, ...)) rather than neutral black.
 
@@ -302,7 +320,7 @@ The sticky header and tab bar use `background` at 90% with `backdrop-blur-md` in
 
 ## Shapes
 
-Photographs and cards sit in 16px frames; large panels and the feature card in 24px; form fields in 14px; every button, chip, search field, icon button, step number and pagination item is a full pill or circle (999px). Inner rows use 12px. Ingredient checkboxes are 24px squares at 6px. The logo badge is a 14/48 rounded square.
+Photographs and cards, including the feature card, sit in 16px frames; large panels use 24px; form fields use 14px; every button, chip, search field, icon button, step number and pagination item is a full pill or circle (999px). Inner rows use 12px. Ingredient checkboxes are 24px squares at 6px. The logo badge is a 14/48 rounded square.
 
 ## Motion
 
@@ -310,7 +328,7 @@ Keyframes and utilities live in `globals.css`; all use `--ease-out-expo` and sta
 - **Rise** (`animate-rise`): page titles, cards (staggered 60ms per card, capped at six), menus, the filter panel, the resume banner, Cook Mode opening.
 - **Pop** (`animate-pop`): checkbox ticks, finished-step checks, filled rating stars, a liked heart, the search clear button, success messages.
 - **Slide** (`animate-slide-next`, `animate-slide-prev`): the Cook Mode step text, from the side you moved towards.
-- **Lift**: recipe cards rise 4px with a deeper shadow on hover; the photo never moves.
+- **Lift**: recipe cards rise 2px with a subtle deeper shadow on hover; the photo never moves.
 - **Press**: buttons and chips scale to 0.95–0.97 while pressed.
 - **Logo steam**: draws in once on load; rises in a loop while the logo is hovered.
 - **Segmented control**: the indicator slides between halves. The active half is tracked with an IntersectionObserver, never a scroll listener.
@@ -341,9 +359,9 @@ Every text field has one, as a short example or hint in `--placeholder` (5.5:1).
 - **State:** selected chips invert to ink fill with paper text. Category chips scroll sideways in one row on a phone. A tomato count badge appears on the "Време и трудност" disclosure when filters inside it are active. Recipe tags are plain text ("Етикети: …"), never pill-shaped, since they are not interactive.
 
 ### Cards / Containers
-- **Recipe card:** 16px corner, body in the category colour with the name on a light pill, card shadow; 4:3 photo flush to the top; 16px text pad with a heading-size title and a small grey meta row: category, then clock + minutes, people + servings and star + rating, spaced 12px apart with 14px icons (no separator dots). Hover lifts the card.
-- **Feature card:** 24px corner, white body, photo on the left 7/12 from 768px, display-size name on the right.
-- **Category tile:** 16px corner in the category colour, name, recipe count and an arrow.
+- **Recipe card:** 16px corner, neutral body, fine border and quiet shadow; 4:3 photo flush to the top; 20px text padding and a 22px title. The small meta row sits at the bottom of the card body: tinted category label, clock + minutes, star + rating. Hover lifts the card 2px.
+- **Feature card:** 16px corner, neutral body and fine border; photo on the left 7/12 from 768px with a 22rem minimum height; 32–48px dish name, description, metadata and tomato "Виж рецептата" affordance on the right. The whole card is one link, without nested interactive controls.
+- **Home category link:** neutral bordered pill, at least 44px high, with a small category-colour dot and a text label. Links wrap on phones.
 - **Panels:** 24px corner, 24px padding, card shadow: sage ingredients, butter rating; white for empty states.
 
 ### Inputs / Fields
@@ -354,7 +372,7 @@ The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radiu
 - **Invalid** (`:user-invalid`): error-red border and halo, only after the visitor has interacted.
 - **Search** (`SearchField`): leading search icon, a clear button once there is text, "/" focuses the header field from anywhere (with a `/` hint on desktop). 44px in the header; 56px with a "Търси" button on the search page.
 - **Comment form:** 48px name field, resizable textarea with a live "N / 1000" counter that turns red past 90%.
-- **Newsletter:** pill field and tomato button on the butter band.
+- **Newsletter:** pill field and tomato button, on cream on the homepage and soft butter on recipe pages.
 - Errors show in deep error red under the field; success in herb green.
 
 ### Navigation
@@ -379,20 +397,20 @@ A peach band that answers who and what: "Здравейте, аз съм Иво"
 `keepShortWords()` (`src/lib/typography.ts`) ties one-letter words (в, с, и, а, о, у, к) to the next word with a non-breaking space in headlines, descriptions, steps and About copy, so none dangles at a line end.
 
 ### Resume banner
-On the home page only, in the browser that was cooking within the last week: a white 16px-rounded card with a card shadow on the peach band, "Продължете: {dish} · стъпка N" in tomato link, and a 44px dismiss circle.
+On the home page only, in the browser that was cooking within the last week: a neutral 16px-rounded card with a quiet shadow, "Продължете: {dish} · стъпка N" in tomato link, and a 44px dismiss circle.
 
 ### Doodle band
 The pinned doodle pattern (whisk, herb sprig, steam, citrus, soup bowl, basil and tomatoes) in 2.2px single-weight line, at reduced opacity, filling an 80px strip at the top of the wheat footer. Nothing else sits on it.
 
 ### Admin (scoped exception)
-`src/app/admin/**` and `src/components/admin/**` inherit the colour and font tokens only. They are not held to the four-size scale or these component patterns, and `--stamp`, `--kraft`, `--brand` remain defined in `globals.css` solely for them.
+`src/app/admin/**` and `src/components/admin/**` inherit the colour and font tokens only. They are not held to these component patterns, and `--stamp`, `--kraft`, `--brand` remain defined in `globals.css` solely for them.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** build pages from full-width colour bands and give every category its food colour via `categoryTint`.
+- **Do** build pages around cream backgrounds and use `categoryTint` for restrained category accents and soft recipe-page surfaces.
 - **Do** let the photograph lead: 4:3 on every card, edge to edge at 40svh on the phone recipe page.
-- **Do** use only the four type tokens and rank with weight and colour.
+- **Do** use the named type tokens, with section headings larger than card titles.
 - **Do** use `text-link` for accent-coloured text and `tomato` for fills.
 - **Do** use the `.field` class for every input so hover, focus and invalid states match.
 - **Do** make every tap target at least 44px, and whole rows tappable where a wet hand needs them.
@@ -406,7 +424,7 @@ The pinned doodle pattern (whisk, herb sprig, steam, citrus, soup bowl, basil an
 - **Don't** zoom, scale or pan images on hover.
 - **Don't** return to retro, vintage-packaging or pastiche treatments: no condensed caps, stamps, square label frames or kraft paper.
 - **Don't** set text in uppercase or letter-spaced caps.
-- **Don't** add a fifth type size.
+- **Don't** introduce arbitrary type sizes outside the named scale.
 - **Don't** set tomato (`#c2410c`) as text on a section tint; it fails contrast.
 - **Don't** fill a section background with tomato.
 - **Don't** place the doodle pattern behind any text.

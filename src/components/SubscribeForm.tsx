@@ -32,7 +32,7 @@ export function SubscribeForm() {
       className="grid gap-6 md:grid-cols-[1fr_1.1fr] md:items-center"
     >
       <div>
-        <h2 id="subscribe-head" className="text-heading font-bold">
+        <h2 id="subscribe-head" className="text-section font-bold">
           Нови рецепти в пощата
         </h2>
         <p className="mt-2 max-w-md text-muted-foreground">

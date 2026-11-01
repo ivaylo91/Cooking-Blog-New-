@@ -15,7 +15,7 @@ export function SectionHead({
 }) {
   return (
     <div className="mb-6 flex flex-wrap items-end justify-between gap-x-6 gap-y-1">
-      <Tag id={id} className="text-heading font-bold">
+      <Tag id={id} className="font-heading text-section font-bold">
         {title}
       </Tag>
       {action && (
