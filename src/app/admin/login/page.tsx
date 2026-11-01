@@ -1,5 +1,8 @@
+import type { Metadata } from "next";
 import { Lock } from "lucide-react";
 import { LoginForm } from "@/components/admin/LoginForm";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default async function LoginPage({
   searchParams,
@@ -23,7 +26,7 @@ export default async function LoginPage({
 
         {error && (
           <p role="alert" className="mt-5 rounded-xl border border-destructive-border bg-destructive-soft px-3 py-2 text-small font-medium text-destructive-strong">
-            {error}
+            Грешен имейл или парола.
           </p>
         )}
 

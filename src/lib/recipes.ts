@@ -279,7 +279,7 @@ export async function getRecipeComments(recipeId: string): Promise<Comment[]> {
 
   const { data, error } = await publicClient
     .from("comments")
-    .select("*")
+    .select("id, recipe_id, author_name, text, created_at")
     .eq("recipe_id", recipeId)
     .order("created_at", { ascending: false });
   if (error) throw error;

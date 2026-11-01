@@ -6,6 +6,20 @@ import { createClient } from "@/lib/supabase/server";
 import { COMMENTS_TAG, RECIPES_TAG } from "@/lib/recipes";
 import type { RecipeFormInput } from "@/types/recipe";
 
+/**
+ * Server actions are public endpoints, so each one checks the session itself
+ * rather than relying on the page that renders its form. Row-level security
+ * is the second lock: only accounts in `admins` can write.
+ */
+async function requireSession() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/admin/login");
+  return { supabase, user };
+}
+
 export async function login(formData: FormData) {
   const email = String(formData.get("email"));
   const password = String(formData.get("password"));
@@ -13,8 +27,9 @@ export async function login(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
 
+  // A flag, not a message: text in a URL could be crafted to mislead the admin.
   if (error) {
-    redirect(`/admin/login?error=${encodeURIComponent(error.message)}`);
+    redirect("/admin/login?error=1");
   }
 
   redirect("/admin?welcome=1");
@@ -92,11 +107,7 @@ async function replaceIngredientsAndSteps(recipeId: string, input: RecipeFormInp
 }
 
 export async function createRecipe(input: RecipeFormInput) {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { supabase, user } = await requireSession();
 
   const { data: recipe, error } = await supabase
     .from("recipes")
@@ -112,7 +123,7 @@ export async function createRecipe(input: RecipeFormInput) {
       servings: input.servings,
       image_path: input.image_path,
       published: input.published,
-      author_id: user?.id,
+      author_id: user.id,
     })
     .select("id")
     .single();
@@ -126,7 +137,7 @@ export async function createRecipe(input: RecipeFormInput) {
 }
 
 export async function updateRecipe(id: string, input: RecipeFormInput) {
-  const supabase = await createClient();
+  const { supabase } = await requireSession();
 
   const { error } = await supabase
     .from("recipes")
@@ -154,21 +165,21 @@ export async function updateRecipe(id: string, input: RecipeFormInput) {
 }
 
 export async function deleteRecipe(id: string) {
-  const supabase = await createClient();
+  const { supabase } = await requireSession();
   const { error } = await supabase.from("recipes").delete().eq("id", id);
   if (error) throw error;
   updateTag(RECIPES_TAG);
 }
 
 export async function togglePublish(id: string, published: boolean) {
-  const supabase = await createClient();
+  const { supabase } = await requireSession();
   const { error } = await supabase.from("recipes").update({ published }).eq("id", id);
   if (error) throw error;
   updateTag(RECIPES_TAG);
 }
 
 export async function deleteComment(id: string) {
-  const supabase = await createClient();
+  const { supabase } = await requireSession();
   const { error } = await supabase.from("comments").delete().eq("id", id);
   if (error) throw error;
   updateTag(COMMENTS_TAG);
@@ -177,7 +188,7 @@ export async function deleteComment(id: string) {
 // The subscribers page reads through the session client and is never cached,
 // so the next render already reflects the delete.
 export async function deleteSubscriber(id: string) {
-  const supabase = await createClient();
+  const { supabase } = await requireSession();
   const { error } = await supabase.from("subscribers").delete().eq("id", id);
   if (error) throw error;
 }

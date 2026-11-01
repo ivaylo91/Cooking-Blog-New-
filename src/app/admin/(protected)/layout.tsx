@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ExternalLink, LogOut } from "lucide-react";
@@ -7,6 +8,8 @@ import { WelcomeToast } from "@/components/admin/WelcomeToast";
 
 const quietLink =
   "flex h-11 items-center gap-2 rounded-full px-3 font-medium text-muted-foreground transition-colors hover:bg-surface-muted hover:text-foreground";
+
+export const metadata: Metadata = { robots: { index: false, follow: false } };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -6,7 +6,9 @@ import { updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { RECIPES_TAG } from "@/lib/recipes";
 
-const IP_HASH_SALT = "kbi-comment-salt-v1";
+// Set IP_HASH_SALT in the environment: a salt committed to the repository
+// doesn't stop anyone turning a stored hash back into an IPv4 address.
+const IP_HASH_SALT = process.env.IP_HASH_SALT ?? "kbi-comment-salt-v1";
 const MIN_SUBMIT_SECONDS = 2;
 const MAX_COMMENTS_PER_WINDOW = 3;
 const RATE_WINDOW_SECONDS = 120;
@@ -68,9 +70,9 @@ export interface RatingActionState {
 }
 
 /**
- * One rating per IP per recipe. The unique constraint on (recipe_id, ip_hash)
- * turns a repeat vote into an update rather than a second vote, and a trigger
- * keeps recipes.rating_sum / rating_count exact.
+ * One rating per IP per recipe. `submit_rating` is the only way in: the unique
+ * constraint on (recipe_id, ip_hash) turns a repeat vote into an update rather
+ * than a second vote, and a trigger keeps recipes.rating_sum / rating_count exact.
  */
 export async function rateRecipe(
   recipeId: string,
@@ -86,12 +88,11 @@ export async function rateRecipe(
   const supabase = await createClient();
   const ipHash = await getIpHash();
 
-  const { error } = await supabase
-    .from("ratings")
-    .upsert(
-      { recipe_id: recipeId, value, ip_hash: ipHash, updated_at: new Date().toISOString() },
-      { onConflict: "recipe_id,ip_hash" }
-    );
+  const { error } = await supabase.rpc("submit_rating", {
+    p_recipe_id: recipeId,
+    p_value: value,
+    p_ip_hash: ipHash,
+  });
 
   if (error) return { status: "error", value: null };
 

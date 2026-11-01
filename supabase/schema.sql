@@ -4,6 +4,35 @@
 create extension if not exists "pgcrypto";
 
 -- ---------------------------------------------------------------------------
+-- Admins. Sign-up is a public endpoint, so being signed in proves nothing:
+-- every write policy below checks this list. After creating the owner's
+-- account, add it here: insert into public.admins select id from auth.users;
+-- ---------------------------------------------------------------------------
+create table if not exists public.admins (
+  user_id uuid primary key references auth.users (id) on delete cascade
+);
+alter table public.admins enable row level security;
+
+create policy "admins can see themselves" on public.admins
+  for select using (user_id = (select auth.uid()));
+
+revoke all on public.admins from anon, authenticated;
+grant select on public.admins to anon, authenticated;
+
+create or replace function public.is_admin()
+returns boolean
+language sql
+stable
+security invoker
+set search_path = ''
+as $$
+  select exists (select 1 from public.admins where user_id = (select auth.uid()));
+$$;
+
+revoke all on function public.is_admin() from public;
+grant execute on function public.is_admin() to anon, authenticated;
+
+-- ---------------------------------------------------------------------------
 -- Categories (Основни ястия, Супи, Салати, Десерти, Тестени, Постни, ...)
 -- ---------------------------------------------------------------------------
 create table if not exists categories (
@@ -131,86 +160,88 @@ alter table recipe_tags enable row level security;
 create policy "categories are publicly readable" on categories
   for select using (true);
 create policy "authenticated insert categories" on categories
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update categories" on categories
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete categories" on categories
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 create policy "tags are publicly readable" on tags
   for select using (true);
 create policy "authenticated insert tags" on tags
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update tags" on tags
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete tags" on tags
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 create policy "published recipes are publicly readable" on recipes
-  for select using (published = true or (select auth.role()) = 'authenticated');
+  for select using (published = true or (select public.is_admin()));
 create policy "authenticated insert recipes" on recipes
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update recipes" on recipes
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete recipes" on recipes
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 create policy "ingredients of visible recipes are readable" on ingredients
   for select using (
     exists (
       select 1 from recipes r
       where r.id = ingredients.recipe_id
-        and (r.published = true or (select auth.role()) = 'authenticated')
+        and (r.published = true or (select public.is_admin()))
     )
   );
 create policy "authenticated insert ingredients" on ingredients
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update ingredients" on ingredients
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete ingredients" on ingredients
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 create policy "steps of visible recipes are readable" on steps
   for select using (
     exists (
       select 1 from recipes r
       where r.id = steps.recipe_id
-        and (r.published = true or (select auth.role()) = 'authenticated')
+        and (r.published = true or (select public.is_admin()))
     )
   );
 create policy "authenticated insert steps" on steps
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update steps" on steps
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete steps" on steps
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 create policy "recipe_tags of visible recipes are readable" on recipe_tags
   for select using (
     exists (
       select 1 from recipes r
       where r.id = recipe_tags.recipe_id
-        and (r.published = true or (select auth.role()) = 'authenticated')
+        and (r.published = true or (select public.is_admin()))
     )
   );
 create policy "authenticated insert recipe_tags" on recipe_tags
-  for insert with check ((select auth.role()) = 'authenticated');
+  for insert with check ((select public.is_admin()));
 create policy "authenticated update recipe_tags" on recipe_tags
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete recipe_tags" on recipe_tags
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Storage bucket for recipe photos.
 -- Create it once (Storage > New bucket), name it exactly "recipe-images",
 -- mark it Public, then run the policies below.
 -- ---------------------------------------------------------------------------
+-- Photos only (no SVG, which can carry scripts): see security-step-1.sql for
+-- the 15 MB limit and allowed types set on the bucket.
 insert into storage.buckets (id, name, public)
 values ('recipe-images', 'recipe-images', true)
 on conflict (id) do nothing;
@@ -218,11 +249,11 @@ on conflict (id) do nothing;
 create policy "recipe images are publicly readable" on storage.objects
   for select using (bucket_id = 'recipe-images');
 create policy "authenticated upload recipe images" on storage.objects
-  for insert with check (bucket_id = 'recipe-images' and auth.role() = 'authenticated');
+  for insert with check (bucket_id = 'recipe-images' and (select public.is_admin()));
 create policy "authenticated update recipe images" on storage.objects
-  for update using (bucket_id = 'recipe-images' and auth.role() = 'authenticated');
+  for update using (bucket_id = 'recipe-images' and (select public.is_admin()));
 create policy "authenticated delete recipe images" on storage.objects
-  for delete using (bucket_id = 'recipe-images' and auth.role() = 'authenticated');
+  for delete using (bucket_id = 'recipe-images' and (select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Comments — public, anonymous comments on published recipes
@@ -246,7 +277,7 @@ create policy "comments on visible recipes are readable" on comments
     exists (
       select 1 from recipes r
       where r.id = comments.recipe_id
-        and (r.published = true or (select auth.role()) = 'authenticated')
+        and (r.published = true or (select public.is_admin()))
     )
   );
 
@@ -256,10 +287,10 @@ create policy "anyone can comment on published recipes" on comments
   );
 
 create policy "authenticated update comments" on comments
-  for update using ((select auth.role()) = 'authenticated')
-  with check ((select auth.role()) = 'authenticated');
+  for update using ((select public.is_admin()))
+  with check ((select public.is_admin()));
 create policy "authenticated delete comments" on comments
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Likes: anonymous, one increment per browser (enforced client-side via
@@ -348,26 +379,35 @@ create trigger ratings_sync
 
 alter table ratings enable row level security;
 
-create policy "ratings of visible recipes are readable" on ratings
-  for select using (
-    exists (
-      select 1 from recipes r
-      where r.id = ratings.recipe_id
-        and (r.published = true or (select auth.role()) = 'authenticated')
-    )
-  );
-create policy "anyone can rate a published recipe" on ratings
-  for insert with check (
-    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
-  );
-create policy "anyone can change their own rating" on ratings
-  for update using (
-    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
-  ) with check (
-    exists (select 1 from recipes r where r.id = ratings.recipe_id and r.published = true)
-  );
+-- Written only through submit_rating; pages read the totals on recipes.
+create policy "admins read ratings" on ratings
+  for select using ((select public.is_admin()));
+
+create or replace function public.submit_rating(p_recipe_id uuid, p_value int, p_ip_hash text)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  if p_value not between 1 and 5 then
+    raise exception 'rating out of range';
+  end if;
+  if not exists (select 1 from public.recipes where id = p_recipe_id and published) then
+    raise exception 'recipe not found';
+  end if;
+  insert into public.ratings (recipe_id, value, ip_hash, updated_at)
+  values (p_recipe_id, p_value, p_ip_hash, now())
+  on conflict (recipe_id, ip_hash)
+  do update set value = excluded.value, updated_at = now();
+end;
+$$;
+
+revoke all on function public.submit_rating(uuid, int, text) from public;
+grant execute on function public.submit_rating(uuid, int, text) to anon, authenticated;
+
 create policy "authenticated delete ratings" on ratings
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Newsletter subscribers. Anyone may sign up, but only the admin may read the
@@ -389,9 +429,9 @@ alter table subscribers enable row level security;
 create policy "anyone can subscribe" on subscribers
   for insert with check (true);
 create policy "only admins read subscribers" on subscribers
-  for select using ((select auth.role()) = 'authenticated');
+  for select using ((select public.is_admin()));
 create policy "authenticated delete subscribers" on subscribers
-  for delete using ((select auth.role()) = 'authenticated');
+  for delete using ((select public.is_admin()));
 
 -- ---------------------------------------------------------------------------
 -- Starter categories

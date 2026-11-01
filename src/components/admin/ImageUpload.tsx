@@ -6,6 +6,14 @@ import { ImageUp, Loader2, X } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { getImageUrl } from "@/lib/images";
 
+// Mirrors the limits on the storage bucket. SVG stays out: it can carry scripts.
+const ALLOWED_TYPES: Record<string, string> = {
+  "image/jpeg": "jpg",
+  "image/png": "png",
+  "image/webp": "webp",
+};
+const MAX_BYTES = 15 * 1024 * 1024;
+
 export function ImageUpload({
   path,
   onChange,
@@ -25,11 +33,20 @@ export function ImageUpload({
   const boxSize = compact ? "h-16 w-16" : "h-40 w-full max-w-xs sm:h-48";
 
   async function handleFile(file: File) {
+    const ext = ALLOWED_TYPES[file.type];
+    if (!ext) {
+      setError("Изберете снимка в JPG, PNG или WebP.");
+      return;
+    }
+    if (file.size > MAX_BYTES) {
+      setError("Снимката е твърде голяма (до 15 MB).");
+      return;
+    }
     setUploading(true);
     setError(null);
     try {
       const supabase = createClient();
-      const ext = file.name.split(".").pop();
+      // The extension comes from the checked type, never from the file name.
       const objectPath = `${folder}/${crypto.randomUUID()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("recipe-images")
@@ -100,7 +117,7 @@ export function ImageUpload({
         )}
         <input
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp"
           disabled={uploading}
           onChange={(e) => {
             const file = e.target.files?.[0];
