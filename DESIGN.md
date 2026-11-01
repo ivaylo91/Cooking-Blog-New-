@@ -373,7 +373,7 @@ A full-screen modal that rises in: dish name and a 48px close circle, 6px pill p
 A 44px pill ("Таймер: N мин", tomato icon, card shadow) under steps that name a duration. Running, it becomes a tomato-wash pill with the countdown and 44px pause and close controls.
 
 ### About page
-Peach band with the display headline and intro beside an upright 4:5 portrait of Иво (no tilt, no eyebrow). Below, "Как готвя" as four short first-person paragraphs at 65ch, then "Сготвихте ли някоя рецепта?" with the tomato "Към рецептите" button.
+A peach band that answers who and what: "Здравейте, аз съм Иво", one line on what is here, the live recipe and category count, the tomato "Към рецептите" button, and a square portrait cropped to head and shoulders. Below, "Как готвя" as four short principles under tomato rules (no cards, no icon tiles), "Започнете оттук" with the three newest recipes, and a butter band inviting comments. Every claim is one the owner has confirmed; counts come from live data, never typed in.
 
 ### Bulgarian typesetting
 `keepShortWords()` (`src/lib/typography.ts`) ties one-letter words (в, с, и, а, о, у, к) to the next word with a non-breaking space in headlines, descriptions, steps and About copy, so none dangles at a line end.
