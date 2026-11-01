@@ -38,16 +38,13 @@ export function RecipeCard({
     getPlaceholderVariant(recipe.id) === "salad" ? SaladIllustration : IngredientsIllustration;
   const rating =
     recipe.rating_count > 0 ? (recipe.rating_sum / recipe.rating_count).toFixed(1) : null;
-  // The category wears its food colour as a small pill, so the card itself
-  // can stay white and let the photo carry the colour. Time and rating are
-  // what a reader scans a grid for; servings wait for the recipe page.
+  // The whole card wears its category's food colour, with the name on a light
+  // pill. Time and rating are what a reader scans a grid for; servings wait
+  // for the recipe page.
   const meta = (
     <>
       {recipe.category?.name && (
-        <span
-          style={{ backgroundColor: categoryTint(recipe.category.slug) }}
-          className="rounded-full px-2.5 py-0.5 font-medium text-foreground"
-        >
+        <span className="rounded-full bg-surface px-2.5 py-0.5 font-medium text-foreground">
           {recipe.category.name}
         </span>
       )}
@@ -69,10 +66,13 @@ export function RecipeCard({
   const metaRow = "flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted-foreground tabular-nums";
   const isFeature = size === "feature";
   // The stagger is capped at six cards so a long grid never makes the reader wait.
-  const style = animate ? { animationDelay: `${Math.min(index, 6) * 60}ms` } : undefined;
+  const style = {
+    backgroundColor: categoryTint(recipe.category?.slug),
+    ...(animate ? { animationDelay: `${Math.min(index, 6) * 60}ms` } : {}),
+  };
   const enter = animate ? "animate-rise" : "";
   const lift =
-    "bg-surface shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
+    "shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
 
   if (isFeature) {
     // The lead story, magazine-style: a 7/5 split with the photo bleeding to
@@ -81,7 +81,8 @@ export function RecipeCard({
     return (
       <Link
         href={`/recepti/${recipe.slug}`}
-        style={style}
+        // On the coloured opening band, a light card keeps the lead story distinct.
+        style={{ ...style, backgroundColor: "var(--surface)" }}
         className={`${enter} group grid overflow-hidden rounded-3xl md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] ${lift}`}
       >
         <div className="relative aspect-[4/3] w-full md:aspect-auto md:min-h-[26rem]">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { startTransition, useActionState, useEffect, useRef, useState } from "react";
 import { Loader2, Send } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
 
@@ -31,7 +31,19 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
   }, [state]);
 
   return (
-    <form ref={formRef} action={formAction} className="flex flex-col gap-4">
+    <form
+      ref={formRef}
+      action={formAction}
+      // React clears a form after its action; handled here, a comment that
+      // fails or hits the rate limit stays in the box instead of being lost.
+      // Without JavaScript the plain action above still works.
+      onSubmit={(event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        startTransition(() => formAction(data));
+      }}
+      className="flex flex-col gap-4"
+    >
       <input type="hidden" name="form_rendered_at" value={renderedAt} />
       <input
         type="text"
@@ -55,8 +67,14 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           required
           maxLength={60}
           autoComplete="name"
+          autoCapitalize="words"
+          enterKeyHint="next"
+          aria-describedby="comment-name-hint"
           className={`${field} h-12`}
         />
+        <p id="comment-name-hint" className="text-small text-muted-foreground">
+          Ще се вижда до коментара.
+        </p>
       </div>
       <div className="flex flex-col gap-1.5">
         <label
@@ -97,7 +115,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 
-      <p aria-live="polite" className="min-h-6 font-medium">
+      <p role="status" className="min-h-6 font-medium">
         {state.status === "success" && (
           <span className="text-secondary">Коментарът е публикуван.</span>
         )}

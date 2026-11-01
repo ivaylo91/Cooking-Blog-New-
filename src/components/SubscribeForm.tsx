@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useRef } from "react";
+import { startTransition, useActionState, useEffect, useRef } from "react";
+import { Loader2 } from "lucide-react";
 import { subscribe, type SubscribeActionState } from "@/app/recepti/actions";
 
 const initialState: SubscribeActionState = { status: "idle" };
@@ -41,7 +42,18 @@ export function SubscribeForm() {
       </div>
 
       <div>
-        <form ref={formRef} action={formAction} className="flex flex-col gap-2 sm:flex-row">
+        <form
+          ref={formRef}
+          action={formAction}
+          // React clears a form after its action; handled here, a mistyped
+          // address stays in the field so it can be corrected. Without
+          // JavaScript the plain action above still works.
+          onSubmit={(event) => {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            startTransition(() => formAction(data));
+          }}
+        >
           {/* Honeypot: hidden from people, tempting to bots. */}
           <input
             type="text"
@@ -51,29 +63,38 @@ export function SubscribeForm() {
             aria-hidden="true"
             className="hidden"
           />
-          <label className="sr-only" htmlFor="subscribe-email">
+          <label className="mb-1.5 block font-semibold" htmlFor="subscribe-email">
             Имейл адрес
           </label>
-          <input
-            id="subscribe-email"
-            type="email"
-            name="email"
-            required
-            autoComplete="email"
-            placeholder="вашият@имейл.бг"
-            className="field field-pill h-14 min-w-0 px-5 text-body sm:flex-1"
-          />
-          <button
-            type="submit"
-            disabled={pending}
-            className="h-14 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
-          >
-            {pending ? "Записване…" : "Запиши ме"}
-          </button>
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              id="subscribe-email"
+              type="email"
+              name="email"
+              required
+              maxLength={254}
+              autoComplete="email"
+              autoCapitalize="none"
+              spellCheck={false}
+              enterKeyHint="send"
+              aria-invalid={isError}
+              aria-describedby="subscribe-status"
+              className="field field-pill h-14 min-w-0 px-5 text-body sm:flex-1"
+            />
+            <button
+              type="submit"
+              disabled={pending}
+              className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
+            >
+              {pending && <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />}
+              {pending ? "Записване…" : "Запиши ме"}
+            </button>
+          </div>
         </form>
 
         <p
-          aria-live="polite"
+          id="subscribe-status"
+          role="status"
           className={`mt-2 min-h-6 px-2 font-medium ${isError ? "text-destructive-strong" : "text-secondary"}`}
         >
           {state.status === "success" ? (

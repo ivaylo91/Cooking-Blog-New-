@@ -2,28 +2,29 @@
 
 /*
  * Списание, warm edition: a modern food-magazine app whose pages run in warm
- * coloured sections (peach, sage, butter) like a magazine spread. Each recipe
+ * coloured sections (peach, sage, butter) on a cream ground, like a magazine
+ * spread, with a deep paprika foot. Each recipe
  * category carries its own food colour. Tomato stays the action colour.
  */
 :root {
   color-scheme: light;
-  /* A warm off-white rather than pure white; cards stay #fff so they lift off it. */
-  --background: #fffcf8;
-  --foreground: #111111;
-  --surface: #ffffff;
-  --surface-muted: #f5f3ef;
-  --border-subtle: rgba(17, 17, 17, 0.1);
-  --rule: #e7e3dc;
-  /* 6.7:1 or better on every tinted section below. */
-  --muted-foreground: #4b4f55;
+  /* Warm cream ground: the page itself feels like a kitchen, not a document. */
+  --background: #fff6ec;
+  --foreground: #2a1710;
+  --surface: #fffdfa;
+  --surface-muted: #fbeedd;
+  --border-subtle: rgba(90, 45, 20, 0.14);
+  --rule: #efdcc6;
+  /* A warm brown, 6.9:1 or better on every tinted section below. */
+  --muted-foreground: #5a4234;
   /* Buttons: 5.2:1 with white text. */
   --accent: #c2410c;
   --accent-strong: #9a3412;
   --accent-foreground: #ffffff;
-  --accent-soft: #ffe9df;
+  --accent-soft: #ffdfcc;
   /* Tomato as text drops to ~4.2:1 on the tints, so links use the deeper tone. */
-  --link: #9a3412;
-  --secondary: #2f7a3f;
+  --link: #8f2f0a;
+  --secondary: #23632f;
   --secondary-soft: #e6f3e6;
   --destructive: #b91c1c;
   --destructive-strong: #991b1b;
@@ -31,16 +32,20 @@
   --destructive-border: #fecaca;
   /* Form fields: the resting border clears 3:1 against white, as controls must. */
   --field: #ffffff;
-  --field-border: #8f8a83;
+  --field-border: #8a7768;
   /* Warm section grounds, a magazine spread's colour blocks. */
-  --peach: #fde6d8;
-  --sage: #e2eedb;
-  --butter: #fdf0c4;
-  --rose: #fbe1e4;
-  --wheat: #f6e7cf;
-  --olive: #e8ecd0;
-  --sky: #dfecf3;
+  --peach: #ffd8bf;
+  --sage: #d3ebc3;
+  --butter: #ffe69a;
+  --rose: #ffd3da;
+  --wheat: #f8deb4;
+  --olive: #e0e8ad;
+  --sky: #c9e6f5;
   /* Shadows tinted towards the warm palette instead of neutral black. */
+  /* The one deep colour: paprika, anchoring the foot of every page. */
+  --ember: #7a2410;
+  --on-ember: #fff1e3;
+  --on-ember-muted: #ffd8bf;
   --shadow-card: 0 1px 2px rgba(74, 32, 12, 0.07), 0 8px 24px -12px rgba(74, 32, 12, 0.2);
   --shadow-lift: 0 2px 4px rgba(74, 32, 12, 0.07), 0 18px 36px -14px rgba(74, 32, 12, 0.3);
   /* Kept for the admin, which inherits tokens only. */
@@ -77,6 +82,9 @@
   --color-wheat: var(--wheat);
   --color-olive: var(--olive);
   --color-sky: var(--sky);
+  --color-ember: var(--ember);
+  --color-on-ember: var(--on-ember);
+  --color-on-ember-muted: var(--on-ember-muted);
   --color-stamp: var(--stamp);
   --color-kraft: var(--kraft);
   --color-brand: var(--brand);
@@ -101,13 +109,13 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     color-scheme: dark;
-    --background: #121212;
-    --foreground: #f4f1ec;
-    --surface: #1c1c1c;
-    --surface-muted: #1f1d1b;
-    --border-subtle: rgba(244, 241, 236, 0.12);
-    --rule: #2c2a27;
-    --muted-foreground: #b3b0aa;
+    --background: #1a1210;
+    --foreground: #f8eee4;
+    --surface: #241914;
+    --surface-muted: #2c201a;
+    --border-subtle: rgba(248, 238, 228, 0.14);
+    --rule: #3a2b22;
+    --muted-foreground: #cdbcae;
     --accent: #ff7a45;
     --accent-strong: #ff9a6e;
     --accent-foreground: #121212;
@@ -119,15 +127,16 @@
     --destructive-strong: #fca5a5;
     --destructive-soft: rgba(248, 113, 113, 0.12);
     --destructive-border: rgba(248, 113, 113, 0.3);
-    --field: #1c1c1c;
-    --field-border: #77736d;
-    --peach: #2b1d16;
-    --sage: #1b2618;
-    --butter: #2a2412;
-    --rose: #2b1a1d;
-    --wheat: #29211a;
-    --olive: #22251a;
-    --sky: #17222a;
+    --field: #241914;
+    --field-border: #8a7a6e;
+    --peach: #3d2417;
+    --sage: #223320;
+    --butter: #3b3014;
+    --rose: #3d2025;
+    --wheat: #38291b;
+    --olive: #2f3319;
+    --sky: #1b303c;
+    --ember: #3a1408;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
     --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 18px 36px -14px rgba(0, 0, 0, 0.8);
     --kraft: #1f1d1b;
@@ -137,13 +146,13 @@
 
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --background: #121212;
-  --foreground: #f4f1ec;
-  --surface: #1c1c1c;
-  --surface-muted: #1f1d1b;
-  --border-subtle: rgba(244, 241, 236, 0.12);
-  --rule: #2c2a27;
-  --muted-foreground: #b3b0aa;
+  --background: #1a1210;
+  --foreground: #f8eee4;
+  --surface: #241914;
+  --surface-muted: #2c201a;
+  --border-subtle: rgba(248, 238, 228, 0.14);
+  --rule: #3a2b22;
+  --muted-foreground: #cdbcae;
   --accent: #ff7a45;
   --accent-strong: #ff9a6e;
   --accent-foreground: #121212;
@@ -155,15 +164,16 @@
   --destructive-strong: #fca5a5;
   --destructive-soft: rgba(248, 113, 113, 0.12);
   --destructive-border: rgba(248, 113, 113, 0.3);
-  --field: #1c1c1c;
-  --field-border: #77736d;
-  --peach: #2b1d16;
-  --sage: #1b2618;
-  --butter: #2a2412;
-  --rose: #2b1a1d;
-  --wheat: #29211a;
-  --olive: #22251a;
-  --sky: #17222a;
+  --field: #241914;
+  --field-border: #8a7a6e;
+  --peach: #3d2417;
+  --sage: #223320;
+  --butter: #3b3014;
+  --rose: #3d2025;
+  --wheat: #38291b;
+  --olive: #2f3319;
+  --sky: #1b303c;
+  --ember: #3a1408;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.5), 0 8px 24px -12px rgba(0, 0, 0, 0.7);
   --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.5), 0 18px 36px -14px rgba(0, 0, 0, 0.8);
   --kraft: #1f1d1b;
@@ -464,3 +474,8 @@ input[type="checkbox"]:focus-visible,
 
 /* Print hides only the site's own chrome (marked print:hidden on the header
    and footer); the recipe's header with its name and facts must print. */
+
+/* Tomato vanishes on paprika, so the footer's focus ring uses its light ink. */
+footer :focus-visible {
+  outline-color: var(--on-ember);
+}

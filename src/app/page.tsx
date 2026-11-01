@@ -85,7 +85,7 @@ export default async function Home() {
                   backgroundColor: categoryTint(category.slug),
                   animationDelay: `${index * 50}ms`,
                 }}
-                className="animate-rise group flex h-full min-h-36 flex-col justify-between gap-3 rounded-2xl p-4 shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift"
+                className="animate-rise group flex h-full min-h-36 flex-col justify-between gap-3 rounded-2xl p-4 shadow-card ring-2 ring-surface transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-1 hover:shadow-lift"
               >
                 <span className="flex items-start justify-between">
                   {/* A taste of the shelf: its newest dish, when it has a photo. */}

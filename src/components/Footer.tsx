@@ -23,16 +23,16 @@ export async function Footer() {
   const categories = inCooksOrder(await getNavCategories());
 
   return (
-    <footer className="bg-wheat print:hidden">
+    <footer className="bg-ember text-on-ember print:hidden">
       {/* The doodle band sits in its own strip so no text ever lands on it. */}
-      <div className="relative h-20 text-muted-foreground">
+      <div className="relative h-20 text-on-ember-muted">
         <CookingBackground className="absolute inset-0" opacity={0.45} scale={0.4} />
       </div>
 
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:px-6 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_auto] md:items-start">
         <div>
           <p className="font-heading text-heading font-bold">Кулинарният блог на Иво</p>
-          <p className="mt-2 max-w-md text-muted-foreground">
+          <p className="mt-2 max-w-md text-on-ember-muted">
             Домашни рецепти, изпробвани в собствената ми кухня. За всеки, който
             обича да готви за удоволствие.
           </p>
@@ -41,7 +41,7 @@ export async function Footer() {
         {/* Every shelf one tap away from the bottom of any page. */}
         {categories.length > 0 && (
           <nav aria-labelledby="footer-categories">
-            <p id="footer-categories" className="text-small font-semibold text-muted-foreground">
+            <p id="footer-categories" className="text-small font-semibold text-on-ember-muted">
               Категории
             </p>
             <ul className="mt-1 grid grid-cols-2 gap-x-6">
@@ -62,7 +62,7 @@ export async function Footer() {
         {/* Labelled and styled like the category column beside it, so the two
             line up as a pair. */}
         <nav aria-labelledby="footer-blog">
-          <p id="footer-blog" className="text-small font-semibold text-muted-foreground">
+          <p id="footer-blog" className="text-small font-semibold text-on-ember-muted">
             Блогът
           </p>
           <ul className="mt-1 grid grid-cols-2 gap-x-6 md:grid-cols-1">
@@ -83,7 +83,7 @@ export async function Footer() {
         </nav>
       </div>
 
-      <p className="mx-auto max-w-6xl px-4 pb-8 text-small text-muted-foreground tabular-nums sm:px-6">
+      <p className="mx-auto max-w-6xl px-4 pb-8 text-small text-on-ember-muted tabular-nums sm:px-6">
         © <CopyrightYear /> Кулинарният блог на Иво
       </p>
     </footer>

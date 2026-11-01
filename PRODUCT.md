@@ -39,6 +39,7 @@ Every recipe is tested in Иво's own kitchen and photographed there, by him. T
 - The terracotta accent, the current fonts and the current layout are not binding and may be replaced.
 - The blog must feel contemporary. The "Бакалия" grocery-label world (2026-10-10) was rejected on 2026-10-12 because it read as retro packaging rather than modern; do not return to retro, vintage-packaging or pastiche worlds.
 - On 2026-10-12 the owner asked for more colour, a logo, animation and better inputs on the "Списание" world. Brand commitments from that round: warm and colourful overall (full-width peach, sage and butter sections; one food colour per category), and a logo of a drawn cooking pot with rising steam in a tomato badge beside the blog name (`src/components/Logo.tsx`, also the favicon). Do not return to a colourless white-and-grey interface or remove the logo.
+- On 2026-11-01 the owner again asked for a more colourful and warm blog, after a pass had turned cards and panels white. Colour at scale is the standing direction: cream ground, cards in their category colour, coloured panels, a deep paprika footer. Do not calm these back to white without being asked.
 - Voice: plain, warm Bulgarian with kitchen idiom. The 404 line "Тази страница липсва от менюто" is the reference for tone.
 
 ## Evidence on Hand

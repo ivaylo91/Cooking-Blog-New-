@@ -311,7 +311,7 @@ export default async function RecipePage({
                 return (
                   <div key={fact.label}>
                     <dt className="flex items-center gap-1.5 text-small text-muted-foreground">
-                      <Icon size={15} aria-hidden="true" />
+                      <Icon size={15} aria-hidden="true" className="text-link" />
                       {fact.label}
                     </dt>
                     <dd className="mt-0.5 text-heading font-bold">
@@ -347,7 +347,7 @@ export default async function RecipePage({
           className="grid gap-14 py-8 md:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] md:gap-12 md:py-10 lg:grid-cols-[minmax(0,25rem)_minmax(0,1fr)] lg:gap-16 print:grid-cols-1"
         >
           <StickyIfFits
-            className="self-start rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 print:static print:border-none print:bg-transparent print:p-0 print:shadow-none"
+            className="self-start rounded-3xl bg-sage p-5 shadow-card sm:p-6 print:static print:bg-transparent print:p-0 print:shadow-none"
             stickyClassName="md:sticky md:top-24"
           >
             <RecipeIngredients
@@ -389,7 +389,7 @@ export default async function RecipePage({
             )}
 
             {/* Asked after cooking, not before: rating, keeping and passing it on. */}
-            <div className="mt-10 rounded-3xl border border-border-subtle bg-surface p-5 shadow-card sm:p-6 print:hidden">
+            <div className="mt-10 rounded-3xl bg-butter p-5 shadow-card sm:p-6 print:hidden">
               <h2 className="text-heading font-bold">Как се получи?</h2>
               <div className="mt-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-3">
                 <RatingStars

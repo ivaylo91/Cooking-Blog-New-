@@ -4,25 +4,29 @@ description: Bulgarian home recipes as a warm, colourful food-magazine app. Colo
 colors:
   tomato: "#c2410c"
   tomato-deep: "#9a3412"
-  tomato-wash: "#ffe9df"
-  tomato-link: "#9a3412"
+  tomato-wash: "#ffdfcc"
+  tomato-link: "#8f2f0a"
   on-tomato: "#ffffff"
-  ink: "#111111"
-  paper: "#fffcf8"
-  surface: "#ffffff"
-  counter-tint: "#f5f3ef"
-  slate-grey: "#4b4f55"
-  field-border: "#8f8a83"
-  peach: "#fde6d8"
-  sage: "#e2eedb"
-  butter: "#fdf0c4"
-  rose: "#fbe1e4"
-  wheat: "#f6e7cf"
-  olive: "#e8ecd0"
-  sky: "#dfecf3"
-  hairline: "rgba(17, 17, 17, 0.1)"
-  rule: "#e7e3dc"
-  herb-green: "#2f7a3f"
+  ink: "#2a1710"
+  paper: "#fff6ec"
+  surface: "#fffdfa"
+  counter-tint: "#fbeedd"
+  slate-grey: "#5a4234"
+  field-border: "#8a7768"
+  peach: "#ffd8bf"
+  sage: "#d3ebc3"
+  butter: "#ffe69a"
+  rose: "#ffd3da"
+  wheat: "#f8deb4"
+  olive: "#e0e8ad"
+  sky: "#c9e6f5"
+  ember: "#7a2410"
+  on-ember: "#fff1e3"
+  on-ember-muted: "#ffd8bf"
+  ember-evening: "#3a1408"
+  hairline: "rgba(90, 45, 20, 0.14)"
+  rule: "#efdcc6"
+  herb-green: "#23632f"
   herb-wash: "#e6f3e6"
   error-red: "#b91c1c"
   error-red-deep: "#991b1b"
@@ -33,19 +37,19 @@ colors:
   tomato-wash-evening: "rgba(255, 122, 69, 0.16)"
   tomato-link-evening: "#ff9a6e"
   on-tomato-evening: "#121212"
-  ink-evening: "#f4f1ec"
-  paper-evening: "#121212"
-  surface-evening: "#1c1c1c"
-  counter-tint-evening: "#1f1d1b"
-  slate-grey-evening: "#b3b0aa"
-  field-border-evening: "#77736d"
-  peach-evening: "#2b1d16"
-  sage-evening: "#1b2618"
-  butter-evening: "#2a2412"
-  rose-evening: "#2b1a1d"
-  wheat-evening: "#29211a"
-  olive-evening: "#22251a"
-  sky-evening: "#17222a"
+  ink-evening: "#f8eee4"
+  paper-evening: "#1a1210"
+  surface-evening: "#241914"
+  counter-tint-evening: "#2c201a"
+  slate-grey-evening: "#cdbcae"
+  field-border-evening: "#8a7a6e"
+  peach-evening: "#3d2417"
+  sage-evening: "#223320"
+  butter-evening: "#3b3014"
+  rose-evening: "#3d2025"
+  wheat-evening: "#38291b"
+  olive-evening: "#2f3319"
+  sky-evening: "#1b303c"
   hairline-evening: "rgba(244, 241, 236, 0.12)"
   rule-evening: "#2c2c2c"
   herb-green-evening: "#4ade80"
@@ -156,7 +160,7 @@ components:
     rounded: "{rounded.frame}"
     padding: "16px"
   card-feature:
-    backgroundColor: "{colors.butter}"
+    backgroundColor: "{colors.surface}"
     textColor: "{colors.ink}"
     rounded: "{rounded.panel}"
     padding: "40px"
@@ -189,7 +193,7 @@ components:
 
 **Creative North Star: "Списание, warm edition: a food magazine you cook from"**
 
-The blog reads like a contemporary food-magazine app on a phone, laid out in warm colour blocks the way a printed spread is. Pages run in full-width bands of peach, sage and butter. Each recipe category has its own food colour, carried by its cards, chips and recipe header. The food photograph still leads every surface. Lora, a contemporary text serif with full Cyrillic, names each dish in bold, sentence case, with tight display leading; Onest, drawn Cyrillic-first, sets everything you read and tap.
+The blog reads like a contemporary food-magazine app on a phone, laid out in warm colour blocks the way a printed spread is. Pages run in full-width bands of peach, sage and butter on a warm cream ground, ending in a deep paprika footer. Each recipe category has its own food colour, carried by its cards, chips and recipe header. The food photograph still leads every surface. Lora, a contemporary text serif with full Cyrillic, names each dish in bold, sentence case, with tight display leading; Onest, drawn Cyrillic-first, sets everything you read and tap.
 
 The brand mark is a drawn cooking pot with three wisps of steam in a tomato badge, beside "Кулинарният блог на Иво". The steam draws in once on load and rises in a loop while the logo is hovered.
 
@@ -200,7 +204,7 @@ The world replaced the "Бакалия" grocery-label system, which was rejected
 **Key Characteristics:**
 - Warm full-width colour bands; one food colour per category.
 - Steaming-pot logo in a tomato badge, also the favicon.
-- Photo first, 4:3 on every card, in 16px rounded frames on a white card with a category-colour pill.
+- Photo first, 4:3 on every card, in 16px rounded frames on a card body in its category's food colour, with the category on a light pill.
 - Lora for display and headings, Onest for body and controls; exactly four type sizes; rank from weight and colour.
 - Every recipe carries a byline: Иво's photo, name and real published/updated dates.
 - Tomato for the primary action and for progress or selected state; deep tomato for text links.
@@ -220,14 +224,15 @@ Warm section colours set the mood; tomato is the one action colour; ink and grey
 
 ### Section and category colours
 - **Peach** (`peach`): page-title bands (home hero, recipes index, search, about, 404, error); the main-dishes category.
-- **Sage** (`sage`): the home categories band; the salads category.
-- **Butter** (`butter`): the newsletter band; the soups category.
-- **Wheat** (`wheat`): the footer; the pastry category.
+- **Sage** (`sage`): the home categories band and the recipe ingredients panel; the salads category.
+- **Butter** (`butter`): the newsletter band and the "Как се получи?" panel; the soups category.
+- **Wheat** (`wheat`): the pastry category.
+- **Ember** (`ember`, with `on-ember`, `on-ember-muted`): the one deep colour, paprika, owning the footer. Focus rings there use `on-ember`, because tomato vanishes on it.
 - **Olive** (`olive`): the lenten category.
 - **Rose** (`rose`): the desserts category.
 - **Sky** (`sky`): the preserves category.
 
-Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. A recipe card's body, its category chip at rest and its recipe page header all wear that colour. Muted text (`slate-grey`, #4b4f55) clears 6.7:1 on every tint.
+Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. A recipe card's body, its category chip at rest and its recipe page header all wear that colour. The home feature card stays on `surface` so it stands out from the peach band, and category tiles carry a light ring so a tile matching its band still reads. Muted text (`slate-grey`, a warm brown #5a4234) clears 6.9:1 on every tint; links clear 6:1.
 
 ### Secondary
 - **Herb Green** (`herb-green`, wash `herb-wash`): success messages only (rating saved, comment published, subscribed).
@@ -276,7 +281,7 @@ Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), eac
 
 **Home.** Peach band: display headline, one line, the resume banner when a dish is in progress, and the feature card. Sage band: category tiles in cook's order, each in its category colour with name, count and arrow. Plain bands: "Най-високо оценени" (when any recipe is rated) as a swipeable scroll-snap shelf, then "Последни рецепти" as the grid. Butter band: newsletter. Wheat footer.
 
-**Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 40svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, the byline (44px portrait linking to /za-ivo, "Иво, сготвено и снимано в моята кухня", published and, when later, updated dates in `<time>`), then the facts (total, prep, cook, servings, difficulty) with print and share directly under them. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a white bordered panel beside the method that sticks only when the whole list fits the viewport (`StickyIfFits`), so a long list is never clipped. Tags follow the method as one line of plain text; the white "Как се получи?" panel holds the rating and the like button; then comments, related recipes and the butter newsletter band. Print shows the recipe header and a line with the blog name and recipe URL; the site header and footer are hidden.
+**Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 40svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, the byline (44px portrait linking to /za-ivo, "Иво, сготвено и снимано в моята кухня", published and, when later, updated dates in `<time>`), then the facts (total, prep, cook, servings, difficulty) with print and share directly under them. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a sage panel beside the method that sticks only when the whole list fits the viewport (`StickyIfFits`), so a long list is never clipped. Tags follow the method as one line of plain text; the butter "Как се получи?" panel holds the rating and the like button; then comments, related recipes and the butter newsletter band. Print shows the recipe header and a line with the blog name and recipe URL; the site header and footer are hidden.
 
 **Index, search, about, 404, error.** A peach title band; on search it also holds the large search field. Short pages (about, 404, error) are one peach spread.
 
@@ -330,12 +335,13 @@ Focus is a 2px tomato outline offset 2px on every link, button, summary and chec
 - **State:** selected chips invert to ink fill with paper text. Category chips scroll sideways in one row on a phone. A tomato count badge appears on the "Време и трудност" disclosure when filters inside it are active. Recipe tags are plain text ("Етикети: …"), never pill-shaped, since they are not interactive.
 
 ### Cards / Containers
-- **Recipe card:** 16px corner, white body with the category as a tinted pill, card shadow; 4:3 photo flush to the top; 16px text pad with a heading-size title and a small grey meta row: category, then clock + minutes, people + servings and star + rating, spaced 12px apart with 14px icons (no separator dots). Hover lifts the card.
+- **Recipe card:** 16px corner, body in the category colour with the name on a light pill, card shadow; 4:3 photo flush to the top; 16px text pad with a heading-size title and a small grey meta row: category, then clock + minutes, people + servings and star + rating, spaced 12px apart with 14px icons (no separator dots). Hover lifts the card.
 - **Feature card:** 24px corner, white body, photo on the left 7/12 from 768px, display-size name on the right.
 - **Category tile:** 16px corner in the category colour, name, recipe count and an arrow.
-- **Panels:** 24px corner, 24px padding, white with a hairline border and card shadow: ingredients, rating, empty states.
+- **Panels:** 24px corner, 24px padding, card shadow: sage ingredients, butter rating; white for empty states.
 
 ### Inputs / Fields
+Every field has a visible label above it (the placeholder is never the label), helper text and errors linked with `aria-describedby`, `aria-invalid` on failure, the right `autocomplete` and keyboard hints, and a pending state on submit. Forms submit through `onSubmit` + `startTransition` so a failed submit keeps what the reader typed, with the plain `action` kept for no-JavaScript use.
 The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radius (`.field-pill` for 999px).
 - **Hover:** border darkens to ink.
 - **Focus:** tomato border plus a 4px tomato-wash halo.
@@ -346,13 +352,13 @@ The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radiu
 - Errors show in deep error red under the field; success in herb green.
 
 ### Navigation
-Sticky 64px white header: the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The wheat footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
+Sticky 64px white header: the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The paprika footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
 
 ### Ingredient list (signature)
 Each row is a whole-row tap target at least 56px tall: a 24px rounded checkbox with a `field-border` outline, the quantity in 600 weight tabular figures (min 4.75rem column), then the item in body text with any note in grey. Ticking pops the check and strikes the quantity; ticks persist across reloads. Quantities print cookable fractions and round by unit family. The servings stepper is two white 44px circles around a 600-weight count, capped at double the written recipe.
 
 ### Method steps (signature)
-Each step is a 44px numbered circle beside body text (max 65ch). Tapping the circle marks it done: the circle fills tomato and the check pops. The first unfinished step after a finished one gets a tomato-wash "Продължете оттук" pill that rises in.
+Each step is a 44px numbered circle on tomato wash beside body text (max 65ch). Tapping the circle marks it done: the circle fills tomato and the check pops. The first unfinished step after a finished one gets a tomato-wash "Продължете оттук" pill that rises in.
 
 ### Cook Mode (signature)
 A full-screen modal that rises in: dish name and a 48px close circle, 6px pill progress segments (tomato up to the current step), "Стъпка N от M" in grey, the step at display size sliding in from the direction of travel, and a bottom bar of three 64px pills (ingredients toggle, Назад, tomato Напред/Готово). The ingredients sheet washes the ones the current step uses in tomato wash. The screen is kept awake.
