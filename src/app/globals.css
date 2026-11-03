@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Screens too short to give up a strip to sticky bars; see the scroll-padding rules. */
+@custom-variant short (@media (max-height: 30rem));
+
 /*
  * A welcoming home kitchen: apricot, butter and herb green, colourful recipe
  * cards and illustrated cooking backgrounds around solid reading surfaces.
@@ -488,9 +491,19 @@ textarea::placeholder {
   --header-h: 4rem;
 }
 
-/* Sticky header + tab bar: anchors must land below both. */
-[id] {
-  scroll-margin-top: calc(var(--header-h) + 3.5rem);
+/* Sticky header + tab bar: anchor jumps and keyboard focus must land below
+   both (WCAG 2.4.11). Set on the scroller, so it covers every element, not
+   only those with an id. */
+html {
+  scroll-padding-top: calc(var(--header-h) + 3.5rem);
+}
+
+/* On a short screen (a phone on its side, or 400% zoom) the bars unpin, as
+   WCAG technique C34 suggests, so nothing needs clearing. */
+@media (max-height: 30rem) {
+  html {
+    scroll-padding-top: 0;
+  }
 }
 
 /* Print hides only the site's own chrome (marked print:hidden on the header

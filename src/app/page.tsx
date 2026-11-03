@@ -39,13 +39,14 @@ export default async function Home() {
             {keepShortWords("Аз съм Иво. Тук споделям домашни рецепти, които съм сготвил лично, с точни мерки и ясни стъпки. Нека приготвим нещо вкусно заедно!")}
           </p>
         </div>
-        <ResumeCooking />
-
         {lead && (
           <section aria-label="Най-нова рецепта" className="mt-7 sm:mt-8">
             <RecipeCard recipe={lead} size="feature" priority />
           </section>
         )}
+        {/* Only the cooking browser renders it, after load; below the lead dish
+            it can't push the page's largest picture down. */}
+        <ResumeCooking />
       </Band>
 
       {categories.length > 0 && (

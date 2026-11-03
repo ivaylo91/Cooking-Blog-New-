@@ -69,7 +69,8 @@ export function Header({ categories }: { categories: Category[] }) {
   }, [panel]);
 
   return (
-    <header ref={headerRef} className="print:hidden sticky top-0 z-40 border-b border-border-subtle bg-surface shadow-card">
+    // Unpinned on short screens; relative, not static, so the phone panels keep their anchor.
+    <header ref={headerRef} className="print:hidden sticky top-0 z-40 short:relative border-b border-border-subtle bg-surface shadow-card">
       <div className="mx-auto flex h-(--header-h) max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
         <Link
           href="/"
