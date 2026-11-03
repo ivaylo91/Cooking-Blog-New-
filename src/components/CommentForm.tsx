@@ -1,8 +1,10 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import { Loader2, Send } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
+import { primaryButton } from "@/components/styles";
+import { submitInTransition } from "@/lib/forms";
 
 const initialState: CommentActionState = { status: "idle" };
 
@@ -30,6 +32,9 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
     }
   }, [state]);
 
+  // The server rejected the name or the text; a rate limit is no one field's fault.
+  const isInvalid = state.status === "error";
+
   return (
     <form
       ref={formRef}
@@ -37,11 +42,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       // React clears a form after its action; handled here, a comment that
       // fails or hits the rate limit stays in the box instead of being lost.
       // Without JavaScript the plain action above still works.
-      onSubmit={(event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        startTransition(() => formAction(data));
-      }}
+      onSubmit={submitInTransition(formAction)}
       className="flex flex-col gap-4"
     >
       <input type="hidden" name="form_rendered_at" value={renderedAt} />
@@ -70,7 +71,8 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           autoComplete="name"
           autoCapitalize="words"
           enterKeyHint="next"
-          aria-describedby="comment-name-hint"
+          aria-invalid={isInvalid}
+          aria-describedby="comment-name-hint comment-status"
           className={`${field} h-12`}
         />
         <p id="comment-name-hint" className="text-small text-muted-foreground">
@@ -92,7 +94,8 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           placeholder="Например: стана чудесно, сложих малко повече чесън."
           rows={4}
           onChange={(e) => setLength(e.target.value.length)}
-          aria-describedby="comment-count"
+          aria-invalid={isInvalid}
+          aria-describedby="comment-count comment-status"
           className={`${field} min-h-32 resize-y py-3`}
         />
         <span
@@ -107,7 +110,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-14 items-center gap-2 self-start rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
+        className={`self-start shadow-card ${primaryButton}`}
       >
         {isPending ? (
           <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />
@@ -117,7 +120,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
 
-      <p role="status" className="min-h-6 font-medium">
+      <p id="comment-status" role="status" className="min-h-6 font-medium">
         {state.status === "success" && (
           <span className="text-secondary">Коментарът е публикуван.</span>
         )}

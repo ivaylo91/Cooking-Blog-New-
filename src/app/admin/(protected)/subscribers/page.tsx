@@ -1,5 +1,5 @@
 import { deleteSubscriber } from "@/app/admin/actions";
-import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
+import { ConfirmDeleteButton } from "@/components/admin/ConfirmDeleteButton";
 import { pageTitle } from "@/components/admin/styles";
 import { createClient } from "@/lib/supabase/server";
 import { CopyEmailsButton } from "@/components/admin/CopyEmailsButton";
@@ -60,9 +60,9 @@ export default async function SubscribersPage() {
                 </td>
                 <td className="py-3 pr-4 text-right">
                   <form action={deleteSubscriber.bind(null, subscriber.id)}>
-                    <ConfirmSubmitButton message={`Да се отпише ли ${subscriber.email}?`}>
+                    <ConfirmDeleteButton message={`Да се отпише ли ${subscriber.email}?`}>
                       Изтрий
-                    </ConfirmSubmitButton>
+                    </ConfirmDeleteButton>
                   </form>
                 </td>
               </tr>

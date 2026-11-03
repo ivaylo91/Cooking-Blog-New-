@@ -24,7 +24,7 @@ import { Band } from "@/components/Band";
 import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { keepShortWords } from "@/lib/typography";
-import ivoPhoto from "@/app/za-ivo/ivo.jpg";
+import { ivoPhoto } from "@/components/AuthorPortrait";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
 // "Средно" reads as an adverb on its own; under a "Трудност" label it needs
@@ -311,7 +311,7 @@ export default async function RecipePage({
                 return (
                   <div key={fact.label}>
                     <dt className="flex items-center gap-1.5 text-small text-muted-foreground">
-                      <Icon size={15} aria-hidden="true" className="text-link" />
+                      <Icon size={15} aria-hidden="true" />
                       {fact.label}
                     </dt>
                     <dd className="mt-0.5 text-heading font-bold">

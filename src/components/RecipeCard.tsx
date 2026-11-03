@@ -66,10 +66,7 @@ export function RecipeCard({
   const metaRow = "flex flex-wrap items-center gap-x-3 gap-y-1 text-small text-muted-foreground tabular-nums";
   const isFeature = size === "feature";
   // The stagger is capped at six cards so a long grid never makes the reader wait.
-  const style = {
-    backgroundColor: categoryTint(recipe.category?.slug),
-    ...(animate ? { animationDelay: `${Math.min(index, 6) * 60}ms` } : {}),
-  };
+  const delay = animate ? { animationDelay: `${Math.min(index, 6) * 60}ms` } : {};
   const enter = animate ? "animate-rise" : "";
   const lift =
     "shadow-card transition-[transform,box-shadow] duration-300 ease-out hover:-translate-y-0.5 hover:shadow-lift active:translate-y-0 motion-reduce:hover:translate-y-0";
@@ -79,7 +76,7 @@ export function RecipeCard({
     return (
       <Link
         href={`/recepti/${recipe.slug}`}
-        style={{ ...style, backgroundColor: "var(--surface)" }}
+        style={delay}
         className={`${enter} group grid overflow-hidden rounded-3xl border border-border-subtle bg-surface md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] ${lift}`}
       >
         <div className="relative aspect-[4/3] w-full md:aspect-auto md:min-h-[22rem]">
@@ -101,7 +98,7 @@ export function RecipeCard({
           <h2 className="text-feature font-bold group-hover:underline">{recipe.title}</h2>
           <p className="mt-4 text-body text-muted-foreground">{keepShortWords(recipe.description)}</p>
           <p className={`mt-4 ${metaRow}`}>{meta}</p>
-          <span className="mt-6 inline-flex min-h-12 w-fit items-center gap-3 rounded-full bg-accent px-6 py-3 text-body font-semibold text-accent-foreground transition-colors group-hover:bg-accent-strong">
+          <span className="mt-6 inline-flex h-14 w-fit items-center gap-3 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors group-hover:bg-accent-strong">
             Виж рецептата
             <ArrowRight size={18} aria-hidden="true" />
           </span>
@@ -113,7 +110,7 @@ export function RecipeCard({
   return (
     <Link
       href={`/recepti/${recipe.slug}`}
-      style={style}
+      style={{ backgroundColor: categoryTint(recipe.category?.slug), ...delay }}
       className={`${enter} group flex flex-col overflow-hidden rounded-2xl border border-border-subtle ${lift}`}
     >
       <div className="relative aspect-[4/3] w-full">

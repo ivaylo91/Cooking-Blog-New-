@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { RotateCw, Home } from "lucide-react";
+import { primaryButton } from "@/components/styles";
 
 /**
  * Every page on the site reads from Supabase, so a failed query would
@@ -30,7 +31,7 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
+          className={primaryButton}
         >
           <RotateCw size={20} />
           Опитай отново

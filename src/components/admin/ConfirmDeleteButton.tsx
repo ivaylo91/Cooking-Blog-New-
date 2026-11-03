@@ -4,10 +4,10 @@ import { Trash2 } from "lucide-react";
 import { dangerButton } from "@/components/admin/styles";
 
 /**
- * A submit button for a destructive server-action form that asks first, so a
- * stray tap cannot delete a comment or a subscriber.
+ * A submit button for a delete server-action form that asks first, so a stray
+ * tap cannot delete a comment or a subscriber.
  */
-export function ConfirmSubmitButton({
+export function ConfirmDeleteButton({
   message,
   children,
 }: {

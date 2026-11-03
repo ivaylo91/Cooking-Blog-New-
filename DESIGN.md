@@ -55,9 +55,9 @@ colors:
   wheat-evening: "#38291b"
   olive-evening: "#2f3319"
   sky-evening: "#1b303c"
-  hairline-evening: "rgba(244, 241, 236, 0.12)"
-  rule-evening: "#2c2c2c"
-  herb-green-evening: "#4ade80"
+  hairline-evening: "rgba(248, 238, 228, 0.14)"
+  rule-evening: "#3a2b22"
+  herb-green-evening: "#6fd38a"
   error-red-evening: "#f87171"
 typography:
   display:
@@ -217,7 +217,7 @@ The blog is a friendly, colourful home kitchen: apricot welcomes the reader, but
 
 The brand mark is a drawn cooking pot with three wisps of steam in a tomato badge, beside "Кулинарният блог на Иво". The steam draws in once on load and rises in a loop while the logo is hovered.
 
-Density is low and tap-first. The reader is a home cook at the counter, often at night, with wet or floury hands. Every control is a 44px pill or circle, quantities lead their rows, and progress state (ticked ingredients, finished steps, the step to resume from) is shown in tomato. Motion is short and purposeful: content rises in, ticks and stars pop, Cook Mode steps slide in from the direction you moved. Dark mode is designed, not inverted: an "evening kitchen" with a #121212 ground, deep warm section tones, a brighter tomato, and untouched photographs.
+Density is low and tap-first. The reader is a home cook at the counter, often at night, with wet or floury hands. Every control is a 44px pill or circle, quantities lead their rows, and progress state (ticked ingredients, finished steps, the step to resume from) is shown in tomato. Motion is short and purposeful: content rises in, ticks and stars pop, Cook Mode steps slide in from the direction you moved. Dark mode is designed, not inverted: an "evening kitchen" with a #1a1210 ground, deep warm section tones, a brighter tomato, and untouched photographs.
 
 The world replaced the "Бакалия" grocery-label system, which was rejected as retro packaging. Retro, vintage-packaging and pastiche treatments are out. The logo and original cooking doodles supply the illustrations; use the doodles as coloured backgrounds around opaque reading panels and as a monochrome footer band.
 
@@ -268,10 +268,10 @@ Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. They
 - **Error Red** (`error-red`, `error-red-deep`, `error-wash`, `error-border`): failures, invalid fields and destructive admin actions.
 
 ### The evening kitchen
-Dark mode (system preference, or `data-theme="dark"` from the toggle) swaps each token for its `-evening` sibling. The section colours become deep warm tones (peach #2b1d16, sage #1b2618, butter #2a2412 and so on), so bands still read as colour without glare. Photographs receive no filter or dimming.
+Dark mode (system preference, or `data-theme="dark"` from the toggle) swaps each token for its `-evening` sibling. The section colours become deep warm tones (peach #3d2417, sage #223320, butter #3b3014 and so on), so bands still read as colour without glare. Photographs receive no filter or dimming.
 
 ### Named Rules
-**The Action Colour Rule.** Tomato marks the primary action, progress, or a selected or active state. Section colour comes from the band and category palette, never from tomato.
+**The Action Colour Rule.** Tomato marks the primary action, progress, or a selected or active state. Section colour comes from the band and category palette, never from tomato. The only decorative tomato is the feature card's divider and the rules over the About page's principles; section headings carry none.
 
 **The Link Tone Rule.** Text in the accent hue always uses `tomato-link`, never `tomato`.
 
@@ -301,7 +301,7 @@ h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use ta
 
 ## Layout
 
-Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), each holding the single centred 72rem column (`max-w-6xl`) with a 16px gutter on phones and 24px from 640px. Header is a 64px sticky white bar with a translucent blur. Card grids are 1 / 2 / 3 columns at <640 / 640 / 1024px, with 24px horizontal and 40px vertical gaps.
+Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), each holding the single centred 72rem column (`max-w-6xl`) with a 16px gutter on phones and 24px from 640px. Header is a 64px sticky bar on an opaque cream surface with a warm shadow. Card grids are 1 / 2 / 3 columns at <640 / 640 / 1024px, with 24px horizontal and 40px vertical gaps.
 
 **Home.** Apricot opening with colourful cooking doodles: a welcoming Bulgarian introduction on a solid apricot panel, resume banner, and a 7/5 photo-and-text feature with a butter panel and "Виж рецептата" action. "Какво ви се хапва?" introduces coloured category cards with icons. "Последни рецепти" comes next on cream, followed by a swipeable highest-rated shelf on sage when ratings exist. A deep herb-green band introduces Ivo with his portrait and a cream About button. The newsletter uses an opaque butter panel over a patterned sage backdrop, followed by the paprika footer. Main sections use 48px vertical padding on phones and 64px from 640px. Recipe grids use 24px horizontal and 40px vertical gaps, matching the index. Do not render an empty latest grid when the sole recipe is already featured.
 
@@ -382,13 +382,13 @@ The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radiu
 - Errors show in deep error red under the field; success in herb green.
 
 ### Navigation
-Sticky 64px white header: the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The paprika footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
+Sticky 64px cream header: the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The paprika footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
 
 ### Ingredient list (signature)
 Each row is a whole-row tap target at least 56px tall: a 24px rounded checkbox with a `field-border` outline, the quantity in 600 weight tabular figures (min 4.75rem column), then the item in body text with any note in grey. Ticking pops the check and strikes the quantity; ticks persist across reloads. Quantities print cookable fractions and round by unit family. The servings stepper is two white 44px circles around a 600-weight count, capped at double the written recipe.
 
 ### Method steps (signature)
-Each step is a 44px numbered circle on tomato wash beside body text (max 65ch). Tapping the circle marks it done: the circle fills tomato and the check pops. The first unfinished step after a finished one gets a tomato-wash "Продължете оттук" pill that rises in.
+Each step is a 44px numbered circle on counter tint beside body text (max 65ch); hover washes it tomato. Tapping the circle marks it done: the circle fills tomato and the check pops. The first unfinished step after a finished one gets a tomato-wash "Продължете оттук" pill that rises in.
 
 ### Cook Mode (signature)
 A full-screen modal that rises in: dish name and a 48px close circle, 6px pill progress segments (tomato up to the current step), "Стъпка N от M" in grey, the step at display size sliding in from the direction of travel, and a bottom bar of three 64px pills (ingredients toggle, Назад, tomato Напред/Готово). The ingredients sheet washes the ones the current step uses in tomato wash. The screen is kept awake.

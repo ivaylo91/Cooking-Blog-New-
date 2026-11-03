@@ -9,6 +9,8 @@ const TONES = {
   wheat: "bg-wheat",
   olive: "bg-olive",
   sky: "bg-sky",
+  // The one dark band, so it brings its own light text.
+  garden: "bg-garden text-on-garden",
   plain: "",
 } as const;
 

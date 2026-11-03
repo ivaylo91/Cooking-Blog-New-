@@ -34,6 +34,9 @@ npm run dev
 - Admin login: [http://localhost:3000/admin/login](http://localhost:3000/admin/login) —
   sign in with the Supabase user you created above.
 
+After changing colours in `src/app/globals.css`, run `npm run check:contrast` to check
+the palette's contrast ratios in light and both dark themes.
+
 ## 3. Writing recipes
 
 Log in at `/admin`, click **Нова рецепта**, and fill in the form: title, category,

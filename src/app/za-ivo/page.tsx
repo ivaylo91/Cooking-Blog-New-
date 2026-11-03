@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { AuthorPortrait, ivoPhoto } from "@/components/AuthorPortrait";
 import { Band } from "@/components/Band";
 import { JsonLd } from "@/components/JsonLd";
 import { RecipeCard } from "@/components/RecipeCard";
 import { SectionHead } from "@/components/SectionHead";
+import { primaryButton } from "@/components/styles";
 import { recipeCount } from "@/lib/format";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import { keepShortWords } from "@/lib/typography";
-import ivoPhoto from "./ivo.jpg";
 
 export const metadata: Metadata = {
   title: "За Иво",
@@ -81,24 +81,18 @@ export default async function ZaIvoPage() {
             </p>
             <Link
               href="/recepti"
-              className="mt-6 inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
+              className={`mt-6 shadow-card ${primaryButton}`}
             >
               Към рецептите
               <ArrowRight size={20} aria-hidden="true" />
             </Link>
           </div>
 
-          <div className="relative aspect-square w-56 overflow-hidden rounded-3xl shadow-lift ring-4 ring-surface sm:w-64 md:w-full">
-            <Image
-              src={ivoPhoto}
-              alt="Иво в кухнята си"
-              fill
-              loading="eager"
-              placeholder="blur"
-              sizes="(min-width: 1024px) 20rem, (min-width: 768px) 17rem, 16rem"
-              className="origin-top scale-125 object-cover"
-            />
-          </div>
+          <AuthorPortrait
+            className="w-56 shadow-lift ring-4 ring-surface sm:w-64 md:w-full"
+            sizes="(min-width: 1024px) 20rem, (min-width: 768px) 17rem, 16rem"
+            eager
+          />
         </div>
       </div>
 
@@ -107,7 +101,7 @@ export default async function ZaIvoPage() {
           aria-labelledby="how-head"
           className="grid gap-x-12 gap-y-6 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)]"
         >
-          <h2 id="how-head" className="text-heading font-bold">
+          <h2 id="how-head" className="text-section font-bold">
             Как готвя
           </h2>
           <div className="grid gap-x-10 gap-y-8 md:grid-cols-2">
@@ -139,7 +133,7 @@ export default async function ZaIvoPage() {
       </div>
 
       <Band tone="butter" innerClassName="py-12">
-        <h2 className="text-heading font-bold">Сготвихте ли някоя рецепта?</h2>
+        <h2 className="text-section font-bold">Сготвихте ли някоя рецепта?</h2>
         <p className="mt-2 max-w-[65ch] text-body text-muted-foreground">
           {keepShortWords(
             "Оставете коментар или оценка под рецептата. Винаги се радвам да чуя как се е получило и какво сте променили."

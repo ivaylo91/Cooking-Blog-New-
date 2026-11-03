@@ -1,8 +1,10 @@
 "use client";
 
-import { startTransition, useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Loader2, Mail } from "lucide-react";
 import { subscribe, type SubscribeActionState } from "@/app/recepti/actions";
+import { primaryButton } from "@/components/styles";
+import { submitInTransition } from "@/lib/forms";
 
 const initialState: SubscribeActionState = { status: "idle" };
 
@@ -48,11 +50,7 @@ export function SubscribeForm() {
           // React clears a form after its action; handled here, a mistyped
           // address stays in the field so it can be corrected. Without
           // JavaScript the plain action above still works.
-          onSubmit={(event) => {
-            event.preventDefault();
-            const data = new FormData(event.currentTarget);
-            startTransition(() => formAction(data));
-          }}
+          onSubmit={submitInTransition(formAction)}
         >
           {/* Honeypot: hidden from people, tempting to bots. */}
           <input
@@ -85,7 +83,7 @@ export function SubscribeForm() {
             <button
               type="submit"
               disabled={pending}
-              className="inline-flex h-14 items-center justify-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] disabled:opacity-60"
+              className={`shadow-card ${primaryButton}`}
             >
               {pending ? (
                 <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />

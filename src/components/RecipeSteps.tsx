@@ -58,7 +58,7 @@ export function RecipeSteps({
                 className={`flex size-11 items-center justify-center rounded-full text-body font-bold tabular-nums transition-[background-color,color,transform] active:scale-90 ${
                   isDone
                     ? "bg-accent text-accent-foreground"
-                    : "bg-accent-soft text-link hover:bg-peach"
+                    : "bg-surface-muted text-foreground hover:bg-accent-soft"
                 }`}
               >
                 {isDone ? <Check size={20} strokeWidth={3} className="animate-pop" /> : index + 1}

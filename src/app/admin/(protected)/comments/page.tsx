@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { deleteComment } from "@/app/admin/actions";
-import { ConfirmSubmitButton } from "@/components/admin/ConfirmSubmitButton";
+import { ConfirmDeleteButton } from "@/components/admin/ConfirmDeleteButton";
 import { pageTitle } from "@/components/admin/styles";
 import { createClient } from "@/lib/supabase/server";
 
@@ -60,11 +60,11 @@ export default async function AdminCommentsPage() {
                 </div>
                 {comment.recipe && (
                   <form action={deleteComment.bind(null, comment.id)} className="shrink-0">
-                    <ConfirmSubmitButton
+                    <ConfirmDeleteButton
                       message={`Изтриване на коментара от ${comment.author_name}?`}
                     >
                       Изтрий
-                    </ConfirmSubmitButton>
+                    </ConfirmDeleteButton>
                   </form>
                 )}
               </div>

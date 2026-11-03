@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ChefHat, ChevronDown, Clock, LayoutGrid, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, LayoutGrid, SlidersHorizontal, X } from "lucide-react";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { recipeCount } from "@/lib/format";
@@ -122,7 +122,6 @@ export function RecipeFilters({
           <div className="animate-rise mt-3 flex flex-col gap-4 rounded-2xl bg-surface p-4 shadow-card">
             <Group label="Време">
               <Chip href={buildHref(active, { time: undefined })} selected={!active.time}>
-                <Clock size={18} aria-hidden="true" />
                 Всички
               </Chip>
               {(Object.keys(TIME_FILTERS) as TimeFilter[]).map((key) => (
@@ -131,7 +130,6 @@ export function RecipeFilters({
                   href={buildHref(active, { time: active.time === key ? undefined : key })}
                   selected={active.time === key}
                 >
-                  <Clock size={18} aria-hidden="true" />
                   {TIME_FILTERS[key].label}
                 </Chip>
               ))}
@@ -141,7 +139,6 @@ export function RecipeFilters({
                 href={buildHref(active, { difficulty: undefined })}
                 selected={!active.difficulty}
               >
-                <ChefHat size={18} aria-hidden="true" />
                 Всички
               </Chip>
               {DIFFICULTIES.map((level) => (
@@ -152,7 +149,6 @@ export function RecipeFilters({
                   })}
                   selected={active.difficulty === level}
                 >
-                  <ChefHat size={18} aria-hidden="true" />
                   <span className="capitalize">{level}</span>
                 </Chip>
               ))}

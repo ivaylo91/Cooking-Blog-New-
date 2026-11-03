@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { AuthorPortrait } from "@/components/AuthorPortrait";
 import { Band } from "@/components/Band";
 import { CategoryIcon } from "@/components/CategoryIcon";
 import { RecipeCard } from "@/components/RecipeCard";
@@ -11,7 +11,6 @@ import { SubscribeForm } from "@/components/SubscribeForm";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import { keepShortWords } from "@/lib/typography";
-import ivoPhoto from "@/app/za-ivo/ivo.jpg";
 
 export const metadata: Metadata = {
   title: { absolute: "Кулинарният блог на Иво: домашни рецепти, изпробвани в моята кухня" },
@@ -27,10 +26,11 @@ export default async function Home() {
   // Only recipes someone has rated: an unrated shelf would be an empty promise.
   const trending = topRated.filter((r) => r.rating_count > 0);
   const [lead, ...latest] = recipes;
+  const showLatest = latest.length > 0 || recipes.length === 0;
 
   return (
     <div>
-      <Band tone="peach" pattern innerClassName="py-8 sm:py-12">
+      <Band tone="peach" pattern innerClassName="py-12 sm:py-16">
         <div className="grid gap-4 rounded-3xl bg-peach p-5 sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
           <h1 className="animate-rise max-w-xl text-display font-bold">
             {keepShortWords("Добре дошли в моята кухня")}
@@ -49,7 +49,13 @@ export default async function Home() {
       </Band>
 
       {categories.length > 0 && (
-        <Band tone="plain" innerClassName="pt-10 sm:pt-12" aria-labelledby="shelf-head">
+        // The latest band below is also cream, so its top padding doubles as
+        // this band's bottom; without it, the shelf needs its own.
+        <Band
+          tone="plain"
+          innerClassName={`pt-12 sm:pt-16 ${showLatest ? "" : "pb-12 sm:pb-16"}`}
+          aria-labelledby="shelf-head"
+        >
           <SectionHead
             title="Какво ви се хапва?"
             id="shelf-head"
@@ -64,7 +70,7 @@ export default async function Home() {
                   className="group flex h-full min-h-20 items-center gap-3 rounded-2xl border border-border-subtle p-3 text-small font-semibold shadow-card transition-[transform,box-shadow] hover:shadow-lift motion-safe:hover:-translate-y-0.5 sm:min-h-32 sm:flex-col sm:justify-center sm:p-4 sm:text-center"
                 >
                   <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-surface text-link">
-                    <CategoryIcon slug={category.slug} size={24} />
+                    <CategoryIcon slug={category.slug} size={22} />
                   </span>
                   {category.name}
                 </Link>
@@ -74,7 +80,7 @@ export default async function Home() {
         </Band>
       )}
 
-      {(latest.length > 0 || recipes.length === 0) && (
+      {showLatest && (
         <Band tone="plain" innerClassName="py-12 sm:py-16" aria-labelledby="latest-head">
           <SectionHead
             title="Последни рецепти"
@@ -106,18 +112,12 @@ export default async function Home() {
         </Band>
       )}
 
-      <Band tone="plain" className="bg-garden text-on-garden" innerClassName="py-12 sm:py-16" aria-labelledby="about-head">
+      <Band tone="garden" innerClassName="py-12 sm:py-16" aria-labelledby="about-head">
         <div className="grid gap-6 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-center sm:gap-10 lg:grid-cols-[12rem_minmax(0,1fr)] lg:gap-14">
-          <div className="relative aspect-square w-36 overflow-hidden rounded-3xl ring-4 ring-on-garden sm:w-full">
-            <Image
-              src={ivoPhoto}
-              alt="Иво в кухнята си"
-              fill
-              placeholder="blur"
-              sizes="(min-width: 1024px) 192px, (min-width: 640px) 160px, 144px"
-              className="origin-top scale-125 object-cover"
-            />
-          </div>
+          <AuthorPortrait
+            className="w-36 ring-4 ring-on-garden sm:w-full"
+            sizes="(min-width: 1024px) 192px, (min-width: 640px) 160px, 144px"
+          />
           <div>
             <h2 id="about-head" className="text-section font-bold">Здравейте, аз съм Иво</h2>
             <p className="mt-4 max-w-2xl text-on-garden-muted">

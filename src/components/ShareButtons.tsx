@@ -14,6 +14,9 @@ const item =
 /**
  * Sharing folded into one control. Four destinations side by side used to
  * outrank the recipe; behind "Сподели" they are there when wanted.
+ *
+ * On a phone the menu spans its nearest positioned ancestor, so the caller's
+ * action row must be `relative`.
  */
 export function ShareButtons({ title, url }: { title: string; url: string }) {
   const canNativeShare = useSyncExternalStore(

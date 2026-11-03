@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Home } from "lucide-react";
+import { primaryButton } from "@/components/styles";
 
 export default function NotFound() {
   return (
@@ -14,7 +15,7 @@ export default function NotFound() {
       <div className="mt-8 flex flex-wrap gap-2">
         <Link
           href="/recepti"
-          className="inline-flex h-14 items-center gap-2 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]"
+          className={primaryButton}
         >
           Към рецептите
           <ArrowRight size={20} />
