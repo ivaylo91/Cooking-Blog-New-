@@ -24,7 +24,7 @@ import { Band } from "@/components/Band";
 import { categoryTint } from "@/lib/categories";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { keepShortWords } from "@/lib/typography";
-import { ivoPhoto } from "@/components/AuthorPortrait";
+import ivoPhoto from "@/components/ivo.jpg";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
 
 // "Средно" reads as an adverb on its own; under a "Трудност" label it needs
@@ -327,10 +327,9 @@ export default async function RecipePage({
               })}
             </dl>
             {/* Keeping and passing it on belong where the cook decides to make it. */}
-            <div className="relative mt-5 flex items-center gap-2 print:hidden">
+            <ShareButtons title={recipe.title} url={recipeUrl} className="mt-5 print:hidden">
               <PrintButton />
-              <ShareButtons title={recipe.title} url={recipeUrl} />
-            </div>
+            </ShareButtons>
           </div>
         </header>
       </div>
@@ -348,7 +347,7 @@ export default async function RecipePage({
         >
           <StickyIfFits
             className="self-start rounded-3xl bg-sage p-5 shadow-card sm:p-6 print:static print:bg-transparent print:p-0 print:shadow-none"
-            stickyClassName="md:sticky md:top-24"
+            stickyClassName="md:sticky md:top-24 short:static"
           >
             <RecipeIngredients
               recipeId={recipe.id}

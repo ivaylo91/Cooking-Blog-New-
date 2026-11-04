@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Clock, Star } from "lucide-react";
 import { IngredientsIllustration } from "@/components/IngredientsIllustration";
 import { SaladIllustration } from "@/components/SaladIllustration";
+import { primaryPill } from "@/components/styles";
 import { categoryTint } from "@/lib/categories";
 import { keepShortWords } from "@/lib/typography";
 import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
@@ -98,7 +99,7 @@ export function RecipeCard({
           <h2 className="text-feature font-bold group-hover:underline">{recipe.title}</h2>
           <p className="mt-4 text-body text-muted-foreground">{keepShortWords(recipe.description)}</p>
           <p className={`mt-4 ${metaRow}`}>{meta}</p>
-          <span className="mt-6 inline-flex h-14 w-fit items-center gap-3 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground transition-colors group-hover:bg-accent-strong">
+          <span className={`mt-6 w-fit transition-colors group-hover:bg-accent-strong ${primaryPill}`}>
             Виж рецептата
             <ArrowRight size={18} aria-hidden="true" />
           </span>

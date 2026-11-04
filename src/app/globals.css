@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
-/* Screens too short to give up a strip to sticky bars; see the scroll-padding rules. */
+/* Screens too short to give up a strip to sticky bars. The one definition of
+   that height: the header, recipe tab bar, ingredients panel and scroll
+   padding all use this variant. */
 @custom-variant short (@media (max-height: 30rem));
 
 /*
@@ -164,6 +166,9 @@
   }
 }
 
+/* The same values again for the toggle: CSS can't share one declaration
+   block between a media query and an attribute selector. Keep the two in
+   step; scripts/check-design-contrast.mjs checks each separately. */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --background: #1a1210;
@@ -496,12 +501,10 @@ textarea::placeholder {
    only those with an id. */
 html {
   scroll-padding-top: calc(var(--header-h) + 3.5rem);
-}
 
-/* On a short screen (a phone on its side, or 400% zoom) the bars unpin, as
-   WCAG technique C34 suggests, so nothing needs clearing. */
-@media (max-height: 30rem) {
-  html {
+  /* On a short screen (a phone on its side, or 400% zoom) the bars unpin, as
+     WCAG technique C34 suggests, so nothing needs clearing. */
+  @variant short {
     scroll-padding-top: 0;
   }
 }

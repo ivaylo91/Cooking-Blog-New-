@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef } from "react";
 import { Loader2, Mail } from "lucide-react";
 import { subscribe, type SubscribeActionState } from "@/app/recepti/actions";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 import { submitInTransition } from "@/lib/forms";
 
 const initialState: SubscribeActionState = { status: "idle" };
@@ -83,7 +83,7 @@ export function SubscribeForm() {
             <button
               type="submit"
               disabled={pending}
-              className={`shadow-card ${primaryButton}`}
+              className={`shadow-card ${primaryAction}`}
             >
               {pending ? (
                 <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />

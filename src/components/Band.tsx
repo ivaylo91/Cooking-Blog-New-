@@ -14,6 +14,8 @@ const TONES = {
   plain: "",
 } as const;
 
+export type Tone = keyof typeof TONES;
+
 /**
  * A full-width coloured section, the magazine spread's colour block. The
  * content inside keeps the site's 72rem column.
@@ -27,7 +29,7 @@ export function Band({
   as: Tag = "section",
   ...rest
 }: {
-  tone: keyof typeof TONES;
+  tone: Tone;
   children: React.ReactNode;
   className?: string;
   innerClassName?: string;

@@ -295,7 +295,7 @@ Dark mode (system preference, or `data-theme="dark"` from the toggle) swaps each
 h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use tabular figures wherever they line up.
 
 ### Named Rules
-**The Type Hierarchy Rule.** Use the named display, feature, section, heading, card, body and small tokens. Section headings read more prominently than card titles. The homepage welcome uses display size, while the leading dish uses feature size.
+**The Type Hierarchy Rule.** Use the named display, feature, section, heading, card, body and small tokens. These seven sizes are the owner's decision (November 2026) and replace the earlier four-size rule; a new level of emphasis still comes from weight or colour, never an eighth size. Section headings read more prominently than card titles. The homepage welcome uses display size, while the leading dish uses feature size.
 
 **The Sentence Case Rule.** Every label, button and heading is sentence case. No uppercase, no letter-spaced caps.
 
@@ -303,9 +303,9 @@ h1–h3 carry `letter-spacing: -0.02em` and `text-wrap: balance`. Numbers use ta
 
 Pages are a stack of full-width `Band` sections (`src/components/Band.tsx`), each holding the single centred 72rem column (`max-w-6xl`) with a 16px gutter on phones and 24px from 640px. Header is a 64px sticky bar on an opaque cream surface with a warm shadow. On screens under 480px tall (a phone on its side, or 400% zoom) the header and the recipe tab bar unpin and scroll away (the `short:` variant), so they never cover half the view. Card grids are 1 / 2 / 3 columns at <640 / 640 / 1024px, with 24px horizontal and 40px vertical gaps.
 
-**Home.** Apricot opening with colourful cooking doodles: a welcoming Bulgarian introduction on a solid apricot panel, a 7/5 photo-and-text feature with a butter panel and "Виж рецептата" action, then the resume banner. The banner renders only after load, so it sits below the feature, where it cannot push the largest image down. "Какво ви се хапва?" introduces coloured category cards with icons. "Последни рецепти" comes next on cream, followed by a swipeable highest-rated shelf on sage when ratings exist. A deep herb-green band introduces Ivo with his portrait and a cream About button. The newsletter uses an opaque butter panel over a patterned sage backdrop, followed by the paprika footer. Main sections use 48px vertical padding on phones and 64px from 640px. Recipe grids use 24px horizontal and 40px vertical gaps, matching the index. Do not render an empty latest grid when the sole recipe is already featured.
+**Home.** Apricot opening with colourful cooking doodles: a welcoming Bulgarian introduction on a solid apricot panel, and a 7/5 photo-and-text feature with a butter panel and "Виж рецептата" action. The resume banner floats over the foot of the screen (see Resume banner), so it never moves the page. "Какво ви се хапва?" introduces coloured category cards with icons. "Последни рецепти" comes next on cream, followed by a swipeable highest-rated shelf on sage when ratings exist. A deep herb-green band introduces Ivo with his portrait and a cream About button. The newsletter uses an opaque butter panel over a patterned sage backdrop, followed by the paprika footer. Main sections use 48px vertical padding on phones and 64px from 640px. Recipe grids use 24px horizontal and 40px vertical gaps, matching the index. Do not render an empty latest grid when the sole recipe is already featured.
 
-**Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 40svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, the byline (44px portrait linking to /za-ivo, "Иво, сготвено и снимано в моята кухня", published and, when later, updated dates in `<time>`), then the facts (total, prep, cook, servings, difficulty) with print and share directly under them. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a sage panel beside the method that sticks only when the whole list fits the viewport (`StickyIfFits`), so a long list is never clipped. Tags follow the method as one line of plain text; the butter "Как се получи?" panel holds the rating and the like button; then comments, related recipes and the butter newsletter band. Print shows the recipe header and a line with the blog name and recipe URL; the site header and footer are hidden.
+**Recipe page.** The photo and header sit on a full-width band in the recipe's category colour. On a phone the photo bleeds edge to edge at 40svh; from 640px it becomes a rounded frame (4:3, then 21:9 at 768px, 16:5 at 1024px). Below it: back link, display-size name, one line of description, the byline (44px portrait linking to /za-ivo, "Иво, сготвено и снимано в моята кухня", published and, when later, updated dates in `<time>`), then the facts (total, prep, cook, servings, difficulty) with print and share directly under them. Below 768px a sticky "Съставки | Приготвяне" segmented bar sits under the header; from 768px ingredients become a sage panel beside the method that sticks only when the whole list fits the viewport (`StickyIfFits`), so a long list is never clipped. On short screens (the `short:` variant) the bar and the panel both scroll with the page. Tags follow the method as one line of plain text; the butter "Как се получи?" panel holds the rating and the like button; then comments, related recipes and the butter newsletter band. Print shows the recipe header and a line with the blog name and recipe URL; the site header and footer are hidden.
 
 **Index, search, about, 404, error.** A peach title band; on search it also holds the large search field. Short pages (about, 404, error) are one peach spread.
 
@@ -318,8 +318,8 @@ Depth comes from contrasting colour sections, fine borders and warm shadows.
 Shadows are tinted towards the warm palette (rgba(74, 32, 12, ...)) rather than neutral black.
 
 ### Shadow Vocabulary
-- **Card** (`shadow-card`): recipe cards, the feature card, white cards on a band (resume banner, empty states, filter panel, stepper buttons), and primary buttons in Cook Mode.
-- **Lift** (`shadow-lift`): a hovered recipe card, and the share menu.
+- **Card** (`shadow-card`): recipe cards, the feature card, white cards on a band (empty states, filter panel, stepper buttons), and primary buttons in Cook Mode.
+- **Lift** (`shadow-lift`): a hovered recipe card, the share menu and the floating resume banner.
 - **Segment** (`shadow-sm`): the sliding indicator of the recipe segmented control.
 
 The sticky header uses an opaque cream surface and a warm shadow. The recipe tab bar retains its translucent background.
@@ -367,7 +367,7 @@ Every text field has one, as a short example or hint in `--placeholder` (5.5:1).
 ### Cards / Containers
 - **Recipe card:** 16px corner, category-coloured body, border and warm shadow; 4:3 photo flush to the top; 20px text padding and a 22px title. Metadata sits at the bottom: cream category label, clock + minutes, star + rating. Hover lifts the card 2px.
 - **Feature card:** 24px corner and fine border; photo on the left 7/12 from 768px with a 22rem minimum height; butter panel with a tomato divider, 32–48px title, description, metadata and "Виж рецептата" affordance. The whole card is one link without nested controls.
-- **Home category link:** coloured, rounded card with a 44px cream icon circle and a visible name. Cards wrap to fill each row on phones and share one row on desktop; minimum heights are 80px on phones and 128px from 640px.
+- **Home category link:** coloured, rounded card with a 44px cream icon circle and a visible name. Icon and name only, by the owner's decision (November 2026): no recipe count or arrow. Cards wrap to fill each row on phones and share one row on desktop; minimum heights are 80px on phones and 128px from 640px.
 - **Panels:** 24px corner, 24px padding, card shadow: sage ingredients, butter rating; white for empty states.
 
 ### Inputs / Fields
@@ -382,7 +382,7 @@ The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radiu
 - Errors show in deep error red under the field; success in herb green.
 
 ### Navigation
-Sticky 64px cream header: the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The paprika footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
+Sticky 64px cream header (unpinned on short screens): the logo and site name on the left; "Рецепти", "За Иво" as 44px pill links (the current section in tomato-wash with tomato-link text), the search field and the theme toggle on the right from 768px. On a phone a 44px menu button opens a panel with heading-size links, search and theme toggle. Pagination is a row of 44px circles, current page in ink. The paprika footer has the blog name and tagline beside link columns (categories; blog pages and RSS).
 
 ### Ingredient list (signature)
 Each row is a whole-row tap target at least 56px tall: a 24px rounded checkbox with a `field-border` outline, the quantity in 600 weight tabular figures (min 4.75rem column), then the item in body text with any note in grey. Ticking pops the check and strikes the quantity; ticks persist across reloads. Quantities print cookable fractions and round by unit family. The servings stepper is two white 44px circles around a 600-weight count, capped at double the written recipe.
@@ -403,7 +403,7 @@ A peach band that answers who and what: "Здравейте, аз съм Иво"
 `keepShortWords()` (`src/lib/typography.ts`) ties one-letter words (в, с, и, а, о, у, к) to the next word with a non-breaking space in headlines, descriptions, steps and About copy, so none dangles at a line end.
 
 ### Resume banner
-On the home page only, in the browser that was cooking within the last week: a neutral 16px-rounded card with a quiet shadow, "Продължете: {dish} · стъпка N" in tomato link, and a 44px dismiss circle.
+On the home page only, in the browser that was cooking within the last week: a neutral 16px-rounded card with a fine border and the lift shadow, "Продължете: {dish} · стъпка N" in tomato link, and a 44px dismiss circle. It renders only after load, so it floats over the foot of the screen (centred, max 28rem, on a phone; bottom right from 640px) instead of taking space in the page, which would shift the layout (web.dev, CLS). In the DOM it follows the opening band, so keyboard users reach it early.
 
 ### Doodle band
 The original doodles (whisk, herbs, steam, citrus, soup bowl, basil and tomatoes) use 2.2px line work. `Band pattern` renders them at scale 0.85 and opacity 0.32 with tomato, herb and citrus accents around opaque content panels. The footer retains a monochrome 80px strip. Artwork is aria-hidden, non-focusable, pointer-events-none and hidden when printing. Never put text directly over visible pattern lines.

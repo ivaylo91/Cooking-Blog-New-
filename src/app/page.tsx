@@ -44,10 +44,11 @@ export default async function Home() {
             <RecipeCard recipe={lead} size="feature" priority />
           </section>
         )}
-        {/* Only the cooking browser renders it, after load; below the lead dish
-            it can't push the page's largest picture down. */}
-        <ResumeCooking />
       </Band>
+
+      {/* Floats over the foot of the screen; placed here so keyboard users
+          reach it right after the opening. */}
+      <ResumeCooking />
 
       {categories.length > 0 && (
         // The latest band below is also cream, so its top padding doubles as

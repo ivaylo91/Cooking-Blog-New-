@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Home } from "lucide-react";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 
 export default function NotFound() {
   return (
@@ -15,10 +15,10 @@ export default function NotFound() {
       <div className="mt-8 flex flex-wrap gap-2">
         <Link
           href="/recepti"
-          className={primaryButton}
+          className={primaryAction}
         >
           Към рецептите
-          <ArrowRight size={20} />
+          <ArrowRight size={20} aria-hidden="true" />
         </Link>
         <Link
           href="/"

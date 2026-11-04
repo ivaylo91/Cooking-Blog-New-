@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { RotateCw, Home } from "lucide-react";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 
 /**
  * Every page on the site reads from Supabase, so a failed query would
@@ -31,9 +31,9 @@ export default function Error({
         <button
           type="button"
           onClick={reset}
-          className={primaryButton}
+          className={primaryAction}
         >
-          <RotateCw size={20} />
+          <RotateCw size={20} aria-hidden="true" />
           Опитай отново
         </button>
         <Link

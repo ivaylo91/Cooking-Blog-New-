@@ -15,10 +15,20 @@ const item =
  * Sharing folded into one control. Four destinations side by side used to
  * outrank the recipe; behind "Сподели" they are there when wanted.
  *
- * On a phone the menu spans its nearest positioned ancestor, so the caller's
- * action row must be `relative`.
+ * It lays out its own action row, so the phone menu can span the whole row
+ * wherever the button sits; `children` are the controls before it (print).
  */
-export function ShareButtons({ title, url }: { title: string; url: string }) {
+export function ShareButtons({
+  title,
+  url,
+  children,
+  className = "",
+}: {
+  title: string;
+  url: string;
+  children?: React.ReactNode;
+  className?: string;
+}) {
   const canNativeShare = useSyncExternalStore(
     noopSubscribe,
     () => typeof navigator !== "undefined" && typeof navigator.share === "function",
@@ -71,61 +81,64 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
   const encodedText = encodeURIComponent(title);
 
   return (
-    <div ref={rootRef} className="sm:relative">
-      <button
-        ref={toggleRef}
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-expanded={open}
-        aria-controls="share-menu"
-        className="flex h-11 items-center gap-2 rounded-full bg-surface-muted px-4 font-semibold transition-colors hover:bg-border-subtle"
-      >
-        <Share2 size={18} />
-        Сподели
-        <ChevronDown
-          size={18}
-          className={`transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
-
-      {open && (
-        <div
-          id="share-menu"
-          // On a phone it spans the action row, anchored to the row itself, so
-          // it can't run off screen wherever the button sits. Above the sticky
-          // tab bar (z-30), below the site header (z-40).
-          className="animate-rise absolute inset-x-0 top-full z-[35] mt-2 rounded-2xl border border-border-subtle bg-surface p-1.5 shadow-lift sm:inset-x-auto sm:left-0 sm:w-64"
+    <div className={`relative flex items-center gap-2 ${className}`}>
+      {children}
+      <div ref={rootRef} className="sm:relative">
+        <button
+          ref={toggleRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls="share-menu"
+          className="flex h-11 items-center gap-2 rounded-full bg-surface-muted px-4 font-semibold transition-colors hover:bg-border-subtle"
         >
-          {canNativeShare && (
-            <button type="button" onClick={handleNativeShare} className={item}>
-              <Share2 size={18} /> Сподели от телефона
+          <Share2 size={18} />
+          Сподели
+          <ChevronDown
+            size={18}
+            className={`transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {open && (
+          <div
+            id="share-menu"
+            // On a phone it spans the action row, anchored to the row itself, so
+            // it can't run off screen wherever the button sits. Above the sticky
+            // tab bar (z-30), below the site header (z-40).
+            className="animate-rise absolute inset-x-0 top-full z-[35] mt-2 rounded-2xl border border-border-subtle bg-surface p-1.5 shadow-lift sm:inset-x-auto sm:left-0 sm:w-64"
+          >
+            {canNativeShare && (
+              <button type="button" onClick={handleNativeShare} className={item}>
+                <Share2 size={18} /> Сподели от телефона
+              </button>
+            )}
+            <a
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={item}
+            >
+              <FacebookIcon className="size-[18px]" /> Facebook
+            </a>
+            <a href={`viber://forward?text=${encodedText}%20${encodedUrl}`} className={item}>
+              <ViberIcon className="size-[18px]" /> Viber
+            </a>
+            <a
+              href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={item}
+            >
+              <WhatsAppIcon className="size-[18px]" /> WhatsApp
+            </a>
+            <button type="button" onClick={handleCopy} className={item} aria-live="polite">
+              {copied ? <Check size={18} /> : <Link2 size={18} />}
+              {copied ? "Копирано" : "Копирай линк"}
             </button>
-          )}
-          <a
-            href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={item}
-          >
-            <FacebookIcon className="size-[18px]" /> Facebook
-          </a>
-          <a href={`viber://forward?text=${encodedText}%20${encodedUrl}`} className={item}>
-            <ViberIcon className="size-[18px]" /> Viber
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodedText}%20${encodedUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={item}
-          >
-            <WhatsAppIcon className="size-[18px]" /> WhatsApp
-          </a>
-          <button type="button" onClick={handleCopy} className={item} aria-live="polite">
-            {copied ? <Check size={18} /> : <Link2 size={18} />}
-            {copied ? "Копирано" : "Копирай линк"}
-          </button>
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

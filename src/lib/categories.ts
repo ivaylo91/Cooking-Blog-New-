@@ -8,7 +8,13 @@ import {
   Soup,
   type LucideIcon,
 } from "lucide-react";
+import type { Tone } from "@/components/Band";
 import type { Category } from "@/types/recipe";
+
+/** A food colour: one of Band's light section tones, never the dark garden or plain cream. */
+type Tint = Exclude<Tone, "garden" | "plain">;
+
+const FALLBACK_TINT: Tint = "peach";
 
 /**
  * Every shelf in one place, in a cook's order, not the alphabet: what you make
@@ -20,7 +26,7 @@ import type { Category } from "@/types/recipe";
  * `icon` is one drawn sign per shelf, so a category is recognised before it is
  * read.
  */
-const SHELVES: { slug: string; tint: string; icon: LucideIcon }[] = [
+const SHELVES: { slug: string; tint: Tint; icon: LucideIcon }[] = [
   { slug: "osnovni-yastia", tint: "peach", icon: CookingPot },
   { slug: "supi", tint: "butter", icon: Soup },
   { slug: "salati", tint: "sage", icon: Salad },
@@ -43,7 +49,7 @@ export function inCooksOrder(categories: Category[]): Category[] {
 }
 
 export function categoryTint(slug: string | null | undefined): string {
-  return `var(--${SHELVES[shelfIndex(slug)]?.tint ?? "peach"})`;
+  return `var(--${SHELVES[shelfIndex(slug)]?.tint ?? FALLBACK_TINT})`;
 }
 
 /**

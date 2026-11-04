@@ -14,7 +14,8 @@ const MAX_COMMENTS_PER_WINDOW = 3;
 const RATE_WINDOW_SECONDS = 120;
 
 export interface CommentActionState {
-  status: "idle" | "success" | "rate_limited" | "error";
+  /** "invalid": the name or text was empty. "error": the comment could not be saved. */
+  status: "idle" | "success" | "rate_limited" | "invalid" | "error";
 }
 
 async function getIpHash(): Promise<string> {
@@ -39,7 +40,7 @@ export async function addComment(
 
   const authorName = String(formData.get("author_name") ?? "").trim().slice(0, 60);
   const text = String(formData.get("text") ?? "").trim().slice(0, 1000);
-  if (!authorName || !text) return { status: "error" };
+  if (!authorName || !text) return { status: "invalid" };
 
   const supabase = await createClient();
   const ipHash = await getIpHash();

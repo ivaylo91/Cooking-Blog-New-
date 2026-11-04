@@ -1,15 +1,16 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { AuthorPortrait, ivoPhoto } from "@/components/AuthorPortrait";
+import { AuthorPortrait } from "@/components/AuthorPortrait";
 import { Band } from "@/components/Band";
 import { JsonLd } from "@/components/JsonLd";
 import { RecipeCard } from "@/components/RecipeCard";
 import { SectionHead } from "@/components/SectionHead";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 import { recipeCount } from "@/lib/format";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import { keepShortWords } from "@/lib/typography";
+import ivoPhoto from "@/components/ivo.jpg";
 
 export const metadata: Metadata = {
   title: "За Иво",
@@ -81,7 +82,7 @@ export default async function ZaIvoPage() {
             </p>
             <Link
               href="/recepti"
-              className={`mt-6 shadow-card ${primaryButton}`}
+              className={`mt-6 shadow-card ${primaryAction}`}
             >
               Към рецептите
               <ArrowRight size={20} aria-hidden="true" />
@@ -91,7 +92,7 @@ export default async function ZaIvoPage() {
           <AuthorPortrait
             className="w-56 shadow-lift ring-4 ring-surface sm:w-64 md:w-full"
             sizes="(min-width: 1024px) 20rem, (min-width: 768px) 17rem, 16rem"
-            eager
+            priority
           />
         </div>
       </div>

@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Loader2, Send } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 import { submitInTransition } from "@/lib/forms";
 
 const initialState: CommentActionState = { status: "idle" };
@@ -32,8 +32,9 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
     }
   }, [state]);
 
-  // The server rejected the name or the text; a rate limit is no one field's fault.
-  const isInvalid = state.status === "error";
+  // Only an empty name or text is the fields' fault; a failed save or a rate
+  // limit is not.
+  const isInvalid = state.status === "invalid";
 
   return (
     <form
@@ -110,7 +111,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className={`self-start shadow-card ${primaryButton}`}
+        className={`self-start shadow-card ${primaryAction}`}
       >
         {isPending ? (
           <Loader2 size={20} aria-hidden="true" className="motion-safe:animate-spin" />
@@ -129,9 +130,14 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
             Твърде много коментари за кратко време. Опитайте отново след малко.
           </span>
         )}
+        {state.status === "invalid" && (
+          <span className="text-destructive-strong">
+            Коментарът не беше публикуван. Попълнете името и текста и опитайте отново.
+          </span>
+        )}
         {state.status === "error" && (
           <span className="text-destructive-strong">
-            Коментарът не беше публикуван. Проверете името и текста и опитайте отново.
+            Коментарът не беше публикуван. Опитайте отново след малко.
           </span>
         )}
       </p>

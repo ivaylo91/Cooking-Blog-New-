@@ -1,7 +1,7 @@
 "use client";
 
 import { RotateCw } from "lucide-react";
-import { primaryButton } from "@/components/styles";
+import { primaryAction } from "@/components/styles";
 import "./globals.css";
 
 /**
@@ -28,7 +28,7 @@ export default function GlobalError({
           <button
             type="button"
             onClick={reset}
-            className={`mt-6 ${primaryButton}`}
+            className={`mt-6 ${primaryAction}`}
           >
             <RotateCw size={20} aria-hidden="true" />
             Опитай отново
