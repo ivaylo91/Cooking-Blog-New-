@@ -4,6 +4,7 @@ import { getImageUrl } from "@/lib/images";
 import { OG_COLORS, ogFonts } from "@/lib/og";
 import { getRecipeBySlug, getRecipes } from "@/lib/recipes";
 
+export const alt = "Рецепта от Кулинарния блог на Иво";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

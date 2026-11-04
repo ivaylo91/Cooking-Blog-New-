@@ -1,4 +1,5 @@
 import { getRecipes } from "@/lib/recipes";
+import { siteUrl } from "@/lib/site";
 
 function escapeXml(value: string): string {
   return value
@@ -10,7 +11,6 @@ function escapeXml(value: string): string {
 }
 
 export async function GET() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const recipes = await getRecipes({ limit: 30 });
 
   const items = recipes

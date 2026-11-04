@@ -18,11 +18,14 @@ export function ImageUpload({
   path,
   onChange,
   folder,
+  baseName = "",
   size = "default",
 }: {
   path: string | null;
   onChange: (path: string | null) => void;
   folder: string;
+  /** Words for the file name, e.g. the recipe slug, so the photo's URL describes it. */
+  baseName?: string;
   size?: "default" | "compact";
 }) {
   const [uploading, setUploading] = useState(false);
@@ -47,7 +50,14 @@ export function ImageUpload({
     try {
       const supabase = createClient();
       // The extension comes from the checked type, never from the file name.
-      const objectPath = `${folder}/${crypto.randomUUID()}.${ext}`;
+      // A short random suffix keeps names unique without hiding the words.
+      const words = baseName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 60);
+      const unique = crypto.randomUUID().slice(0, 12);
+      const objectPath = `${folder}/${words ? `${words}-${unique}` : crypto.randomUUID()}.${ext}`;
       const { error: uploadError } = await supabase.storage
         .from("recipe-images")
         .upload(objectPath, file, { upsert: false });

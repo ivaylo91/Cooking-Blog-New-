@@ -111,6 +111,8 @@ export function RecipeForm({
   const [title, setTitle] = useState(initialRecipe?.title ?? "");
   const [slug, setSlug] = useState(initialRecipe?.slug ?? "");
   const [slugTouched, setSlugTouched] = useState(!!initialRecipe);
+  // Matches updateRecipe, which keeps a published recipe's slug.
+  const slugLocked = !!initialRecipe?.published;
   const [description, setDescription] = useState(initialRecipe?.description ?? "");
   const [categoryId, setCategoryId] = useState(initialRecipe?.category_id ?? "");
   const [cuisine, setCuisine] = useState(initialRecipe?.cuisine ?? "Българска");
@@ -270,12 +272,20 @@ export function RecipeForm({
               required
               placeholder="boba-chorba"
               value={slug}
+              readOnly={slugLocked}
+              aria-describedby={slugLocked ? "slug-locked-hint" : undefined}
               onChange={(e) => {
                 setSlug(e.target.value);
                 setSlugTouched(true);
               }}
-              className={`font-mono ${fieldClass}`}
+              className={`font-mono ${fieldClass} ${slugLocked ? "opacity-70" : ""}`}
             />
+            {slugLocked && (
+              <span id="slug-locked-hint" className="text-small font-normal text-muted-foreground">
+                Адресът на публикувана рецепта не се сменя, за да не се счупят линковете към нея.
+                Скрийте рецептата, ако все пак трябва да го смените.
+              </span>
+            )}
           </label>
 
           <label className={`${labelClass} sm:col-span-2`}>
@@ -368,7 +378,7 @@ export function RecipeForm({
 
           <div className="sm:col-span-2">
             <span className="mb-1.5 block font-semibold">Снимка</span>
-            <ImageUpload path={imagePath} onChange={setImagePath} folder="recipes" />
+            <ImageUpload path={imagePath} onChange={setImagePath} folder="recipes" baseName={slug} />
           </div>
 
           <label className="flex min-h-11 cursor-pointer items-center gap-3 font-semibold sm:col-span-2">
@@ -544,6 +554,7 @@ export function RecipeForm({
                 path={step.image_path}
                 onChange={(path) => updateStep(index, { image_path: path })}
                 folder="steps"
+                baseName={`${slug}-stapka-${index + 1}`}
               />
               <div className="hidden sm:mt-1 sm:flex sm:items-center sm:gap-1">
                 <button

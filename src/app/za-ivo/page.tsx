@@ -11,12 +11,17 @@ import { recipeCount } from "@/lib/format";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
 import { keepShortWords } from "@/lib/typography";
 import ivoPhoto from "@/components/ivo.jpg";
+import { sharedOpenGraph, siteUrl } from "@/lib/site";
+
+const description =
+  "Иво е авторът на Кулинарния блог: домашни рецепти, сготвени и снимани в собствената му кухня, с точни мерки и ясни стъпки.";
 
 export const metadata: Metadata = {
   title: "За Иво",
-  description:
-    "Иво е авторът на Кулинарния блог: домашни рецепти, сготвени и снимани в собствената му кухня, с точни мерки и ясни стъпки.",
+  description,
   alternates: { canonical: "/za-ivo" },
+  openGraph: { ...sharedOpenGraph, type: "profile", url: "/za-ivo", title: "За Иво", description },
+  twitter: { card: "summary_large_image", title: "За Иво", description },
 };
 
 // How the recipes are made, in Иво's own voice. Each line is a claim he has
@@ -40,7 +45,6 @@ const principles = [
   },
 ];
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 // The author behind every recipe's byline, so search engines can tie the
 // recipes to one real person.

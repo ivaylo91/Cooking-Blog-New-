@@ -26,6 +26,8 @@ import { getImageUrl, getPlaceholderVariant } from "@/lib/images";
 import { keepShortWords } from "@/lib/typography";
 import ivoPhoto from "@/components/ivo.jpg";
 import { getRecipeBySlug, getRecipeComments, getRecipes, getRelatedRecipes } from "@/lib/recipes";
+import { sharedOpenGraph, siteUrl } from "@/lib/site";
+import { stepAnchor } from "@/lib/steps";
 
 // "Средно" reads as an adverb on its own; under a "Трудност" label it needs
 // the feminine adjective.
@@ -35,8 +37,9 @@ const DIFFICULTY_LABEL: Record<string, string> = {
   трудно: "Висока",
 };
 
-function isoDuration(minutes: number): string {
-  return `PT${minutes}M`;
+/** ISO 8601, or nothing: a zero "PT0M" would claim the dish takes no time. */
+function isoDuration(minutes: number): string | undefined {
+  return minutes > 0 ? `PT${minutes}M` : undefined;
 }
 
 const dateFormat = new Intl.DateTimeFormat("bg-BG", {
@@ -83,7 +86,9 @@ export async function generateMetadata({
     description,
     alternates: { canonical: `/recepti/${recipe.slug}` },
     openGraph: {
+      ...sharedOpenGraph,
       type: "article",
+      url: `/recepti/${recipe.slug}`,
       title: recipe.title,
       description,
       publishedTime: recipe.created_at,
@@ -117,7 +122,6 @@ export default async function RecipePage({
   const totalTime = recipe.prep_time_minutes + recipe.cook_time_minutes;
   const ratingAverage =
     recipe.rating_count > 0 ? recipe.rating_sum / recipe.rating_count : 0;
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   const recipeUrl = `${siteUrl}/recepti/${recipe.slug}`;
 
   const jsonLd = {
@@ -139,12 +143,15 @@ export default async function RecipePage({
     recipeYield: `${recipe.servings} порции`,
     recipeCategory: recipe.category?.name,
     recipeCuisine: recipe.cuisine,
-    keywords: recipe.tags.map((t) => t.name).join(", "),
+    keywords: recipe.tags.length > 0 ? recipe.tags.map((t) => t.name).join(", ") : undefined,
     recipeIngredient: recipe.ingredients.map((i) =>
       [i.amount, i.unit, i.item, i.note && `(${i.note})`].filter(Boolean).join(" ")
     ),
-    recipeInstructions: recipe.steps.map((s) => ({
+    // Each step links to its own place on the page, so Google can send a
+    // searcher straight to it.
+    recipeInstructions: recipe.steps.map((s, index) => ({
       "@type": "HowToStep",
+      url: `${recipeUrl}#${stepAnchor(index)}`,
       text: s.text,
       image: getImageUrl(s.image_path) ?? undefined,
     })),

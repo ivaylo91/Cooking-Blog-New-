@@ -5,12 +5,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
-import { JsonLd } from "@/components/JsonLd";
-
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
-const siteName = "Кулинарният блог на Иво";
-const siteDescription =
-  "Домашни български рецепти, сготвени в кухнята на Иво: основни ястия, супи, салати, тестени и десерти с точни мерки и ясни стъпки.";
+import { sharedOpenGraph, siteDescription, siteName, siteUrl } from "@/lib/site";
 
 // Onest is a contemporary grotesk drawn for Cyrillic first, so Bulgarian text
 // sets as naturally as Latin. It carries everything a cook reads and taps.
@@ -38,33 +33,20 @@ export const metadata: Metadata = {
   alternates: {
     types: { "application/rss+xml": "/rss.xml" },
   },
+  // Lets Google show the large food photos in Discover and image-rich results.
+  robots: { "max-image-preview": "large" },
+  // Defaults for pages that set no openGraph of their own. No url here: an
+  // inherited one would make every such page share as the home page.
   openGraph: {
+    ...sharedOpenGraph,
     type: "website",
-    locale: "bg_BG",
-    siteName,
     title: siteName,
     description: siteDescription,
-    url: siteUrl,
   },
   twitter: {
     card: "summary_large_image",
     title: siteName,
     description: siteDescription,
-  },
-};
-
-const websiteJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: siteName,
-  url: siteUrl,
-  inLanguage: "bg",
-  description: siteDescription,
-  publisher: { "@type": "Person", name: "Иво", url: `${siteUrl}/za-ivo` },
-  potentialAction: {
-    "@type": "SearchAction",
-    target: `${siteUrl}/tarsene?q={search_term_string}`,
-    "query-input": "required name=search_term_string",
   },
 };
 
@@ -84,7 +66,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="flex min-h-full flex-col bg-background text-foreground">
-        <JsonLd data={websiteJsonLd} />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-accent focus:px-5 focus:py-3 focus:text-body focus:font-semibold focus:text-accent-foreground"
@@ -96,7 +77,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
-        {/* Cookieless, so no consent banner is needed under GDPR. */}
+        {/* They set no cookies, but they do send page-view data from the
+            browser, which EU guidance treats as needing a lawful basis or
+            consent; see COOKIES-PRIVACY-RESEARCH.md before relying on them. */}
         <Analytics />
         <SpeedInsights />
       </body>

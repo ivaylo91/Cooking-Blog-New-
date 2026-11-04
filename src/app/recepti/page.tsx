@@ -7,6 +7,7 @@ import { Pagination } from "@/components/Pagination";
 import { RecipeCard } from "@/components/RecipeCard";
 import { RecipeFilters } from "@/components/RecipeFilters";
 import { getCategories, getPagedRecipes, getStockedCategories } from "@/lib/recipes";
+import { sharedOpenGraph } from "@/lib/site";
 import { DIFFICULTIES, TIME_FILTERS } from "@/types/recipe";
 import type { Difficulty, TimeFilter } from "@/types/recipe";
 
@@ -51,12 +52,22 @@ export async function generateMetadata({
     const title = `Всички рецепти${pageSuffix}`;
     const description =
       "Всички домашни рецепти от Кулинарния блог на Иво: основни ястия, супи, салати, тестени, десерти и консерви, с филтри по време и трудност.";
-    return { title, description, alternates: { canonical }, openGraph: { title, description } };
+    return {
+      title,
+      description,
+      alternates: { canonical },
+      openGraph: { ...sharedOpenGraph, url: canonical, title, description },
+    };
   }
 
   const title = `${category.name}: рецепти${pageSuffix}`;
   const description = `${category.name}: домашни рецепти, сготвени в кухнята на Иво, с точни мерки, ясни стъпки и снимки.`;
-  return { title, description, alternates: { canonical }, openGraph: { title, description } };
+  return {
+    title,
+    description,
+    alternates: { canonical },
+    openGraph: { ...sharedOpenGraph, url: canonical, title, description },
+  };
 }
 
 export default async function ReceptiPage({

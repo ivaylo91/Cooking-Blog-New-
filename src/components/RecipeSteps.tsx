@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Check, RotateCcw } from "lucide-react";
 import { StepTimer } from "@/components/StepTimer";
 import { rememberCooking } from "@/lib/lastCooked";
+import { stepAnchor } from "@/lib/steps";
 import { extractStepDuration } from "@/lib/timer";
 import { useStoredSet } from "@/lib/useStoredSet";
 
@@ -48,6 +49,7 @@ export function RecipeSteps({
           return (
             <li
               key={step.id}
+              id={stepAnchor(index)}
               className="grid grid-cols-[auto_1fr] gap-4 border-b border-border-subtle py-5 last:border-b-0"
             >
               <button
@@ -88,7 +90,7 @@ export function RecipeSteps({
                   <div className="relative mt-4 aspect-video w-full max-w-md overflow-hidden rounded-2xl print:hidden">
                     <Image
                       src={step.imageUrl}
-                      alt={`Стъпка ${index + 1}`}
+                      alt={`${title}: стъпка ${index + 1}`}
                       fill
                       sizes="(min-width: 480px) 448px, 100vw"
                       className="object-cover"

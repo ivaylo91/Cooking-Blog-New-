@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { LogoMark } from "@/components/Logo";
 import { OG_COLORS, ogFonts } from "@/lib/og";
 
+export const alt = "Кулинарният блог на Иво: домашни рецепти";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

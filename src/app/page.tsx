@@ -4,17 +4,41 @@ import { ArrowRight } from "lucide-react";
 import { AuthorPortrait } from "@/components/AuthorPortrait";
 import { Band } from "@/components/Band";
 import { CategoryIcon } from "@/components/CategoryIcon";
+import { JsonLd } from "@/components/JsonLd";
 import { RecipeCard } from "@/components/RecipeCard";
 import { ResumeCooking } from "@/components/ResumeCooking";
 import { SectionHead } from "@/components/SectionHead";
 import { SubscribeForm } from "@/components/SubscribeForm";
 import { categoryTint, inCooksOrder } from "@/lib/categories";
 import { getRecipes, getStockedCategories } from "@/lib/recipes";
+import { sharedOpenGraph, siteDescription, siteName, siteUrl } from "@/lib/site";
 import { keepShortWords } from "@/lib/typography";
 
+const homeTitle = "Кулинарният блог на Иво: домашни рецепти, изпробвани в моята кухня";
+
 export const metadata: Metadata = {
-  title: { absolute: "Кулинарният блог на Иво: домашни рецепти, изпробвани в моята кухня" },
+  title: { absolute: homeTitle },
   alternates: { canonical: "/" },
+  openGraph: {
+    ...sharedOpenGraph,
+    type: "website",
+    url: "/",
+    title: homeTitle,
+    description: siteDescription,
+  },
+};
+
+// The site's name for Google's site-name feature, on the home page only, as
+// Google asks. No SearchAction: Google retired the sitelinks search box.
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: siteName,
+  alternateName: "Cooking Blog of Ivo",
+  url: `${siteUrl}/`,
+  inLanguage: "bg",
+  description: siteDescription,
+  publisher: { "@type": "Person", name: "Иво", url: `${siteUrl}/za-ivo` },
 };
 
 export default async function Home() {
@@ -30,6 +54,7 @@ export default async function Home() {
 
   return (
     <div>
+      <JsonLd data={websiteJsonLd} />
       <Band tone="peach" pattern innerClassName="py-12 sm:py-16">
         <div className="grid gap-4 rounded-3xl bg-peach p-5 sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
           <h1 className="animate-rise max-w-xl text-display font-bold">

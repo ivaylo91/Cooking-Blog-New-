@@ -139,10 +139,20 @@ export async function createRecipe(input: RecipeFormInput) {
 export async function updateRecipe(id: string, input: RecipeFormInput) {
   const { supabase } = await requireSession();
 
+  // A published recipe's URL is what search engines and shared links know;
+  // renaming it would leave them on a dead page. Unpublish first to rename.
+  const { data: current, error: currentError } = await supabase
+    .from("recipes")
+    .select("slug, published")
+    .eq("id", id)
+    .single();
+  if (currentError) throw currentError;
+  const slug = current.published ? current.slug : input.slug;
+
   const { error } = await supabase
     .from("recipes")
     .update({
-      slug: input.slug,
+      slug,
       title: input.title,
       description: input.description,
       category_id: input.category_id,
