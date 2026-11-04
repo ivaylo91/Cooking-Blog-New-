@@ -1,14 +1,11 @@
 "use server";
 
-import { createHash } from "crypto";
+import { createHmac } from "crypto";
 import { headers } from "next/headers";
 import { updateTag } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { RECIPES_TAG } from "@/lib/recipes";
 
-// Set IP_HASH_SALT in the environment: a salt committed to the repository
-// doesn't stop anyone turning a stored hash back into an IPv4 address.
-const IP_HASH_SALT = process.env.IP_HASH_SALT ?? "kbi-comment-salt-v1";
 const MIN_SUBMIT_SECONDS = 2;
 const MAX_COMMENTS_PER_WINDOW = 3;
 const RATE_WINDOW_SECONDS = 120;
@@ -18,10 +15,28 @@ export interface CommentActionState {
   status: "idle" | "success" | "rate_limited" | "invalid" | "error";
 }
 
+/**
+ * The secret behind every IP fingerprint. A key anyone can read in the repo
+ * would let them hash all 4.3 billion IPv4 addresses and read the stored
+ * fingerprints back, so production refuses to run without IP_HASH_SALT.
+ */
+function ipHashKey(): string {
+  const key = process.env.IP_HASH_SALT;
+  if (key) return key;
+  if (process.env.VERCEL_ENV === "production") {
+    throw new Error("IP_HASH_SALT is not set: comments and ratings are disabled until it is.");
+  }
+  return "local-development-only";
+}
+
+/**
+ * A keyed one-way fingerprint (HMAC-SHA-256) of the visitor's IP, the kind
+ * EDPB Guidelines 01/2025 on pseudonymisation prefer over a plain hash.
+ */
 async function getIpHash(): Promise<string> {
   const h = await headers();
   const ip = h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? h.get("x-real-ip") ?? "unknown";
-  return createHash("sha256").update(`${ip}:${IP_HASH_SALT}`).digest("hex").slice(0, 32);
+  return createHmac("sha256", ipHashKey()).update(ip).digest("hex").slice(0, 32);
 }
 
 export async function addComment(
