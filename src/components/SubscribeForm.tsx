@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { Loader2, Mail } from "lucide-react";
 import { subscribe, type SubscribeActionState } from "@/app/recepti/actions";
 import { primaryAction } from "@/components/styles";
@@ -105,6 +106,12 @@ export function SubscribeForm() {
           ) : (
             MESSAGES[state.status]
           )}
+        </p>
+        <p className="mt-1 px-2 text-small text-muted-foreground">
+          Използвам имейла ви само за писма за нови рецепти.{" "}
+          <Link href="/poveritelnost" className="font-semibold text-link underline">
+            Поверителност
+          </Link>
         </p>
       </div>
     </section>

@@ -18,6 +18,7 @@ async function buildSitemap(): Promise<MetadataRoute.Sitemap> {
     { url: siteUrl, lastModified },
     { url: `${siteUrl}/recepti`, lastModified },
     { url: `${siteUrl}/za-ivo`, lastModified },
+    { url: `${siteUrl}/poveritelnost` },
   ];
 
   // Each stocked shelf is an indexable page with its own canonical URL, last

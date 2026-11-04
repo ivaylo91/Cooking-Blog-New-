@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { Loader2, Send } from "lucide-react";
 import { addComment, type CommentActionState } from "@/app/recepti/actions";
 import { primaryAction } from "@/components/styles";
@@ -77,7 +78,7 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
           className={`${field} h-12`}
         />
         <p id="comment-name-hint" className="text-small text-muted-foreground">
-          Ще се вижда до коментара.
+          Ще се вижда до коментара. Може и само малко име или псевдоним.
         </p>
       </div>
       <div className="flex flex-col gap-1.5">
@@ -120,6 +121,13 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
         )}
         {isPending ? "Публикуване…" : "Публикувай"}
       </button>
+
+      <p className="-mt-1 text-small text-muted-foreground">
+        За защита от спам пазя хеширан отпечатък на IP адреса ви, не самия адрес.{" "}
+        <Link href="/poveritelnost" className="font-semibold text-link underline">
+          Поверителност
+        </Link>
+      </p>
 
       <p id="comment-status" role="status" className="min-h-6 font-medium">
         {state.status === "success" && (

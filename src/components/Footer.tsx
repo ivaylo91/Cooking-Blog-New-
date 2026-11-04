@@ -16,6 +16,7 @@ async function CopyrightYear() {
 const links = [
   { href: "/recepti", label: "Рецепти" },
   { href: "/za-ivo", label: "За Иво" },
+  { href: "/poveritelnost", label: "Поверителност" },
 ];
 
 export async function Footer() {

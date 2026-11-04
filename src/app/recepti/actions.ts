@@ -118,10 +118,10 @@ export async function subscribe(
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!EMAIL_PATTERN.test(email) || email.length > 254) return { status: "invalid" };
 
+  // Only the address: nothing reads an IP for subscribers, and an IP
+  // doesn't prove consent anyway (COOKIES-PRIVACY-RESEARCH.md).
   const supabase = await createClient();
-  const { error } = await supabase
-    .from("subscribers")
-    .insert({ email, ip_hash: await getIpHash() });
+  const { error } = await supabase.from("subscribers").insert({ email });
 
   // 23505 = unique violation, i.e. already subscribed.
   if (error?.code === "23505") return { status: "duplicate" };

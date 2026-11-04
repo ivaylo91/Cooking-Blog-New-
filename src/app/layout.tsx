@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { Lora, Onest } from "next/font/google";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Footer } from "@/components/Footer";
+import { SiteAnalytics } from "@/components/SiteAnalytics";
 import { sharedOpenGraph, siteDescription, siteName, siteUrl } from "@/lib/site";
 
 // Onest is a contemporary grotesk drawn for Cyrillic first, so Bulgarian text
@@ -77,11 +76,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Footer />
-        {/* They set no cookies, but they do send page-view data from the
-            browser, which EU guidance treats as needing a lawful basis or
-            consent; see COOKIES-PRIVACY-RESEARCH.md before relying on them. */}
-        <Analytics />
-        <SpeedInsights />
+        {/* No cookies; disclosed on /poveritelnost with an opt-out there, the
+            route chosen in COOKIES-PRIVACY-RESEARCH.md (option a). */}
+        <SiteAnalytics />
       </body>
     </html>
   );
