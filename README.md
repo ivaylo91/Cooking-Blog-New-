@@ -18,7 +18,9 @@ Recipe blog built with Next.js (App Router) and Supabase.
    (the schema below also does this for you if the bucket doesn't exist yet).
 5. Open **SQL Editor → New query**, paste the contents of [`supabase/schema.sql`](supabase/schema.sql),
    and run it. This creates all tables, row-level security policies, storage policies,
-   and seeds the starter categories.
+   and seeds the starter categories. Then run
+   [`supabase/search-ingredients-tags.sql`](supabase/search-ingredients-tags.sql) the
+   same way, so search also finds recipes by their ingredients and tags.
 6. In **Authentication → Users**, click **Add user** and create your own admin account
    (email + password). Only authenticated users can write recipes — there is no public
    sign-up.

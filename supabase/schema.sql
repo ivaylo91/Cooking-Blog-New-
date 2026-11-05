@@ -68,6 +68,9 @@ create table if not exists recipes (
   published boolean not null default false,
   likes_count int not null default 0,
   author_id uuid references auth.users (id) on delete set null,
+  -- Title and description only here; search-ingredients-tags.sql turns
+  -- this into a trigger-maintained column that also covers ingredients and
+  -- tags. Run it after this file.
   search_vector tsvector generated always as (
     to_tsvector('simple', coalesce(title, '') || ' ' || coalesce(description, ''))
   ) stored,
