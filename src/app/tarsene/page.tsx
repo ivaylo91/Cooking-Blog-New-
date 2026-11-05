@@ -77,7 +77,7 @@ export default async function TarseneStranica({
         <div className="animate-rise mt-4 rounded-3xl bg-surface p-6 shadow-card sm:p-8">
           <p className="font-heading text-heading font-bold">Няма такава рецепта</p>
           <p className="mt-2 text-muted-foreground">
-            Опитайте с по-кратка дума или разгледайте някоя категория:
+            Опитайте с друга дума, например продукт или вид ястие, или разгледайте някоя категория:
           </p>
           <CategoryChips categories={categories} />
         </div>

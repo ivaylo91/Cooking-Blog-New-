@@ -82,9 +82,29 @@ export function formatTimeRemaining(totalSeconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
+let audio: AudioContext | null = null;
+
 /**
- * Plays a pleasant three-tone chime using Web Audio API and vibrates phone.
- * Doesn't require any network request or external audio asset.
+ * Creates (or wakes) the one audio context the chime uses. Call it from a
+ * tap: iOS only lets a page play sound from a context started by a gesture,
+ * and a context created when time runs out would stay silent.
+ */
+export function primeTimerAudio(): void {
+  try {
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (!AudioCtx) return;
+    audio ??= new AudioCtx();
+    if (audio.state === "suspended") audio.resume().catch(() => {});
+  } catch {
+    // No audio: the visual and vibration cues remain.
+  }
+}
+
+/**
+ * Plays a warm four-note chime through the primed audio context and vibrates
+ * the phone where the browser allows it. No network request or audio file.
  */
 export function notifyTimerFinished(): void {
   try {
@@ -96,10 +116,9 @@ export function notifyTimerFinished(): void {
   }
 
   try {
-    const AudioCtx = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-    if (!AudioCtx) return;
-
-    const ctx = new AudioCtx();
+    if (!audio) primeTimerAudio();
+    const ctx = audio;
+    if (!ctx) return;
     const notes = [523.25, 659.25, 783.99, 1046.5]; // C5, E5, G5, C6 (warm arpeggio)
     const now = ctx.currentTime;
 
@@ -124,4 +143,3 @@ export function notifyTimerFinished(): void {
     // Audio context may be restricted by autoplay policies before user gesture
   }
 }
-

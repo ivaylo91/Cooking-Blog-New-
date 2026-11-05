@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useSyncExternalStore } from "react";
+import { useActionState, useEffect, useState, useSyncExternalStore } from "react";
 import { Star } from "lucide-react";
 import { rateRecipe, type RatingActionState } from "@/app/recepti/actions";
 
@@ -55,13 +55,25 @@ export function RatingStars({
   // Once the visitor has voted, show their own rating; otherwise the average.
   const filledTo = hovered ?? myRating ?? Math.round(average);
 
-  function remember(star: number) {
-    setPicked(star);
+  // The pick shows at once; it is remembered on this device only once the
+  // server has saved it, and a failed vote puts the stars back.
+  const [seenState, setSeenState] = useState(state);
+  if (seenState !== state) {
+    setSeenState(state);
+    if (state.status === "error") setPicked(null);
+  }
+
+  useEffect(() => {
+    if (state.status !== "success" || state.value == null) return;
     try {
-      localStorage.setItem(storageKey(recipeId), String(star));
+      localStorage.setItem(storageKey(recipeId), String(state.value));
     } catch {
       // Private mode or blocked storage: the vote still counts server-side.
     }
+  }, [state, recipeId]);
+
+  function remember(star: number) {
+    setPicked(star);
   }
 
   return (
@@ -87,7 +99,7 @@ export function RatingStars({
               onBlur={() => setHovered(null)}
               aria-label={`${star} от 5`}
               aria-pressed={myRating === star}
-              className="flex size-11 items-center justify-center transition-transform hover:scale-110 active:scale-95 disabled:opacity-50"
+              className="flex size-11 items-center justify-center transition-transform disabled:opacity-50 motion-safe:hover:scale-110 motion-safe:active:scale-95"
             >
               {/* Keyed by the vote, so the pop plays once when it lands
                   rather than every time the pointer passes over a star. */}
@@ -95,7 +107,7 @@ export function RatingStars({
                 key={picked != null && star <= picked ? `voted-${picked}` : "idle"}
                 size={26}
                 className={`${
-                  star <= filledTo ? "fill-accent text-accent" : "text-muted-foreground/60"
+                  star <= filledTo ? "fill-accent text-accent" : "text-muted-foreground"
                 } ${picked != null && star <= picked ? "animate-pop" : ""}`}
               />
             </button>
@@ -110,7 +122,7 @@ export function RatingStars({
       <p aria-live="polite" className="min-h-6 font-medium text-secondary">
         {state.status === "success" && "Благодарим за оценката!"}
         {state.status === "error" && (
-          <span className="text-destructive-strong">Оценката не беше записана.</span>
+          <span className="text-destructive-strong">Оценката не беше записана. Опитайте отново.</span>
         )}
       </p>
     </div>

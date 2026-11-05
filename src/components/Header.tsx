@@ -29,8 +29,12 @@ function DesktopLinks({ pathname }: { pathname: string | null }) {
         key={link.href}
         href={link.href}
         aria-current={active ? "page" : undefined}
-        className={`flex h-11 items-center gap-2 whitespace-nowrap rounded-full px-3 font-medium transition-colors lg:px-4 ${
-          active ? "bg-accent-soft text-link" : "hover:bg-surface-muted"
+        className={`flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 font-medium transition-colors lg:px-4 ${
+          // The underline marks the current section by shape too; the wash
+          // alone is only 1.24:1 against the header.
+          active
+            ? "bg-accent-soft text-link underline decoration-2 underline-offset-[0.35em]"
+            : "hover:bg-surface-muted"
         }`}
       >
         <link.icon size={18} aria-hidden="true" />
@@ -46,6 +50,8 @@ type Panel = "menu" | "search" | null;
 export function Header({ categories }: { categories: Category[] }) {
   const [panel, setPanel] = useState<Panel>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const searchButtonRef = useRef<HTMLButtonElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
   const menuOpen = panel === "menu";
   const searchOpen = panel === "search";
   const close = () => setPanel(null);
@@ -54,7 +60,11 @@ export function Header({ categories }: { categories: Category[] }) {
   useEffect(() => {
     if (!panel) return;
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setPanel(null);
+      if (event.key !== "Escape") return;
+      // Back to the button that opened the panel, so keyboard users keep
+      // their place instead of starting over from the top of the page.
+      (panel === "search" ? searchButtonRef : menuButtonRef).current?.focus();
+      setPanel(null);
     }
     // A tap on the page below closes the panel, as on any app's menu.
     function onPointerDown(event: PointerEvent) {
@@ -100,6 +110,7 @@ export function Header({ categories }: { categories: Category[] }) {
             in the bar rather than inside the menu. */}
         <div className="flex shrink-0 items-center md:hidden">
           <button
+            ref={searchButtonRef}
             type="button"
             onClick={() => toggle("search")}
             className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-surface-muted"
@@ -110,6 +121,7 @@ export function Header({ categories }: { categories: Category[] }) {
             {searchOpen ? <X size={22} /> : <Search size={22} />}
           </button>
           <button
+            ref={menuButtonRef}
             type="button"
             onClick={() => toggle("menu")}
             className="flex size-11 items-center justify-center rounded-full transition-colors hover:bg-surface-muted"
@@ -139,7 +151,7 @@ export function Header({ categories }: { categories: Category[] }) {
                 key={link.href}
                 href={link.href}
                 onClick={close}
-                className="flex h-14 items-center gap-3 rounded-xl px-3 text-heading font-semibold"
+                className="flex min-h-14 items-center gap-3 rounded-xl px-3 py-2 text-heading font-semibold"
               >
                 <link.icon size={22} aria-hidden="true" />
                 {link.label}
@@ -156,7 +168,7 @@ export function Header({ categories }: { categories: Category[] }) {
                     href={`/recepti?category=${c.slug}`}
                     onClick={close}
                     style={{ backgroundColor: categoryTint(c.slug) }}
-                    className="flex h-11 items-center gap-1.5 rounded-full px-4 text-small font-medium transition-transform active:scale-95"
+                    className="flex min-h-11 items-center gap-1.5 rounded-full px-4 py-2 text-small font-medium transition-transform motion-safe:active:scale-95"
                   >
                     <CategoryIcon slug={c.slug} size={16} />
                     {c.name}

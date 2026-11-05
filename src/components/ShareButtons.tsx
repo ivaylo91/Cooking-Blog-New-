@@ -36,6 +36,7 @@ export function ShareButtons({
   );
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [copyFailed, setCopyFailed] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -70,10 +71,12 @@ export function ShareButtons({
   async function handleCopy() {
     try {
       await navigator.clipboard.writeText(url);
+      setCopyFailed(false);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
       setCopied(false);
+      setCopyFailed(true);
     }
   }
 
@@ -87,17 +90,23 @@ export function ShareButtons({
         <button
           ref={toggleRef}
           type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-expanded={open}
-          aria-controls="share-menu"
-          className="flex h-11 items-center gap-2 rounded-full bg-surface-muted px-4 font-semibold transition-colors hover:bg-border-subtle"
+          // Where the phone has its own share sheet, one tap opens it: it
+          // already lists Viber, WhatsApp and the rest.
+          onClick={() => (canNativeShare ? handleNativeShare() : setOpen((v) => !v))}
+          // A disclosure only when it opens our own menu.
+          aria-expanded={canNativeShare ? undefined : open}
+          aria-controls={canNativeShare ? undefined : "share-menu"}
+          className="flex min-h-11 items-center gap-2 rounded-full bg-surface-muted px-4 py-2 font-semibold transition-colors hover:bg-border-subtle"
         >
-          <Share2 size={18} />
+          <Share2 size={18} aria-hidden="true" />
           Сподели
-          <ChevronDown
-            size={18}
-            className={`transition-transform ${open ? "rotate-180" : ""}`}
-          />
+          {!canNativeShare && (
+            <ChevronDown
+              size={18}
+              aria-hidden="true"
+              className={`transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          )}
         </button>
 
         {open && (
@@ -136,6 +145,11 @@ export function ShareButtons({
               {copied ? <Check size={18} /> : <Link2 size={18} />}
               {copied ? "Копирано" : "Копирай линк"}
             </button>
+            {copyFailed && (
+              <p role="status" className="px-3 pb-2 pt-1 text-small text-destructive-strong">
+                Копирането не стана. Копирайте адреса от лентата на браузъра.
+              </p>
+            )}
           </div>
         )}
       </div>

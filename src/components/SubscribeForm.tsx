@@ -13,8 +13,8 @@ const MESSAGES: Record<SubscribeActionState["status"], string> = {
   idle: "",
   success: "Готово! Ще получавате новите рецепти.",
   duplicate: "Този имейл вече е записан.",
-  invalid: "Моля, въведете валиден имейл адрес.",
-  error: "Нещо се обърка. Опитайте отново.",
+  invalid: "Въведете имейл адрес във вида ime@example.com.",
+  error: "Имейлът не беше записан. Опитайте отново след малко.",
 };
 
 export function SubscribeForm() {
@@ -48,6 +48,9 @@ export function SubscribeForm() {
         <form
           ref={formRef}
           action={formAction}
+          // The server checks the address and answers in our own words,
+          // instead of the browser's generic bubble.
+          noValidate
           // React clears a form after its action; handled here, a mistyped
           // address stays in the field so it can be corrected. Without
           // JavaScript the plain action above still works.

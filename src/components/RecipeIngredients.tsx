@@ -56,6 +56,11 @@ export function RecipeIngredients({
         <h2 id="sastavki-head" className="sr-only text-heading font-bold md:not-sr-only">
           Съставки
         </h2>
+        {/* The stepper is hidden on paper, so the printout says which
+            servings its quantities are for. */}
+        <p className="hidden font-semibold print:block">
+          Количества за {servings} {servings === 1 ? "порция" : "порции"}
+        </p>
         <div className="flex items-center gap-1 print:hidden">
           <button
             type="button"
@@ -108,7 +113,7 @@ export function RecipeIngredients({
                     </span>
                     <span
                       className={`min-w-[4.75rem] shrink-0 font-semibold tabular-nums transition-colors ${
-                        isChecked ? "text-muted-foreground line-through" : ""
+                        isChecked ? "text-muted-foreground line-through print:text-foreground print:no-underline" : ""
                       }`}
                     >
                       {formatQuantity(ingredient.amount, ingredient.unit, multiplier)}

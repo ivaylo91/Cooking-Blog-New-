@@ -75,7 +75,8 @@ interface FilterableQuery {
   textSearch(
     column: string,
     query: string,
-    options: { type: "websearch"; config: string }
+    // No type: a raw tsquery, as prefixQuery builds it.
+    options: { config: string }
   ): FilterableQuery;
 }
 
@@ -87,6 +88,23 @@ function recipeSelect(options: RecipeQuery): string {
   return options.categorySlug
     ? `${RECIPE_COLUMNS}, category:categories!inner(*)`
     : RECIPE_SELECT;
+}
+
+/**
+ * Turns what the reader typed into a prefix search: every word must start a
+ * word in the title or description, so "чорб" finds "чорба" and "бо" finds
+ * "боб". Bulgarian inflects the ending, so longer words lose a final vowel
+ * first ("чорби" also finds "чорба"). Only letters and digits survive, which
+ * keeps the raw tsquery syntax safe from whatever was typed.
+ */
+export function prefixQuery(input: string): string | null {
+  const words = input
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter(Boolean)
+    .map((word) => (word.length > 4 ? word.replace(/[аяоеиуъюaeiouy]$/u, "") : word))
+    .map((word) => `${word}:*`);
+  return words.length > 0 ? words.join(" & ") : null;
 }
 
 function applyRecipeFilters<Q>(query: Q, options: RecipeQuery): Q {
@@ -112,10 +130,8 @@ function applyRecipeFilters<Q>(query: Q, options: RecipeQuery): Q {
   }
 
   if (options.search) {
-    q = q.textSearch("search_vector", options.search, {
-      type: "websearch",
-      config: "simple",
-    });
+    const query = prefixQuery(options.search);
+    if (query) q = q.textSearch("search_vector", query, { config: "simple" });
   }
 
   return q as Q;

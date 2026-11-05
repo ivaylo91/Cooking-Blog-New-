@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/Skeleton";
 export default function HomeLoading() {
   return (
     <div>
+      {/* The skeleton is silent to screen readers; this says what is happening. */}
+      <p role="status" className="sr-only">Зареждане…</p>
       <Band tone="peach" pattern as="div" innerClassName="py-8 sm:py-12">
         <div className="grid gap-4 rounded-3xl bg-peach p-5 sm:p-8 lg:grid-cols-[1.2fr_1fr] lg:items-center lg:gap-16">
           <Skeleton className="h-20 w-full max-w-xl" />

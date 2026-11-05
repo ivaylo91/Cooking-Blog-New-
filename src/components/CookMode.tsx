@@ -2,18 +2,16 @@
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight, Check, ListChecks, Utensils, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, ListChecks, Timer as TimerIcon, Utensils, X } from "lucide-react";
 import { StepTimer } from "@/components/StepTimer";
 import { getImageUrl } from "@/lib/images";
 import { rememberCooking } from "@/lib/lastCooked";
 import { formatQuantity } from "@/lib/quantities";
 import { useStoredServings } from "@/lib/servings";
 import { useStoredSet } from "@/lib/useStoredSet";
-import { extractStepDuration } from "@/lib/timer";
+import { extractStepDuration, formatTimeRemaining } from "@/lib/timer";
+import { secondsLeft, useTimers } from "@/lib/useTimers";
 import type { Ingredient, Step } from "@/types/recipe";
-
-const FOCUSABLE =
-  'button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 /**
  * Bulgarian inflects nouns, so "каймата" in a step should match "кайма" in the
@@ -33,8 +31,9 @@ function usedInStep(ingredient: Ingredient, stepText: string) {
 
 /**
  * Full-screen, one step at a time, screen kept awake: the recipe as you read
- * it at the stove. It is a modal dialog, so focus moves in and comes back,
- * Escape leaves, the arrow keys turn steps, and the page behind stays still.
+ * it at the stove. It is a native modal <dialog>, so the page behind is inert,
+ * focus stays inside and comes back, Escape leaves, and the arrow keys turn
+ * steps.
  * It remembers the step you were on, and the ingredients are one tap away,
  * with the ones this step uses marked, so checking a quantity never costs
  * your place.
@@ -61,7 +60,8 @@ export function CookMode({
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const wakeLockRef = useRef<WakeLockSentinel | null>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const ingredientsToggleRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const titleId = useId();
@@ -74,6 +74,12 @@ export function CookMode({
   const stepText = currentStep?.text ?? "";
   const stepImageUrl = currentStep?.image_path ? getImageUrl(currentStep.image_path) : null;
   const detectedTimer = useMemo(() => extractStepDuration(stepText), [stepText]);
+  const timerPrefix = `${recipeId}:`;
+  // Timers still running on other steps, shown as a tray so none is lost
+  // when the cook moves on.
+  const otherTimers = useTimers().filter(
+    (timer) => timer.id.startsWith(timerPrefix) && timer.id !== `${timerPrefix}${index}`
+  );
 
   const usedNow = useMemo(
     () => new Set(ingredients.filter((i) => usedInStep(i, stepText)).map((i) => i.id)),
@@ -111,6 +117,13 @@ export function CookMode({
     triggerRef.current?.focus();
   }
 
+  function closeIngredients() {
+    setShowIngredients(false);
+    // The sheet's own button goes away with it; focus goes back to the
+    // toggle that opened it instead of falling out of the dialog.
+    requestAnimationFrame(() => ingredientsToggleRef.current?.focus());
+  }
+
   // Keep the screen awake while cooking, and re-acquire after it comes back.
   useEffect(() => {
     if (!open) return;
@@ -138,9 +151,12 @@ export function CookMode({
     };
   }, [open]);
 
-  // Modal behaviour on open: lock the page behind and move focus in.
+  // Modal behaviour on open: showModal() makes the page behind inert and keeps
+  // focus inside; the page itself is kept from scrolling under it.
   useEffect(() => {
     if (!open) return;
+    const dialog = dialogRef.current;
+    if (dialog && !dialog.open) dialog.showModal();
     const root = document.documentElement;
     const previousOverflow = root.style.overflow;
     root.style.overflow = "hidden";
@@ -174,7 +190,8 @@ export function CookMode({
     }
   }
 
-  // Keyboard while open: Escape leaves, arrows turn steps, Tab stays inside.
+  // Keyboard while open: the arrows turn steps. Escape and Tab are the
+  // dialog's own (see onCancel below).
   useEffect(() => {
     if (!open) return;
 
@@ -190,15 +207,6 @@ export function CookMode({
     }
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        event.preventDefault();
-        if (showIngredients) setShowIngredients(false);
-        else {
-          setOpen(false);
-          triggerRef.current?.focus();
-        }
-        return;
-      }
       if (!showIngredients && event.key === "ArrowRight") {
         event.preventDefault();
         step(index + 1);
@@ -207,22 +215,6 @@ export function CookMode({
       if (!showIngredients && event.key === "ArrowLeft") {
         event.preventDefault();
         step(index - 1);
-        return;
-      }
-      if (event.key === "Tab" && dialogRef.current) {
-        const focusable = Array.from(
-          dialogRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)
-        ).filter((el) => el.offsetParent !== null);
-        if (focusable.length === 0) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
       }
     }
 
@@ -234,7 +226,7 @@ export function CookMode({
 
   const isLast = index === steps.length - 1;
   const primary =
-    "flex h-16 items-center justify-center gap-2 rounded-full bg-accent text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]";
+    "flex min-h-16 py-2 items-center justify-center gap-2 rounded-full bg-accent text-body font-semibold text-accent-foreground transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97]";
 
   return (
     <>
@@ -242,19 +234,28 @@ export function CookMode({
         ref={triggerRef}
         type="button"
         onClick={openCookMode}
-        className="flex h-14 w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] sm:w-auto"
+        className="flex min-h-14 w-full items-center justify-center gap-2.5 rounded-full bg-accent px-7 py-2 text-body font-semibold text-accent-foreground shadow-card transition-[background-color,transform] hover:bg-accent-strong active:scale-[0.97] sm:w-auto"
       >
         <Utensils size={20} />
         Готви стъпка по стъпка
       </button>
 
       {open && (
-        <div
+        <dialog
           ref={dialogRef}
-          role="dialog"
-          aria-modal="true"
           aria-labelledby={titleId}
-          className="animate-rise fixed inset-0 z-[60] flex flex-col bg-background"
+          // Escape: close the ingredients sheet first, then Cook Mode.
+          onCancel={(event) => {
+            event.preventDefault();
+            if (showIngredients) closeIngredients();
+            else close();
+          }}
+          // Browsers may close a dialog on a repeated Escape without a
+          // cancellable event; keep the state in step when that happens.
+          onClose={() => {
+            if (open) close();
+          }}
+          className="animate-rise fixed inset-0 m-0 hidden h-full max-h-none w-full max-w-none flex-col border-0 bg-background p-0 text-foreground open:flex backdrop:bg-background"
         >
           <div className="flex items-center justify-between gap-3 px-4 pt-4 sm:px-8">
             <h2 id={titleId} className="min-w-0 truncate text-body font-bold">
@@ -286,17 +287,44 @@ export function CookMode({
             className="relative flex flex-1 flex-col overflow-y-auto px-5 py-8 sm:px-12"
           >
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <p aria-live="polite" className="font-semibold text-muted-foreground tabular-nums">
+              <p className="font-semibold text-muted-foreground tabular-nums">
                 Стъпка {index + 1} от {steps.length}
               </p>
               {detectedTimer && (
                 <StepTimer
-                  key={`${index}-${detectedTimer.seconds}`}
+                  id={`${timerPrefix}${index}`}
                   initialSeconds={detectedTimer.seconds}
                   label={detectedTimer.label}
                 />
               )}
             </div>
+            {/* Says the new step itself, not only its number, when it changes. */}
+            <p aria-live="polite" className="sr-only">
+              Стъпка {index + 1} от {steps.length}. {stepText}
+            </p>
+
+            {otherTimers.length > 0 && (
+              <ul className="mt-3 flex flex-wrap gap-2" aria-label="Други таймери">
+                {otherTimers.map((timer) => {
+                  const stepIndex = Number(timer.id.slice(timerPrefix.length));
+                  return (
+                    <li key={timer.id}>
+                      <button
+                        type="button"
+                        onClick={() => goTo(stepIndex)}
+                        className={`inline-flex min-h-11 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-small font-semibold tabular-nums ${
+                          timer.finished ? "bg-secondary-soft text-secondary" : "bg-surface-muted"
+                        }`}
+                      >
+                        <TimerIcon size={15} aria-hidden="true" />
+                        Стъпка {stepIndex + 1}:{" "}
+                        {timer.finished ? "времето изтече" : formatTimeRemaining(secondsLeft(timer))}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
 
             <p
               key={index}
@@ -311,7 +339,7 @@ export function CookMode({
               <div className="relative mt-6 aspect-video w-full max-w-lg overflow-hidden rounded-2xl shadow-card print:hidden">
                 <Image
                   src={stepImageUrl}
-                  alt={`Стъпка ${index + 1}`}
+                  alt={`${title}: стъпка ${index + 1}`}
                   fill
                   sizes="(min-width: 640px) 512px, 100vw"
                   className="object-cover"
@@ -345,8 +373,8 @@ export function CookMode({
                   </div>
                   <button
                     type="button"
-                    onClick={() => setShowIngredients(false)}
-                    className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface-muted px-4 text-small font-semibold hover:bg-border-subtle"
+                    onClick={closeIngredients}
+                    className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-full bg-surface-muted px-4 py-2 text-small font-semibold hover:bg-border-subtle"
                   >
                     <ArrowLeft size={17} aria-hidden="true" />
                     Към стъпката
@@ -415,10 +443,11 @@ export function CookMode({
 
           <div className="grid grid-cols-[auto_1fr_1fr] gap-2 px-4 pb-5 pt-3 sm:px-8">
             <button
+              ref={ingredientsToggleRef}
               type="button"
-              onClick={() => setShowIngredients((v) => !v)}
+              onClick={() => (showIngredients ? closeIngredients() : setShowIngredients(true))}
               aria-pressed={showIngredients}
-              className={`flex h-16 items-center justify-center gap-2 rounded-full px-5 font-semibold transition-colors ${
+              className={`flex min-h-16 items-center justify-center gap-2 rounded-full px-5 py-2 font-semibold transition-colors ${
                 showIngredients ? "bg-foreground text-background" : "bg-surface-muted"
               }`}
             >
@@ -430,7 +459,7 @@ export function CookMode({
               type="button"
               onClick={() => goTo(index - 1)}
               disabled={index === 0}
-              className="flex h-16 items-center justify-center gap-2 rounded-full bg-surface-muted text-body font-semibold disabled:opacity-35"
+              className="flex min-h-16 items-center justify-center gap-2 rounded-full bg-surface-muted py-2 text-body font-semibold disabled:opacity-35"
             >
               <ArrowLeft size={22} /> Назад
             </button>
@@ -444,7 +473,7 @@ export function CookMode({
               </button>
             )}
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );

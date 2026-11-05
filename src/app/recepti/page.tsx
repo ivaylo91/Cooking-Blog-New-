@@ -130,6 +130,23 @@ export default async function ReceptiPage({
           <p className="mt-2 text-muted-foreground">
             Махнете някой от филтрите или вижте всички рецепти.
           </p>
+          {/* A way out, not just advice: one tap back to a full list. */}
+          <div className="mt-4 flex flex-wrap gap-2">
+            {(active.time || active.difficulty) && (
+              <Link
+                href={active.category ? `/recepti?category=${active.category}` : "/recepti"}
+                className="inline-flex min-h-11 items-center rounded-full bg-surface px-5 py-2 font-semibold shadow-card hover:bg-accent-soft"
+              >
+                Махни времето и трудността
+              </Link>
+            )}
+            <Link
+              href="/recepti"
+              className="inline-flex min-h-11 items-center rounded-full bg-surface px-5 py-2 font-semibold shadow-card hover:bg-accent-soft"
+            >
+              Всички рецепти
+            </Link>
+          </div>
         </div>
       ) : (
         <>

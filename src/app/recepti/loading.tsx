@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/Skeleton";
 export default function ReceptiLoading() {
   return (
     <>
+      {/* The skeleton is silent to screen readers; this says what is happening. */}
+      <p role="status" className="sr-only">Зареждане…</p>
       <Band tone="peach" as="div" innerClassName="pb-8 pt-8 sm:pb-10 sm:pt-12">
         <Skeleton className="h-12 w-48" />
       </Band>

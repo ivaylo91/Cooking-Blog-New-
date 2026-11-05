@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, X } from "lucide-react";
 import { forgetCooking, useLastCooked } from "@/lib/lastCooked";
+import { stepAnchor } from "@/lib/steps";
 
 /**
  * Back to the dish someone left half-made. Rendered only in the browser that
@@ -14,9 +15,9 @@ export function ResumeCooking() {
   if (!last) return null;
 
   return (
-    <div className="animate-rise fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-30 mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border-subtle bg-surface p-2 pl-5 shadow-lift print:hidden sm:left-auto sm:right-6 sm:w-96">
+    <div data-resume-banner className="animate-rise fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-4 right-4 z-30 mx-auto flex max-w-md items-center gap-2 rounded-2xl border border-border-subtle bg-surface p-2 pl-5 shadow-lift print:hidden sm:left-auto sm:right-6 sm:w-96">
       <Link
-        href={`/recepti/${last.slug}${last.step != null ? "#prigotvyane" : ""}`}
+        href={`/recepti/${last.slug}${last.step != null ? `#${stepAnchor(last.step)}` : ""}`}
         className="flex min-h-11 flex-1 items-center gap-2 font-semibold text-link"
       >
         <span className="min-w-0">

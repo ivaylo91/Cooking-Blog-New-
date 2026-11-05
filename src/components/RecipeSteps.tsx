@@ -56,7 +56,8 @@ export function RecipeSteps({
                 type="button"
                 onClick={() => toggle(step.id, index)}
                 aria-pressed={isDone}
-                aria-label={`Стъпка ${index + 1}: ${isDone ? "изпълнена" : "отбележи като изпълнена"}`}
+                // A fixed name: aria-pressed alone says whether it's done.
+                aria-label={`Стъпка ${index + 1}: готова`}
                 className={`flex size-11 items-center justify-center rounded-full text-body font-bold tabular-nums transition-[background-color,color,transform] active:scale-90 ${
                   isDone
                     ? "bg-accent text-accent-foreground"
@@ -73,7 +74,7 @@ export function RecipeSteps({
                   </span>
                 )}
                 <p
-                  className={`max-w-[65ch] text-body leading-relaxed ${
+                  className={`max-w-[65ch] text-body leading-relaxed text-pretty ${
                     isDone ? "text-muted-foreground" : ""
                   }`}
                 >
@@ -82,7 +83,7 @@ export function RecipeSteps({
 
                 {timer && (
                   <div className="mt-3 print:hidden">
-                    <StepTimer initialSeconds={timer.seconds} label={timer.label} />
+                    <StepTimer id={`${recipeId}:${index}`} initialSeconds={timer.seconds} label={timer.label} />
                   </div>
                 )}
 

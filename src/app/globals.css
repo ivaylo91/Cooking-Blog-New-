@@ -18,9 +18,9 @@
   --surface-muted: #f5e6ce;
   --border-subtle: rgba(90, 45, 20, 0.22);
   --rule: #efdcc6;
-  /* A warm brown, 6.9:1 or better on every tinted section below. */
+  /* A warm brown, 6.6:1 or better on every tinted section below (lowest: wheat). */
   --muted-foreground: #5a4234;
-  /* Buttons: 5.2:1 with white text. */
+  /* Buttons: 5.8:1 with white text. */
   --accent: #b9381b;
   --accent-strong: #922a13;
   --accent-foreground: #ffffff;
@@ -147,7 +147,7 @@
     --destructive-soft: rgba(248, 113, 113, 0.12);
     --destructive-border: rgba(248, 113, 113, 0.3);
     --field: #241914;
-    --field-border: #8a7a6e;
+    --field-border: #9a8a7e;
     --placeholder: #a8978a;
     --doodle-herb: #a4c787;
     --doodle-gold: #f2bd65;
@@ -190,7 +190,7 @@
   --destructive-soft: rgba(248, 113, 113, 0.12);
   --destructive-border: rgba(248, 113, 113, 0.3);
   --field: #241914;
-  --field-border: #8a7a6e;
+  --field-border: #9a8a7e;
   --placeholder: #a8978a;
   --doodle-herb: #a4c787;
   --doodle-gold: #f2bd65;
@@ -295,15 +295,22 @@ textarea::placeholder {
   border-color: var(--foreground);
 }
 
+/* A solid 2px ring in the action colour, then the soft halo. A border
+   colour change alone barely differs from the resting border (about 1.03:1);
+   the ring gives focus real contrast against the page (WCAG 2.4.13). */
 .field:focus,
 .field:focus-visible {
   border-color: var(--accent);
-  box-shadow: 0 0 0 4px var(--accent-soft);
+  box-shadow:
+    0 0 0 2px var(--accent),
+    0 0 0 6px var(--accent-soft);
 }
 
 .field:user-invalid {
   border-color: var(--destructive);
-  box-shadow: 0 0 0 4px var(--destructive-soft);
+  box-shadow:
+    0 0 0 2px var(--destructive),
+    0 0 0 6px var(--destructive-soft);
 }
 
 .field-pill {
@@ -507,6 +514,12 @@ html {
   @variant short {
     scroll-padding-top: 0;
   }
+}
+
+/* The floating resume banner covers the foot of the home page; keep focused
+   links and anchor jumps clear of it while it shows. */
+html:has([data-resume-banner]) {
+  scroll-padding-bottom: 6rem;
 }
 
 /* Print hides only the site's own chrome (marked print:hidden on the header

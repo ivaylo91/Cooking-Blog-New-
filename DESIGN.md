@@ -47,7 +47,7 @@ colors:
   surface-evening: "#241914"
   counter-tint-evening: "#2c201a"
   slate-grey-evening: "#cdbcae"
-  field-border-evening: "#8a7a6e"
+  field-border-evening: "#9a8a7e"
   peach-evening: "#3d2417"
   sage-evening: "#223320"
   butter-evening: "#3b3014"
@@ -237,7 +237,7 @@ The world replaced the "Бакалия" grocery-label system, which was rejected
 Warm cream, apricot, butter and herb green set the mood; tomato is the primary action colour; dark ink and warm brown carry text.
 
 ### Primary
-- **Tomato** (`tomato`): the filled primary action ("Готви стъпка по стъпка", "Запиши ме", "Търси", "Към рецептите"), the logo badge, finished-step circles, checked ingredient boxes, Cook Mode progress segments, filled rating stars, the reading-progress bar, the focus ring and field focus border, text selection and the caret. 5.2:1 with white text.
+- **Tomato** (`tomato`): the filled primary action ("Готви стъпка по стъпка", "Запиши ме", "Търси", "Към рецептите"), the logo badge, finished-step circles, checked ingredient boxes, Cook Mode progress segments, filled rating stars, the reading-progress bar, the focus ring and field focus border, text selection and the caret. 5.8:1 with white text.
 - **Deep Tomato** (`tomato-deep`): hover fill for primary buttons.
 - **Tomato Link** (`tomato-link`, evening `#ff9a6e`): every text link and tomato-coloured label (back link, "Всички рецепти", "Продължете", the active nav pill). Tomato itself drops to about 4.2:1 on the section tints, so text never uses it.
 - **Tomato Wash** (`tomato-wash`): soft active backgrounds: the active nav pill, the "Продължете оттук" marker, the field focus halo, a liked heart and the ingredients used by the current Cook Mode step.
@@ -263,7 +263,7 @@ Category colours come from `categoryTint(slug)` in `src/lib/categories.ts`. They
 - **Paper** (`paper`, #fff5e5) and **Surface** (`surface`, #fffdf6): warm cream ground and lighter labels and controls. Form fields use their separate white field token.
 - **Counter Tint** (`counter-tint`): secondary pills, the segmented control track and skeletons.
 - **Slate Grey** (`slate-grey`): secondary text: descriptions, meta lines, fact labels, placeholders, counts.
-- **Field Border** (`field-border`): the resting 1.5px border of every input and checkbox; 3:1 against white.
+- **Field Border** (`field-border`): the resting 1.5px border of every input and checkbox; 5.6:1 against white (3:1 is the minimum).
 - **Hairline** (`hairline`): the header's bottom rule and list row dividers.
 - **Error Red** (`error-red`, `error-red-deep`, `error-wash`, `error-border`): failures, invalid fields and destructive admin actions.
 
@@ -337,7 +337,7 @@ Keyframes and utilities live in `globals.css`; all use `--ease-out-expo` and sta
 - **Lift**: recipe cards rise 2px with a subtle deeper shadow on hover; the photo never moves.
 - **Press**: buttons and chips scale to 0.95–0.97 while pressed.
 - **Logo steam**: draws in once on load; rises in a loop while the logo is hovered.
-- **Segmented control**: the indicator slides between halves. The active half is tracked with an IntersectionObserver, never a scroll listener.
+- **Segmented control**: the ink indicator slides between halves, with paper text on the active half. The active half is tracked with an IntersectionObserver, never a scroll listener.
 - **Reading progress**: a CSS scroll-driven animation (`view-timeline` on `[data-reading-target]`); hidden in browsers without support.
 
 Reduced motion zeroes every distance, holds scale at 1 and stops the steam; colour transitions remain.
@@ -374,7 +374,7 @@ Every text field has one, as a short example or hint in `--placeholder` (5.5:1).
 Every field has a visible label above it (the placeholder is never the label), helper text and errors linked with `aria-describedby`, `aria-invalid` on failure, the right `autocomplete` and keyboard hints, and a pending state on submit. Forms submit through `onSubmit` + `startTransition` so a failed submit keeps what the reader typed, with the plain `action` kept for no-JavaScript use.
 The `.field` class (`globals.css`): white fill, 1.5px `field-border`, 14px radius (`.field-pill` for 999px).
 - **Hover:** border darkens to ink.
-- **Focus:** tomato border plus a 4px tomato-wash halo.
+- **Focus:** tomato border with a solid 2px tomato ring, then a 4px tomato-wash halo, so focus has contrast and is not a hue change alone (WCAG 2.4.13).
 - **Invalid** (`:user-invalid`): error-red border and halo, only after the visitor has interacted.
 - **Search** (`SearchField`): leading search icon, a clear button once there is text, "/" focuses the header field from anywhere (with a `/` hint on desktop). 44px in the header; 56px with a "Търси" button on the search page.
 - **Comment form:** 48px name field, resizable textarea with a live "N / 1000" counter that turns red past 90%.
@@ -391,10 +391,10 @@ Each row is a whole-row tap target at least 56px tall: a 24px rounded checkbox w
 Each step is a 44px numbered circle on counter tint beside body text (max 65ch); hover washes it tomato. Tapping the circle marks it done: the circle fills tomato and the check pops. The first unfinished step after a finished one gets a tomato-wash "Продължете оттук" pill that rises in.
 
 ### Cook Mode (signature)
-A full-screen modal that rises in: dish name and a 48px close circle, 6px pill progress segments (tomato up to the current step), "Стъпка N от M" in grey, the step at display size sliding in from the direction of travel, and a bottom bar of three 64px pills (ingredients toggle, Назад, tomato Напред/Готово). The ingredients sheet washes the ones the current step uses in tomato wash. The screen is kept awake.
+A full-screen native `<dialog>` (opened with `showModal()`, so the page behind is inert) that rises in: dish name and a 48px close circle, 6px pill progress segments (tomato up to the current step), "Стъпка N от M" in grey, the step at display size sliding in from the direction of travel, and a bottom bar of three 64px pills (ingredients toggle, Назад, tomato Напред/Готово). The ingredients sheet washes the ones the current step uses in tomato wash. The screen is kept awake.
 
 ### Step timer
-A 44px pill ("Таймер: N мин", tomato icon, card shadow) under steps that name a duration. Running, it becomes a tomato-wash pill with the countdown and 44px pause and close controls.
+A 44px pill ("Таймер: N мин", tomato icon, card shadow) under steps that name a duration. Running, it becomes a tomato-wash pill with the countdown and 44px pause and close controls; the icon stays still (no looping motion). All timers share one store (`src/lib/useTimers.ts`) and count to a wall-clock end, so they stay right in background tabs, keep the screen awake while running, and survive moving between Cook Mode steps, where timers from other steps show as a row of small pills that jump back to their step. The chime is unlocked by the Start tap, and screen readers hear one announcement when time is up.
 
 ### About page
 A peach band that answers who and what: "Здравейте, аз съм Иво", one line on what is here, the live recipe and category count, the tomato "Към рецептите" button, and a square portrait cropped to head and shoulders. Below, "Как готвя" as four short principles under tomato rules (no cards, no icon tiles), "Започнете оттук" with the three newest recipes, and a butter band inviting comments. Every claim is one the owner has confirmed; counts come from live data, never typed in.

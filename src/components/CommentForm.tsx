@@ -13,7 +13,14 @@ const field = "field px-4 text-body";
 const MAX = 1000;
 
 export function CommentForm({ recipeId }: { recipeId: string }) {
-  const [renderedAt] = useState(() => Date.now());
+  // When the form appeared, for the anti-bot time trap. Stamped after load,
+  // not during render: reading the clock while rendering makes Cache
+  // Components defer the whole recipe page to the browser. Without
+  // JavaScript the field stays empty and the server skips the check.
+  const renderedAtRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (renderedAtRef.current) renderedAtRef.current.value = String(Date.now());
+  }, []);
   const [state, formAction, isPending] = useActionState(
     addComment.bind(null, recipeId),
     initialState
@@ -30,6 +37,8 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
   useEffect(() => {
     if (state.status === "success") {
       formRef.current?.reset();
+      // reset() empties the stamp too; the next comment starts its clock now.
+      if (renderedAtRef.current) renderedAtRef.current.value = String(Date.now());
     }
   }, [state]);
 
@@ -41,13 +50,16 @@ export function CommentForm({ recipeId }: { recipeId: string }) {
     <form
       ref={formRef}
       action={formAction}
+      // The server checks the fields and answers in our own words, instead
+      // of the browser's generic bubble.
+      noValidate
       // React clears a form after its action; handled here, a comment that
       // fails or hits the rate limit stays in the box instead of being lost.
       // Without JavaScript the plain action above still works.
       onSubmit={submitInTransition(formAction)}
       className="flex flex-col gap-4"
     >
-      <input type="hidden" name="form_rendered_at" value={renderedAt} />
+      <input ref={renderedAtRef} type="hidden" name="form_rendered_at" defaultValue="" />
       <input
         type="text"
         name="website"

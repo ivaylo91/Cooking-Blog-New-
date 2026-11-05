@@ -15,9 +15,11 @@ const onest = Onest({
 
 // Lora, a warm book serif with full Cyrillic, sets the headlines only, so the
 // pages read like a food magazine while the working text stays a clean sans.
+// Every Lora heading is bold, so only the 700 weight is shipped.
 const lora = Lora({
   variable: "--font-lora",
   subsets: ["latin", "cyrillic"],
+  weight: "700",
 });
 
 export const metadata: Metadata = {

@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/Skeleton";
 export default function TarseneLoading() {
   return (
     <>
+      {/* The skeleton is silent to screen readers; this says what is happening. */}
+      <p role="status" className="sr-only">Зареждане…</p>
       <Band tone="peach" as="div" innerClassName="pb-8 pt-8 sm:pb-10 sm:pt-12">
         <Skeleton className="h-12 w-64" />
         <Skeleton className="mt-6 h-14 w-full max-w-2xl rounded-full" />

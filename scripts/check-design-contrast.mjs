@@ -41,13 +41,30 @@ const textPairs = [
   ["placeholder", "field"],
   ["secondary", "butter"],
   ["destructive-strong", "butter"],
+  // Active half of the recipe tab bar: paper text on the ink indicator.
+  ["background", "foreground"],
 ];
 const controlPairs = [
   ["field-border", "field"],
+  // Fields also sit on the sage newsletter backdrop and the butter panels.
+  ["field-border", "sage"],
+  ["field-border", "butter"],
+  // Empty rating stars on the butter "Как се получи?" panel.
+  ["muted-foreground", "butter"],
+  // The recipe tab bar's ink indicator against its track.
+  ["foreground", "surface-muted"],
   ...surfaces.map((bg) => ["accent", bg]),
   ["on-garden", "garden"],
   ["on-ember", "ember"],
 ];
+// The toggle's dark block repeats the system one; a value changed in only
+// one of them would make the two dark themes differ.
+assert.deepEqual(
+  tokens(':root[data-theme="dark"]'),
+  tokens(':root:not([data-theme="light"])'),
+  "The two dark theme blocks in globals.css differ"
+);
+
 let failures = 0;
 for (const [name, palette] of Object.entries(themes)) {
   let lowestText = Infinity;

@@ -272,7 +272,7 @@ export default async function RecipePage({
               </Link>
             )}
             <h1 className="text-display font-bold">{recipe.title}</h1>
-            <p className="mt-3 max-w-2xl text-body text-muted-foreground">
+            <p className="mt-3 max-w-[65ch] text-body text-muted-foreground">
               {keepShortWords(recipe.description)}
             </p>
 

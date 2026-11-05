@@ -6,6 +6,8 @@ import { Skeleton } from "@/components/Skeleton";
 export default function RecipeLoading() {
   return (
     <div>
+      {/* The skeleton is silent to screen readers; this says what is happening. */}
+      <p role="status" className="sr-only">Зареждане…</p>
       <div className="bg-peach">
         <div className="mx-auto max-w-6xl sm:px-6 sm:pt-6">
           <Skeleton className="h-[40svh] w-full rounded-none sm:aspect-[4/3] sm:h-auto sm:rounded-3xl md:aspect-[21/9] lg:aspect-[16/5]" />

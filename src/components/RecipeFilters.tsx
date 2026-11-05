@@ -27,7 +27,7 @@ function buildHref(active: ActiveFilters, change: Partial<ActiveFilters>): strin
 }
 
 const chip =
-  "flex h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 font-medium transition-colors";
+  "flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 font-medium transition-colors";
 const chipOn = "bg-foreground text-background";
 const chipOff = "bg-surface-muted hover:brightness-95 active:scale-[0.97]";
 
@@ -109,7 +109,7 @@ export function RecipeFilters({
       <div className="mt-4 flex flex-wrap items-start gap-x-4 gap-y-3">
         {/* Time and difficulty wait behind one control until they are wanted. */}
         <details open={secondaryCount > 0} className="group w-full sm:w-auto">
-          <summary className="flex h-11 w-fit cursor-pointer list-none items-center gap-2 rounded-full border border-border-subtle px-4 font-medium transition-colors hover:bg-surface-muted [&::-webkit-details-marker]:hidden">
+          <summary className="flex min-h-11 w-fit cursor-pointer list-none items-center gap-2 rounded-full border border-border-subtle px-4 font-medium transition-colors hover:bg-surface-muted [&::-webkit-details-marker]:hidden">
             <SlidersHorizontal size={18} aria-hidden="true" />
             Време и трудност
             {secondaryCount > 0 && (

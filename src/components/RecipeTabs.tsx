@@ -76,7 +76,7 @@ export function RecipeTabs() {
         {/* The indicator slides rather than jumping, so the switch reads as one control. */}
         <span
           aria-hidden="true"
-          className="absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-background shadow-sm transition-transform duration-300 ease-out"
+          className="absolute inset-y-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-foreground shadow-sm transition-transform duration-300 ease-out motion-reduce:transition-none"
           style={{ transform: active === "prigotvyane" ? "translateX(100%)" : "none" }}
         />
         {sides.map((side) => {
@@ -86,8 +86,10 @@ export function RecipeTabs() {
               key={side.id}
               href={`#${side.id}`}
               aria-current={isActive ? "location" : undefined}
-              className={`relative flex h-11 items-center justify-center gap-2 rounded-full font-semibold transition-colors ${
-                isActive ? "" : "text-muted-foreground"
+              // Ink fill with paper text, like a selected chip, so the active
+              // half stands out from the track (it was 1.14:1 before).
+              className={`relative flex min-h-11 items-center justify-center gap-2 rounded-full font-semibold transition-colors ${
+                isActive ? "text-background" : "text-muted-foreground"
               }`}
             >
               <side.icon size={18} aria-hidden="true" />

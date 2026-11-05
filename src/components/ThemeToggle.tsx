@@ -13,9 +13,16 @@ function getSystemTheme(): Theme {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
 
+// Blocked site data makes localStorage throw; this sits in the root layout,
+// so an unguarded read would take every page down with it.
 function readStoredTheme(): Theme {
-  const stored = localStorage.getItem("theme");
-  return stored === "light" || stored === "dark" ? stored : getSystemTheme();
+  try {
+    const stored = localStorage.getItem("theme");
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    // Fall through to the system theme.
+  }
+  return getSystemTheme();
 }
 
 export function ThemeToggle() {
@@ -25,7 +32,11 @@ export function ThemeToggle() {
 
   function toggle() {
     const next: Theme = theme === "dark" ? "light" : "dark";
-    localStorage.setItem("theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    } catch {
+      // Not remembered for next time, but the switch still applies now.
+    }
     document.documentElement.setAttribute("data-theme", next);
     setOverride(next);
   }
