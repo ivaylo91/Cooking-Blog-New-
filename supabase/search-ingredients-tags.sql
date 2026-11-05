@@ -23,8 +23,12 @@ returns trigger
 set search_path to 'public'
 as $$
 declare
-  not_edits constant text[] :=
-    array['search_vector', 'updated_at', 'likes_count', 'rating_sum', 'rating_count'];
+  -- total_time_minutes is generated, so it is still NULL in NEW here and
+  -- would make every update look like an edit.
+  not_edits constant text[] := array[
+    'search_vector', 'updated_at', 'likes_count', 'rating_sum', 'rating_count',
+    'total_time_minutes'
+  ];
 begin
   if (to_jsonb(new) - not_edits) = (to_jsonb(old) - not_edits) then
     new.updated_at = old.updated_at;
